@@ -1,2 +1,2 @@
-# Softver-za-agenciju-za-rad-sa-nekretninama
+# Softver za registraciju vozila
 Projektni zadatak iz predmeta Osnovi softverskog inzenjerstva
