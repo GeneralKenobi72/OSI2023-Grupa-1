@@ -1,4 +1,5 @@
-#include "../inc/test.h"
+#include "test.h"
+#include <iostream>
 
 int main() {
 	test t1 = test("test");
