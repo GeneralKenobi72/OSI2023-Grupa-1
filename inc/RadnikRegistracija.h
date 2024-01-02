@@ -9,9 +9,6 @@ using namespace std;
 
 class RadnikR : public Radnik {
 private:
-	bool registered = true;
-	string birthDate;
-	string position;
 	// Vraæa podstring od poèetka do pozicije underscore-a
 	string fileUsernameRadnikT(const string filename) {
 		size_t underscorePos = filename.find('_');
@@ -24,14 +21,19 @@ private:
 			return NULL;
 		}
 	}
+	bool isUserNameTakenR(const string username)
+	{
+		ifstream file(username + "_radnikRegistracija.txt");
+		return file.good();
+	}
 public:
 	RadnikR() noexcept : Radnik() {}
 
-	//Ovjde se pohranjuju info. o nekom radniku za tehnièki pregled
+	//Ovjde se pohranjuju info. o nekom radniku za tehnièki pregled iz postojece datoteke
 	void setInfo(string username)
 	{
 		try {
-			if (!isUserNameTaken(username))
+			if (!isUserNameTakenR(username))
 			{
 				throw UserNameNotFound();
 			}
@@ -72,7 +74,7 @@ public:
 	void printFromFile(string username)
 	{
 		try {
-			if (!isUserNameTaken(username))
+			if (!isUserNameTakenR(username))
 			{
 				throw UserNameNotFound();
 			}
@@ -92,7 +94,7 @@ public:
 		{
 			cout << e.what() << endl;
 		}
-		string R_Username, R_Password, R_FirstName, R_LastName, R_Email;
+		string R_Username, R_Password, R_FirstName, R_LastName, R_Email, R_birthDate, R_position;
 		getline(out, R_Username);
 		cout << "Username from file: "; ignore_colon(R_Username);
 		getline(out, R_Password);
@@ -103,6 +105,10 @@ public:
 		cout << "Last Name from file: "; ignore_colon(R_LastName);
 		getline(out, R_Email);
 		cout << "Email from file: ";  ignore_colon(R_Email);
+		getline(out, R_birthDate);
+		cout << "BirthDate from file: "; ignore_colon(R_birthDate);
+		getline(out, R_position);
+		cout << "Position from file: "; ignore_colon(R_position);
 	}
 
 	void LogIn()
@@ -111,6 +117,11 @@ public:
 			username_result, password_result;
 		cout << "Enter your username" << endl;
 		cin >> R_username;
+
+		while (!isUserNameTakenR(R_username)) {
+			cout << "Korisnicko ime nije pronadjeno! Molim unesite ponovo." << endl;
+			cin >> R_username;
+		}
 
 		ifstream file(R_username + "_radnikRegistracija.txt");
 		try {
@@ -145,6 +156,5 @@ public:
 			}
 		}
 	}
-
 
 };
