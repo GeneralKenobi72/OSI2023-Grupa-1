@@ -1,9 +1,16 @@
-#include "test.h"
+//#include "test.h"
+#include "../inc/test.h"
+#include "../inc/User.h"
+#include "../inc/Client.h"
 #include <iostream>
+using namespace std;
 
 int main() {
-	test t1 = test("kevin panter, probace preko jabuselea...\n\n\n\n\n\nOAAAAAAA KEVIN PANTER\n\nvreme nije isteklo");
-
-	std::cout << t1.getValue();
+	Client client1;
+	string user;
+	client1.NewRegistration();
+	cout << "Enter username: ";
+	cin >> user;
+	client1.printFromFile(user);
 	return 0;
 }

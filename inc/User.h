@@ -12,7 +12,7 @@ public:
 	User() noexcept {}
 	User(const string user_name,const string password) noexcept : userName(user_name), password(password) {}
 
-	// ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponašanja
+	// ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponaï¿½anja
 	//  moze se koristiti samo jedna za provjeru prvog i zadnjeg imena
 	// ali zbog preglednosti su definisane zasebno
 	bool ValidFirstName(string firstName)
@@ -160,7 +160,7 @@ public:
 
 	}
 	//f-ja provjerava preko imena fajla da li je username zauzeto 
-	//ako datoteka postoji vraca true, inaèe false
+	//ako datoteka postoji vraca true, inaï¿½e false
 	bool isUserNameTaken(const string username)
 	{
 		ifstream file(username + ".txt");
@@ -217,7 +217,7 @@ protected:
 			cout << result << endl;
 		}
 	}
-	//ima istu logiku kao i gornja funkcija, s tim što sada vraca rezultat
+	//ima istu logiku kao i gornja funkcija, s tim ï¿½to sada vraca rezultat
 	string return_ignore_colon(string nameFile)
 	{
 		size_t colonPos = nameFile.find(':');
@@ -232,10 +232,10 @@ protected:
 		}
 	}
 	//int userID;
-	string userName;
-	string first_name, last_name;
-	string email;
-	string password;
+	string userName="";
+	string first_name="", last_name="";
+	string email="";
+	string password="";
 	//opciono string userEmail;
 };
 

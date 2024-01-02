@@ -6,6 +6,10 @@
 using namespace std;
 
 class Radnik : public User {
+protected:
+	bool registered = true;
+	string birthDate;
+	string position;
 public:
 	Radnik() noexcept : User() {}
 };

@@ -9,21 +9,22 @@ using namespace std;
 // RadnikT-za tehnièki pregled
 class RadnikT : public Radnik {
 private:
-
-	bool registered = true;
-	string birthDate;
-	string position;
 	// Vraæa podstring od poèetka do pozicije underscore-a
 	string fileUsernameRadnikT(const string filename) {
 		size_t underscorePos = filename.find('_');
 		if (underscorePos != string::npos) {
 
-			string R_username= filename.substr(0, underscorePos);
+			string R_username = filename.substr(0, underscorePos);
 			return R_username;
 		}
 		else {
 			return NULL;
 		}
+	}
+	bool isUserNameTakenT(const string username)
+	{
+		ifstream file(username + "_radnikTehnicki.txt");
+		return file.good();
 	}
 public:
 
@@ -33,7 +34,7 @@ public:
 	void setInfo(string username)
 	{
 		try {
-			if (!isUserNameTaken(username))
+			if (!isUserNameTakenT(username))
 			{
 				throw UserNameNotFound();
 			}
@@ -42,7 +43,7 @@ public:
 		{
 			cout << e.what() << endl;
 		}
-		
+
 		ifstream out(username + "_radnikTehnicki.txt");
 		try {
 			if (!out.is_open())
@@ -66,7 +67,7 @@ public:
 		getline(out, R_Email); ignore_colon(R_Email);
 		email = R_Email;
 		getline(out, R_birthDate); ignore_colon(R_birthDate);
-		birthDate=R_birthDate;
+		birthDate = R_birthDate;
 		getline(out, R_position); ignore_colon(R_position);
 		position = R_position;
 	}
@@ -74,7 +75,7 @@ public:
 	void printFromFile(string username)
 	{
 		try {
-			if (!isUserNameTaken(username))
+			if (!isUserNameTakenT(username))
 			{
 				throw UserNameNotFound();
 			}
@@ -94,17 +95,21 @@ public:
 		{
 			cout << e.what() << endl;
 		}
-		string R_Username, R_Password, R_FirstName, R_LastName, R_Email;
+		string R_Username, R_Password, R_FirstName, R_LastName, R_Email, R_birthDate, R_position;
 		getline(out, R_Username);
-		cout << "Username from file: "; ignore_colon(R_Username);
+		cout << "Korisnicko ime: "; ignore_colon(R_Username);
 		getline(out, R_Password);
-		cout << "Password from file: "; ignore_colon(R_Password);
+		cout << "Sifra : "; ignore_colon(R_Password);
 		getline(out, R_FirstName);
-		cout << "First Name from file: "; ignore_colon(R_FirstName);
+		cout << "Ime : "; ignore_colon(R_FirstName);
 		getline(out, R_LastName);
-		cout << "Last Name from file: "; ignore_colon(R_LastName);
+		cout << "Prezime : "; ignore_colon(R_LastName);
 		getline(out, R_Email);
-		cout << "Email from file: ";  ignore_colon(R_Email);
+		cout << "Email : ";  ignore_colon(R_Email);
+		getline(out, R_birthDate);
+		cout << "Datum i godina rodjenja: "; ignore_colon(R_birthDate);
+		getline(out, R_position);
+		cout << "Pozicija rada: "; ignore_colon(R_position);
 	}
 
 	//Ovjde je radnik vec registrovan na sistem te je samo potrebno ulogovanje 
@@ -112,9 +117,13 @@ public:
 	{
 		string R_username, R_password, result,
 			username_result, password_result;
-		cout << "Enter your username" << endl;
+		cout << "Unesite korisnicko ime." << endl;
 		cin >> R_username;
 
+		while (!isUserNameTakenT(R_username)) {
+			cout << "Korisnicko ime nije pronadjeno! Molim unesite ponovo." << endl;
+			cin >> R_username;
+		}
 		ifstream file(R_username + "_radnikTehnicki.txt");
 		try {
 			if (!file.is_open())
@@ -132,18 +141,18 @@ public:
 		{
 			cout << e.what() << endl;
 		}
-		cout << "Enter your password" << endl;
+		cout << "Unesite sifru." << endl;
 		R_password = Enter_password();
 		while (1)
 		{
 			if (R_password != result)
 			{
-				cout << "Incorrect password. Please enter again." << endl;
+				cout << "Netacna sifra! Unesite ponovo." << endl;
 				R_password = Enter_password();
 			}
 			else
 			{
-				cout << "Welcome " << username_result << " back!" << endl;
+				cout << "Dobrodosli " << username_result << " nazad!" << endl;
 				break;
 			}
 		}
