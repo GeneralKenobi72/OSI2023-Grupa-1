@@ -29,5 +29,4 @@ public:
 private:
 
 	bool provjeriKorisnickoImeAdminaR(const string username);
-
 };

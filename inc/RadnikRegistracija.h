@@ -21,5 +21,4 @@ public:
 	void ispisFajla(string korisnickoIme);
 
 	void Ulogovanje();
-
 };
