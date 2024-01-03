@@ -14,3 +14,4 @@ Makefile
 .cache/
 compile_commands.json
 *.exe
+.ccls-cache/
