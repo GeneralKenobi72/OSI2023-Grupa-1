@@ -1,3 +1,6 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include "Korisnik.h"
 #include <iostream>
 #include <fstream>
@@ -24,3 +27,4 @@ inline string Admin::getUserName() { return korisnickoIme; }
 
 inline string Admin::getEmail() { return email; }
 
+#endif

@@ -1,3 +1,6 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include "Korisnik.h"
 #include "Admin.h"
 #include <iostream>
@@ -60,7 +63,7 @@ void AdminTehnicki::Prijava()
 void AdminTehnicki::dodajRadnikaTehnicki()
 {
 	string KorisnickoImeRadnikaT, LozinkaRadnikaT,
-		ImeRadnikaT, PrezimeRadnikT, LozinkaRadnikaT, EmailRadnikaT;
+		ImeRadnikaT, PrezimeRadnikT, EmailRadnikaT;
 	cout << "Unesite korisnicko ime." << endl;
 	cin >> KorisnickoImeRadnikaT;
 	cout << "Unesite Ime." << endl;
@@ -170,3 +173,4 @@ bool AdminTehnicki::provjeriKorisnickoImeAdminT(const string username)
 	return file.good();
 }
 
+#endif

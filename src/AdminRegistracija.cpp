@@ -1,3 +1,6 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include <iostream>
 #include "Korisnik.h"
 #include "Admin.h"
@@ -98,3 +101,5 @@ bool AdminRegistracija::provjeriKorisnickoImeAdminaR(const string username)
 	ifstream file(username + "_administratorRegistracija.txt");
 	return file.good();
 }
+
+#endif
