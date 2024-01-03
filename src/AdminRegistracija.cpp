@@ -52,6 +52,7 @@ void AdminRegistracija::Prijava()
 		{
 			AT_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
 			cout << "Dobrodosli " << AT_rezultat << " nazad!" << endl;
+			cout << "Dobrodosli " << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
@@ -79,6 +80,7 @@ void AdminRegistracija::obrisiRadnikaRegistracija()
 //Funkcija za pregled svih radnika za registraciju gdje se ispisuju korisnicka imena
 //dodatno mozemo imati funckiju gdje na osnovu tih imena pristupamo datoteci za jos detaljnije informacija 
 //kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
+
 void AdminRegistracija::PregledNalogaRadnika()
 {
 	for (const auto& entry : fs::directory_iterator("./")) { //Ovo je trenutni direktorijum 

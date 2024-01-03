@@ -195,6 +195,7 @@ void Klijent::Ulogovanje()
 		{
 			K_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat); // paziiiiiiiiiiiiiiiiiiiiiiiii
 			cout << "Dobrodosli " << K_rezultat << " nazad!" << endl;
+			cout << "Dobrodosli" << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
