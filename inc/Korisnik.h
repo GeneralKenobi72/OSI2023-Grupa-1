@@ -17,15 +17,19 @@ public:
 	// ali zbog preglednosti su definisane zasebno
 	bool ValidnoIme(string ime);
 	bool ValidnoPrezime(string prezime);
+
 	bool ValidanEmail(string email);
 	bool ValidnaSifra(string sifra);
+
 	//f-ja provjerava preko imena fajla da li je korisnicko ime zauzeto 
 	//ako datoteka postoji vraca true, inače false
 	bool zauzetKorisnickoIme(const string korisnicko_ime);
+
 	//f-ja koju ce dijeliti svi ucesnici za unos sifre
 	//Unosom se svaki put pojavljuje *
 	//npr. Enter password:******
 	string UnesiSifru();
+
 	string provjeriKorisnickoIme(string korisnico_ime);
 	string getIme() { return Ime; }
 	string getPrezime() { return Prezime; }

@@ -6,17 +6,17 @@
 #include <fstream>
 using namespace std;
 
-// RadnikT-za tehnièki pregled
+// RadnikT-za tehnicki pregled
 class RadnikT : public Radnik {
 private:
-	// Vraæa podstring od poèetka do pozicije underscore-a
+	// Vraca podstring od pocetka do pozicije underscore-a
 	string fajlKorisnickoImeRadnikaT(const string fileIme);
 	bool provjeriKorisnickoImeRadnikaT(const string korisnickoIme);
 public:
 
 	RadnikT() noexcept : Radnik() {}
 
-	//Ovjde se pohranjuju info. o nekom radniku za tehnièki pregled
+	//Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled
 	void postaviInfo(string korisnickoIme);
 
 	void ispisFajla(string korisnicko_ime);

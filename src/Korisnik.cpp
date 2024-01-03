@@ -7,10 +7,9 @@
 #include "Korisnik.h"
 using namespace std;
 
-// ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponašanja
+// ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponasanja
 //  moze se koristiti samo jedna za provjeru prvog i zadnjeg imena
 // ali zbog preglednosti su definisane zasebno
-
 bool Korisnik::ValidnoIme(string ime)
 {
 	int i = 1;
@@ -55,8 +54,6 @@ bool Korisnik::ValidanEmail(string email)
 {
 	if (!isalpha(email[0]))
 	{
-		//cout << "Invalid email input." << endl;
-		//throw InvalidEmail();
 		return false;
 	}
 	int at = -1, tacka = -1;
@@ -81,7 +78,6 @@ bool Korisnik::ValidanEmail(string email)
 	}
 	if (at == -1 || tacka == -1)
 	{
-		//cout << "Invalid email input." << endl;
 		return false;
 		//throw InvalidEmail();
 	}
@@ -155,9 +151,8 @@ bool Korisnik::ValidnaSifra(string sifra)
 
 }
 
-//f-ja provjerava preko imena fajla da li je korisnicko ime zauzeto 
-//ako datoteka postoji vraca true, inaèe false
-
+//f-ja provjerava preko imena fajla da li je korisnicko ime zauzeto ili da li postoji u bazi podataka
+//ako datoteka postoji vraca true, inace false
 bool Korisnik::zauzetKorisnickoIme(const string korisnicko_ime)
 {
 	ifstream file(korisnicko_ime + ".txt");
@@ -166,8 +161,7 @@ bool Korisnik::zauzetKorisnickoIme(const string korisnicko_ime)
 
 //f-ja koju ce dijeliti svi ucesnici za unos sifre
 //Unosom se svaki put pojavljuje *
-//npr. Enter password:******
-
+//npr. Unesi sifru:******
 string Korisnik::UnesiSifru()
 {
 	string novaSifra;
@@ -199,10 +193,9 @@ string Korisnik::provjeriKorisnickoIme(string korisnico_ime)
 }
 
 //f-ja koja ignorise string do pojave ':'
-//Prilikom ispisa iz datoteke-> Username:
-//                              Password:
+//Prilikom ispisa iz datoteke-> Korisnicko ime:
+//                              Sifra:
 // itd. ce ignorisati te ispisati samo username, password...
-
 void Korisnik::ignorisiDvotacku(string imeDatoteke)
 {
 	size_t pozicija = imeDatoteke.find(':');
@@ -213,8 +206,7 @@ void Korisnik::ignorisiDvotacku(string imeDatoteke)
 	}
 }
 
-//ima istu logiku kao i gornja funkcija, s tim što sada vraca rezultat
-
+//ima istu logiku kao i gornja funkcija, s tim sto sada vraca rezultat
 string Korisnik::vrati_ignorisiDvotacku(string imeDatoteke)
 {
 	size_t pozicija = imeDatoteke.find(':');

@@ -6,7 +6,7 @@
 #include <string>
 #include "Izuzeci.h"
 #include <filesystem>
-#include "RadnikTehnièki.h"
+#include "RadnikTehnicki.h"
 namespace fs = std::filesystem;
 using namespace std;
 
@@ -23,7 +23,7 @@ public:
 	void dodajRadnikaTehnicki();
 	void obrisiRadnikaTehnicki();
 	//Funkcija za pregled svih radnika za tehnicki pregled gdje se ispisuju korisnicka imena
-	// <filesystem> omoguæava rad sa fajl sistemom, pružajuæi funkcionalnosti za manipulaciju fajlovima
+	// <filesystem> omogucava rad sa fajl sistemom, pruzajuci funkcionalnosti za manipulaciju fajlovima
 	// prolazi kroz sve fajlove u trenutnom direktorijumu ("./"), entry.path().filename().string() uzima putanju trenutnog fajla u iteraciji,
 	// zatim dohvata samo ime fajla
 	//dodatno mozemo imati funckiju gdje na osnovu tih imena pristupamo datoteci za jos detaljnije informacija 

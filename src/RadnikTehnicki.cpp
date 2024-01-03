@@ -3,11 +3,10 @@
 #include "Radnik.h"
 #include <string>
 #include <fstream>
-#include "RadnikTehnièki.h"
+#include "RadnikTehnicki.h"
 using namespace std;
 
-// Vraæa podstring od poèetka do pozicije underscore-a
-
+// Vraca podstring od pocetka do pozicije underscore-a
 string RadnikT::fajlKorisnickoImeRadnikaT(const string fileIme) {
 	size_t pozicija = fileIme.find('_');
 	if (pozicija != string::npos) {
@@ -26,8 +25,8 @@ bool RadnikT::provjeriKorisnickoImeRadnikaT(const string korisnickoIme)
 	return file.good();
 }
 
-//Ovjde se pohranjuju info. o nekom radniku za tehnièki pregled
 
+//Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled
 void RadnikT::postaviInfo(string korisnickoIme)
 {
 	try {
@@ -110,7 +109,6 @@ void RadnikT::ispisFajla(string korisnicko_ime)
 }
 
 //Ovjde je radnik vec registrovan na sistem te je samo potrebno ulogovanje 
-
 void RadnikT::Ulogovanje()
 {
 	string R_korisnickoIme, R_sifra, rezultat,
