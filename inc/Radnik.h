@@ -1,15 +1,15 @@
 #pragma once
 #include <iostream>
-#include "User.h"
+#include "Korisnik.h"
 #include <string>
 #include <fstream>
 using namespace std;
 
-class Radnik : public User {
+class Radnik : public Korisnik {
 protected:
-	bool registered = true;
-	string birthDate;
-	string position;
+	bool registrovan = true;
+	string datumRodjenja;
+	string pozicija;
 public:
-	Radnik() noexcept : User() {}
+	Radnik() noexcept : Korisnik() {}
 };
