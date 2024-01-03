@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Korisnik.h"
+#include "Izuzeci.h"
 #include <string>
 #include <fstream>
 #include <conio.h> 
@@ -36,6 +37,7 @@ void Klijent::upisFajla(string korisnicko_ime)
 	file << "Prezime:" << Prezime << "\n";
 	file << "Email:" << email << "\n";
 }
+
 void Klijent::ispisFajla(string korisnicko_ime)
 {
 	//ovdje provjerava da li je klijent u bazi podataka
@@ -56,22 +58,25 @@ void Klijent::ispisFajla(string korisnicko_ime)
 		{
 			throw FajlNijeOtvoren();
 		}
+		else
+		{
+			string K_korisnickoIme, K_sifra, K_Ime, K_prezime, Email;
+			getline(out, K_korisnickoIme);
+			cout << "Korisnicko Ime: "; ignorisiDvotacku(K_korisnickoIme);
+			getline(out, K_sifra);
+			cout << "Sifra: ";  ignorisiDvotacku(K_sifra);
+			getline(out, K_Ime);
+			cout << "Ime: "; ignorisiDvotacku(K_Ime);
+			getline(out, K_prezime);
+			cout << "Prezime: "; ignorisiDvotacku(K_prezime);
+			getline(out, Email);
+			cout << "Email: ";  ignorisiDvotacku(Email);
+		}
 	}
 	catch (const FajlNijeOtvoren& e)
 	{
 		cout << e.what() << endl;
 	}
-	string K_korisnickoIme, K_sifra, K_Ime, K_prezime, Email;
-	getline(out, K_korisnickoIme);
-	cout << "Korisnicko Ime: "; ignorisiDvotacku(K_korisnickoIme);
-	getline(out, K_sifra);
-	cout << "Sifra: ";  ignorisiDvotacku(K_sifra);
-	getline(out, K_Ime);
-	cout << "Ime: "; ignorisiDvotacku(K_Ime);
-	getline(out, K_prezime);
-	cout << "Prezime: "; ignorisiDvotacku(K_prezime);
-	getline(out, Email);
-	cout << "Email: ";  ignorisiDvotacku(Email);
 }
 
 void Klijent::novaRegistracija()
@@ -178,6 +183,7 @@ void Klijent::Ulogovanje()
 	}
 	cout << "Unesite sifru" << endl;
 	K_sifra = UnesiSifru();
+	string K_rezultat;
 	while (1)
 	{
 		if (K_sifra != rezultat)
@@ -187,7 +193,8 @@ void Klijent::Ulogovanje()
 		}
 		else
 		{
-			cout << "Dobrodosli" << korisnickoIme_rezultat << " nazad!" << endl;
+			K_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat); // paziiiiiiiiiiiiiiiiiiiiiiiii
+			cout << "Dobrodosli " << K_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
