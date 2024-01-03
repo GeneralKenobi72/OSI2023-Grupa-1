@@ -8,12 +8,6 @@ using namespace std;
 
 class Klijent : public Korisnik {
 private:
-<<<<<<< HEAD
-=======
-	//funkcija koja za ispis iz datoteke ignorise naziv do pojave : 
-	// tj. "Username:","Password:" itd.
-	//funckija za unos sifre, gdje se pri unosom umjesto sifre prikazuje *
->>>>>>> efe835d (Promjena naziva sa engelskog na srpski)
 public:
 	Klijent() noexcept : Korisnik() {}
 

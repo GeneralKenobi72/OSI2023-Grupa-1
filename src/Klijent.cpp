@@ -37,7 +37,6 @@ void Klijent::upisFajla(string korisnicko_ime)
 	file << "Prezime:" << Prezime << "\n";
 	file << "Email:" << email << "\n";
 }
-
 void Klijent::ispisFajla(string korisnicko_ime)
 {
 	//ovdje provjerava da li je klijent u bazi podataka

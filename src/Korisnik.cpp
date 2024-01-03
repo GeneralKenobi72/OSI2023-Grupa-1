@@ -7,16 +7,10 @@
 #include "Korisnik.h"
 using namespace std;
 
-<<<<<<< HEAD
-// ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponasanja
-//  moze se koristiti samo jedna za provjeru prvog i zadnjeg imena
-// ali zbog preglednosti su definisane zasebno
-=======
 // ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponašanja
 //  moze se koristiti samo jedna za provjeru prvog i zadnjeg imena
 // ali zbog preglednosti su definisane zasebno
 
->>>>>>> e18e0b8 (Izvrsene promjene naziva sa eng na srpski)
 bool Korisnik::ValidnoIme(string ime)
 {
 	int i = 1;
@@ -61,11 +55,6 @@ bool Korisnik::ValidanEmail(string email)
 {
 	if (!isalpha(email[0]))
 	{
-<<<<<<< HEAD
-=======
-		//cout << "Invalid email input." << endl;
-		//throw InvalidEmail();
->>>>>>> e18e0b8 (Izvrsene promjene naziva sa eng na srpski)
 		return false;
 	}
 	int at = -1, tacka = -1;
@@ -90,10 +79,6 @@ bool Korisnik::ValidanEmail(string email)
 	}
 	if (at == -1 || tacka == -1)
 	{
-<<<<<<< HEAD
-=======
-		//cout << "Invalid email input." << endl;
->>>>>>> e18e0b8 (Izvrsene promjene naziva sa eng na srpski)
 		return false;
 		//throw InvalidEmail();
 	}
@@ -167,14 +152,8 @@ bool Korisnik::ValidnaSifra(string sifra)
 
 }
 
-<<<<<<< HEAD
 //f-ja provjerava preko imena fajla da li je korisnicko ime zauzeto ili da li postoji u bazi podataka
 //ako datoteka postoji vraca true, inace false
-=======
-//f-ja provjerava preko imena fajla da li je korisnicko ime zauzeto 
-//ako datoteka postoji vraca true, inaèe false
-
->>>>>>> e18e0b8 (Izvrsene promjene naziva sa eng na srpski)
 bool Korisnik::zauzetKorisnickoIme(const string korisnicko_ime)
 {
 	ifstream file(korisnicko_ime + ".txt");
@@ -183,12 +162,7 @@ bool Korisnik::zauzetKorisnickoIme(const string korisnicko_ime)
 
 //f-ja koju ce dijeliti svi ucesnici za unos sifre
 //Unosom se svaki put pojavljuje *
-<<<<<<< HEAD
 //npr. Unesi sifru:******
-=======
-//npr. Enter password:******
-
->>>>>>> e18e0b8 (Izvrsene promjene naziva sa eng na srpski)
 string Korisnik::UnesiSifru()
 {
 	string novaSifra;
@@ -220,16 +194,9 @@ string Korisnik::provjeriKorisnickoIme(string korisnico_ime)
 }
 
 //f-ja koja ignorise string do pojave ':'
-<<<<<<< HEAD
 //Prilikom ispisa iz datoteke-> Korisnicko ime:
 //                              Sifra:
 // itd. ce ignorisati te ispisati samo username, password...
-=======
-//Prilikom ispisa iz datoteke-> Username:
-//                              Password:
-// itd. ce ignorisati te ispisati samo username, password...
-
->>>>>>> e18e0b8 (Izvrsene promjene naziva sa eng na srpski)
 void Korisnik::ignorisiDvotacku(string imeDatoteke)
 {
 	size_t pozicija = imeDatoteke.find(':');
@@ -240,12 +207,7 @@ void Korisnik::ignorisiDvotacku(string imeDatoteke)
 	}
 }
 
-<<<<<<< HEAD
 //ima istu logiku kao i gornja funkcija, s tim sto sada vraca rezultat
-=======
-//ima istu logiku kao i gornja funkcija, s tim što sada vraca rezultat
-
->>>>>>> e18e0b8 (Izvrsene promjene naziva sa eng na srpski)
 string Korisnik::vrati_ignorisiDvotacku(string imeDatoteke)
 {
 	size_t pozicija = imeDatoteke.find(':');

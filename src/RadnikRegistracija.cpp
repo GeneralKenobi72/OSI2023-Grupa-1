@@ -6,8 +6,7 @@
 #include "RadnikRegistracija.h"
 using namespace std;
 
-// Vraæa podstring od poèetka do pozicije underscore-a
-
+// Vraca podstring od pocetka do pozicije underscore-a
 string RadnikR::fajlKorisnickoImeRadnikaT(const string fileIme) {
 	size_t pozicija = fileIme.find('_');
 	if (pozicija != string::npos) {
@@ -26,9 +25,7 @@ bool RadnikR::provjeriKorisnickoImeRadnikaT(const string korisnickoIme)
 	return file.good();
 }
 
-//Ovjde se pohranjuju info. o nekom radniku za tehnièki pregled iz postojece datoteke
-
->>>>>>> e18e0b8 (Izvrsene promjene naziva sa eng na srpski)
+//Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled iz postojece datoteke
 void RadnikR::postaviInfo(string korisnickoIme)
 {
 	try {

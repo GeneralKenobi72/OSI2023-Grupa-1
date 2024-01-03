@@ -154,6 +154,7 @@ void RadnikT::Ulogovanje()
 		{
 			R_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
 			cout << "Dobrodosli " << R_rezultat << " nazad!" << endl;
+			cout << "Dobrodosli " << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
