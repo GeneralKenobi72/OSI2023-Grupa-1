@@ -8,14 +8,13 @@ using namespace std;
 
 class RadnikR : public Radnik {
 private:
-	// Vraca podstring od pocetka do pozicije underscore-a
+	// Vraæa podstring od poèetka do pozicije underscore-a
 	string fajlKorisnickoImeRadnikaT(const string fileIme);
-
 	bool provjeriKorisnickoImeRadnikaT(const string korisnickoIme);
 public:
 	RadnikR() noexcept : Radnik() {}
 
-	//Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled iz postojece datoteke
+	//Ovjde se pohranjuju info. o nekom radniku za tehnièki pregled iz postojece datoteke
 	void postaviInfo(string korisnickoIme);
 
 	void ispisFajla(string korisnickoIme);
