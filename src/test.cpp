@@ -1,16 +1,22 @@
-//#include "test.h"
-#include "../inc/test.h"
-#include "../inc/User.h"
-#include "../inc/Client.h"
-#include <iostream>
+#include "RadnikRegistracija.h"
+#include "RadnikTehnicki.h"
+#include "Radnik.h"
+#include "Klijent.h"
+#include "AdminTehnicki.h"
 using namespace std;
+#include <string>
 
-int main() {
-	Client client1;
-	string user;
-	client1.NewRegistration();
-	cout << "Enter username: ";
-	cin >> user;
-	client1.printFromFile(user);
+int main()
+{
+	RadnikT radnikT;
+	string username;
+	RadnikR radnikR;
+	cout << "Provjera da li radnik za registraciju postoji?" << endl;
+	cin >> username;
+	radnikR.ispisFajla(username);
+	AdminTehnicki adminT;
+	cout << "Pregeld radnika tehnickog:" << endl;
+	adminT.PregledNalogaRadnika();
 	return 0;
 }
+

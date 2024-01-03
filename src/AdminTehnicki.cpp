@@ -5,8 +5,8 @@
 #include <string>
 #include "Izuzeci.h"
 #include <filesystem>
-#include "RadnikTehnièki.h"
-#include "AdminTehnièki.h"
+#include "RadnikTehnicki.h"
+#include "AdminTehnicki.h"
 namespace fs = std::filesystem;
 using namespace std;
 
@@ -57,7 +57,6 @@ void AdminTehnicki::Prijava()
 }
 
 //Ovdje treba jos doraditi kod dodajRadnikaTehnicki()
-
 void AdminTehnicki::dodajRadnikaTehnicki()
 {
 	string KorisnickoImeRadnikaT, LozinkaRadnikaT,
@@ -144,12 +143,11 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 }
 
 //Funkcija za pregled svih radnika za tehnicki pregled gdje se ispisuju korisnicka imena
-// <filesystem> omoguæava rad sa fajl sistemom, pružajuæi funkcionalnosti za manipulaciju fajlovima
+// <filesystem> omogucava rad sa fajl sistemom, pruzajuci funkcionalnosti za manipulaciju fajlovima
 // prolazi kroz sve fajlove u trenutnom direktorijumu ("./"), entry.path().filename().string() uzima putanju trenutnog fajla u iteraciji,
 // zatim dohvata samo ime fajla
 //dodatno mozemo imati funckiju gdje na osnovu tih imena pristupamo datoteci za jos detaljnije informacija 
-//kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
-
+//kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika()
 void AdminTehnicki::PregledNalogaRadnika()
 {
 	for (const auto& entry : fs::directory_iterator("./")) { //Ovo je trenutni direktorijum 
