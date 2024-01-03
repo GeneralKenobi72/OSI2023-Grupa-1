@@ -1,9 +1,22 @@
-#include "test.h"
-#include <iostream>
+#include "RadnikRegistracija.h"
+#include "RadnikTehnicki.h"
+#include "Radnik.h"
+#include "Klijent.h"
+#include "AdminTehnicki.h"
+using namespace std;
+#include <string>
 
-int main() {
-	test t1 = test("kevin panter, probace preko jabuselea...\n\n\n\n\n\nOAAAAAAA KEVIN PANTER\n\nvreme nije isteklo");
-
-	std::cout << t1.getValue();
+int main()
+{
+	RadnikT radnikT;
+	string username;
+	RadnikR radnikR;
+	cout << "Provjera da li radnik za registraciju postoji?" << endl;
+	cin >> username;
+	radnikR.ispisFajla(username);
+	AdminTehnicki adminT;
+	cout << "Pregeld radnika tehnickog:" << endl;
+	adminT.PregledNalogaRadnika();
 	return 0;
 }
+
