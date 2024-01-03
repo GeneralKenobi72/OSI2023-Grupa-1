@@ -1,3 +1,6 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include <iostream>
 #include "Korisnik.h"
 #include "Radnik.h"
@@ -159,3 +162,5 @@ void RadnikT::Ulogovanje()
 		}
 	}
 }
+
+#endif

@@ -1,10 +1,17 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cctype>
 #include "Izuzeci.h"
-#include <conio.h>
 #include "Korisnik.h"
+#ifdef _WIN32
+#include <conio.h>
+#else
+#include "getch.h"
+#endif
 using namespace std;
 
 // ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponašanja
@@ -167,7 +174,7 @@ string Korisnik::UnesiSifru()
 {
 	string novaSifra;
 	char ch;
-	ch = _getch();
+	ch = getch();
 	while (ch != 13) {  // Provjeri za ENTER key ASCII 13
 		if (ch != 8) {   // Provjeri za backspace ASCII 8
 			novaSifra.push_back(ch);
@@ -177,7 +184,7 @@ string Korisnik::UnesiSifru()
 			novaSifra.pop_back();
 			cout << "\b \b";  // Obrisi zadnju * (asterisk)
 		}
-		ch = _getch();
+		ch = getch();
 	}
 	cout << endl;
 	return novaSifra;
@@ -221,3 +228,5 @@ string Korisnik::vrati_ignorisiDvotacku(string imeDatoteke)
 		return NULL;
 	}
 }
+
+#endif

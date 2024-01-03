@@ -4,7 +4,11 @@
 #include <string>
 #include <cctype>
 #include "Izuzeci.h"
+#ifdef _WIN32
 #include <conio.h>
+#else
+#include "getch.h"
+#endif
 using namespace std;
 
 class Korisnik {

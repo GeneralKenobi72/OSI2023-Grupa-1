@@ -13,6 +13,6 @@ file(GLOB HEADERS "inc/*.h")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Dodajte izvore i zaglavlja u izvršni fajl
-add_executable(Softver-za-registraciju-vozila ${SOURCES} ${HEADERS})
+add_executable(Softver-za-registraciju-vozila ${SOURCES} ${HEADERS} src/getch.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/inc src)

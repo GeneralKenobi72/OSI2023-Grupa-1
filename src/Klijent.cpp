@@ -1,10 +1,12 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include <iostream>
 #include "Korisnik.h"
 #include "Izuzeci.h"
+#include "Klijent.h"
 #include <string>
 #include <fstream>
-#include <conio.h> 
-#include "Klijent.h"
 using namespace std;
 
 Klijent::Klijent(const string C_Ime, const string C_Prezime,
@@ -200,3 +202,4 @@ void Klijent::Ulogovanje()
 	}
 }
 
+#endif
