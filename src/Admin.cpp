@@ -5,22 +5,22 @@
 #include "Admin.h"
 using namespace std;
 
-Admin::Admin(const string A_firstName, const string A_lastName, const string A_password, const string A_email)
+Admin::Admin(const string A_Ime, const string A_Prezime, const string A_sifra, const string A_email)
 	: Korisnik()
 {
-	Ime = A_firstName;
-	Prezime = A_lastName;
+	Ime = A_Ime;
+	Prezime = A_Prezime;
 	email = A_email;
-	sifra = A_password;
+	sifra = A_sifra;
 }
 
-inline string Admin::getFirstName() { return Ime; }
+inline string Admin::getIme() { return Ime; }
 
-inline string Admin::getLasttName() { return Prezime; }
+inline string Admin::getPrezime() { return Prezime; }
 
-inline string Admin::getPassword() { return sifra; }
+inline string Admin::getSifra() { return sifra; }
 
-inline string Admin::getUserName() { return korisnickoIme; }
+inline string Admin::getKorisnickoIme() { return korisnickoIme; }
 
 inline string Admin::getEmail() { return email; }
 

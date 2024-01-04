@@ -9,12 +9,12 @@ class Admin : public Korisnik {
 protected:
 	bool registrovan = true;
 public:
-	Admin(const string A_firstName, const string A_lastName, const string A_password, const string A_email);
+	Admin(const string, const string, const string, const string);
 	Admin() : Korisnik() {}
-	string getFirstName();
-	string getLasttName();
-	string getPassword();
-	string getUserName();
+	string getIme();
+	string getPrezime();
+	string getSifra();
+	string getKorisnickoIme();
 	string getEmail();
 
 };
