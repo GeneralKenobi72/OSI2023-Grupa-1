@@ -57,7 +57,6 @@ void AdminTehnicki::Prijava()
 		{
 			AT_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
 			cout << "Dobrodosli " << AT_rezultat << " nazad!" << endl;
-			cout << "Dobrodosli " << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
@@ -154,7 +153,7 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 // prolazi kroz sve fajlove u trenutnom direktorijumu ("./"), entry.path().filename().string() uzima putanju trenutnog fajla u iteraciji,
 // zatim dohvata samo ime fajla
 //dodatno mozemo imati funckiju gdje na osnovu tih imena pristupamo datoteci za jos detaljnije informacija 
-//kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika()
+//kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 void AdminTehnicki::PregledNalogaRadnika()
 {
 	for (const auto& entry : fs::directory_iterator("./")) { //Ovo je trenutni direktorijum 
