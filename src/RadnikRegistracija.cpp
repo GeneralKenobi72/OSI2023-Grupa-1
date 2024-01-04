@@ -88,8 +88,7 @@ void RadnikR::ispisFajla(string korisnickoIme)
 		{
 			throw FajlNijeOtvoren();
 		}
-		else
-		{
+		else {
 			string R_korisnickoIme, R_sifra, R_Ime, R_Prezime, R_Email, R_datumRodjenja, R_pozicija;
 			getline(out, R_korisnickoIme);
 			cout << "Korisnicko ime (iz baze podataka): "; ignorisiDvotacku(R_korisnickoIme);
