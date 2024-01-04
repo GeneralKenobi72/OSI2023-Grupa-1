@@ -43,6 +43,7 @@ void AdminRegistracija::Prijava()
 	}
 	cout << "Unesite sifru" << endl;
 	AR_sifra = UnesiSifru();
+	string AT_rezultat;
 	while (1)
 	{
 		if (AR_sifra != rezultat)
@@ -52,7 +53,8 @@ void AdminRegistracija::Prijava()
 		}
 		else
 		{
-			cout << "Dobrodosli " << korisnickoIme_rezultat << " nazad!" << endl;
+			AT_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
+			cout << "Dobrodosli " << AT_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
@@ -101,5 +103,4 @@ bool AdminRegistracija::provjeriKorisnickoImeAdminaR(const string username)
 	ifstream file(username + "_administratorRegistracija.txt");
 	return file.good();
 }
-
 #endif

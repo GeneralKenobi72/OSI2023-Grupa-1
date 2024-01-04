@@ -89,26 +89,29 @@ void RadnikT::ispisFajla(string korisnicko_ime)
 		{
 			throw FajlNijeOtvoren();
 		}
+		else
+		{
+			string R_korisnickoIme, R_sifra, R_Ime, R_Prezime, R_Email, R_datumRodjenja, R_pozicija;
+			getline(out, R_korisnickoIme);
+			cout << "Korisnicko ime (iz baze podataka): "; ignorisiDvotacku(R_korisnickoIme);
+			getline(out, R_sifra);
+			cout << "Sifra (iz baze podataka): "; ignorisiDvotacku(R_sifra);
+			getline(out, R_Ime);
+			cout << "Ime (iz baze podataka): "; ignorisiDvotacku(R_Ime);
+			getline(out, R_Prezime);
+			cout << "Prezime (iz baze podataka): "; ignorisiDvotacku(R_Prezime);
+			getline(out, R_Email);
+			cout << "Email (iz baze podataka): ";  ignorisiDvotacku(R_Email);
+			getline(out, R_datumRodjenja);
+			cout << "Datum rodjenja (iz baze podataka): "; ignorisiDvotacku(R_datumRodjenja);
+			getline(out, R_pozicija);
+			cout << "Pozicija (iz baze podataka): "; ignorisiDvotacku(R_pozicija);
+		}
 	}
 	catch (const FajlNijeOtvoren& e)
 	{
 		cout << e.what() << endl;
 	}
-	string R_korisnickoIme, R_sifra, R_Ime, R_Prezime, R_Email, R_datumRodjenja, R_pozicija;
-	getline(out, R_korisnickoIme);
-	cout << "Korisnicko ime (iz baze podataka): "; ignorisiDvotacku(R_korisnickoIme);
-	getline(out, R_sifra);
-	cout << "Sifra (iz baze podataka): "; ignorisiDvotacku(R_sifra);
-	getline(out, R_Ime);
-	cout << "Ime (iz baze podataka): "; ignorisiDvotacku(R_Ime);
-	getline(out, R_Prezime);
-	cout << "Prezime (iz baze podataka): "; ignorisiDvotacku(R_Prezime);
-	getline(out, R_Email);
-	cout << "Email (iz baze podataka): ";  ignorisiDvotacku(R_Email);
-	getline(out, R_datumRodjenja);
-	cout << "Datum rodjenja (iz baze podataka): "; ignorisiDvotacku(R_datumRodjenja);
-	getline(out, R_pozicija);
-	cout << "Pozicija (iz baze podataka): "; ignorisiDvotacku(R_pozicija);
 }
 
 //Ovjde je radnik vec registrovan na sistem te je samo potrebno ulogovanje 
@@ -142,6 +145,7 @@ void RadnikT::Ulogovanje()
 	}
 	cout << "Unesite sifru." << endl;
 	R_sifra = UnesiSifru();
+	string R_rezultat;
 	while (1)
 	{
 		if (R_sifra != rezultat)
@@ -151,7 +155,8 @@ void RadnikT::Ulogovanje()
 		}
 		else
 		{
-			cout << "Dobrodosli " << korisnickoIme_rezultat << " nazad!" << endl;
+			R_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
+			cout << "Dobrodosli " << R_rezultat << " nazad!" << endl;
 			break;
 		}
 	}

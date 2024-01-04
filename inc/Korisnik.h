@@ -16,7 +16,7 @@ public:
 	Korisnik() noexcept {}
 	Korisnik(const string korisnickoIme, const string sifra) noexcept : korisnickoIme(korisnickoIme), sifra(sifra) {}
 
-	// ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponašanja
+	// ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponasanja
 	//  moze se koristiti samo jedna za provjeru prvog i zadnjeg imena
 	// ali zbog preglednosti su definisane zasebno
 	bool ValidnoIme(string ime);
@@ -43,11 +43,11 @@ public:
 
 protected:
 	//f-ja koja ignorise string do pojave ':'
-	//Prilikom ispisa iz datoteke-> Username:
-	//                              Password:
+	//Prilikom ispisa iz datoteke-> Korisnicko ime:
+	//                              Sifra:
 	// itd. ce ignorisati te ispisati samo username, password...
 	void ignorisiDvotacku(string imeDatoteke);
-	//ima istu logiku kao i gornja funkcija, s tim što sada vraca rezultat
+	//ima istu logiku kao i gornja funkcija, s tim sto sada vraca rezultat
 	string vrati_ignorisiDvotacku(string imeDatoteke);
 	//int userID;
 	string korisnickoIme;

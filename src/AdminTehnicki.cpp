@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 #ifndef GETCH_H
 #define GETCH_H
 
+=======
+>>>>>>> develop
 #include "Korisnik.h"
 #include "Admin.h"
 #include <iostream>
@@ -8,6 +11,10 @@
 #include <string>
 #include "Izuzeci.h"
 #include <filesystem>
+<<<<<<< HEAD
+=======
+#include "Izuzeci.h"
+>>>>>>> develop
 #include "RadnikTehnicki.h"
 #include "AdminTehnicki.h"
 namespace fs = std::filesystem;
@@ -44,6 +51,10 @@ void AdminTehnicki::Prijava()
 	}
 	cout << "Unesite sifru" << endl;
 	AT_sifra = UnesiSifru();
+<<<<<<< HEAD
+=======
+	string AT_rezultat;
+>>>>>>> develop
 	while (1)
 	{
 		if (AT_sifra != rezultat)
@@ -53,7 +64,12 @@ void AdminTehnicki::Prijava()
 		}
 		else
 		{
+<<<<<<< HEAD
 			cout << "Dobrodosli " << korisnickoIme_rezultat << " nazad!" << endl;
+=======
+			AT_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
+			cout << "Dobrodosli " << AT_rezultat << " nazad!" << endl;
+>>>>>>> develop
 			break;
 		}
 	}
@@ -150,7 +166,11 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 // prolazi kroz sve fajlove u trenutnom direktorijumu ("./"), entry.path().filename().string() uzima putanju trenutnog fajla u iteraciji,
 // zatim dohvata samo ime fajla
 //dodatno mozemo imati funckiju gdje na osnovu tih imena pristupamo datoteci za jos detaljnije informacija 
+<<<<<<< HEAD
 //kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika()
+=======
+//kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
+>>>>>>> develop
 void AdminTehnicki::PregledNalogaRadnika()
 {
 	for (const auto& entry : fs::directory_iterator("./")) { //Ovo je trenutni direktorijum 
@@ -173,4 +193,7 @@ bool AdminTehnicki::provjeriKorisnickoImeAdminT(const string username)
 	return file.good();
 }
 
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> develop
