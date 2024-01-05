@@ -1,10 +1,12 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include <iostream>
 #include "Korisnik.h"
 #include "Izuzeci.h"
+#include "Klijent.h"
 #include <string>
 #include <fstream>
-#include <conio.h> 
-#include "Klijent.h"
 using namespace std;
 
 Klijent::Klijent(const string C_Ime, const string C_Prezime,
@@ -37,7 +39,6 @@ void Klijent::upisFajla(string korisnicko_ime)
 	file << "Prezime:" << Prezime << "\n";
 	file << "Email:" << email << "\n";
 }
-
 void Klijent::ispisFajla(string korisnicko_ime)
 {
 	//ovdje provjerava da li je klijent u bazi podataka
@@ -195,8 +196,10 @@ void Klijent::Ulogovanje()
 		{
 			K_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat); // paziiiiiiiiiiiiiiiiiiiiiiiii
 			cout << "Dobrodosli " << K_rezultat << " nazad!" << endl;
+			cout << "Dobrodosli" << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
 }
 
+#endif

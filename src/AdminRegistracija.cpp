@@ -1,3 +1,6 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include <iostream>
 #include "Korisnik.h"
 #include "Admin.h"
@@ -52,6 +55,7 @@ void AdminRegistracija::Prijava()
 		{
 			AT_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
 			cout << "Dobrodosli " << AT_rezultat << " nazad!" << endl;
+			cout << "Dobrodosli " << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
@@ -100,3 +104,5 @@ bool AdminRegistracija::provjeriKorisnickoImeAdminaR(const string username)
 	ifstream file(username + "_administratorRegistracija.txt");
 	return file.good();
 }
+
+#endif

@@ -16,5 +16,4 @@ public:
 	string getSifra();
 	string getKorisnickoIme();
 	string getEmail();
-
 };

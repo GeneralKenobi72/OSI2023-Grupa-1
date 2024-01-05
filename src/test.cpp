@@ -1,3 +1,6 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include "RadnikRegistracija.h"
 #include "RadnikTehnicki.h"
 #include "Radnik.h"
@@ -20,3 +23,4 @@ int main()
 	return 0;
 }
 
+#endif

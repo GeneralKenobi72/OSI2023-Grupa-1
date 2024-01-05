@@ -1,3 +1,6 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include <iostream>
 #include "Korisnik.h"
 #include "Radnik.h"
@@ -85,8 +88,7 @@ void RadnikR::ispisFajla(string korisnickoIme)
 		{
 			throw FajlNijeOtvoren();
 		}
-		else
-		{
+		else {
 			string R_korisnickoIme, R_sifra, R_Ime, R_Prezime, R_Email, R_datumRodjenja, R_pozicija;
 			getline(out, R_korisnickoIme);
 			cout << "Korisnicko ime (iz baze podataka): "; ignorisiDvotacku(R_korisnickoIme);
@@ -153,7 +155,10 @@ void RadnikR::Ulogovanje()
 		{
 			R_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
 			cout << "Dobrodosli " << R_rezultat << " nazad!" << endl;
+			cout << "Dobrodosli " << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
 }
+
+#endif

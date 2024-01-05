@@ -1,15 +1,19 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cctype>
 #include "Izuzeci.h"
-#include <conio.h>
 #include "Korisnik.h"
+#include "getChar.h"
 using namespace std;
 
-// ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponasanja
+// ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponašanja
 //  moze se koristiti samo jedna za provjeru prvog i zadnjeg imena
 // ali zbog preglednosti su definisane zasebno
+
 bool Korisnik::ValidnoIme(string ime)
 {
 	int i = 1;
@@ -166,7 +170,7 @@ string Korisnik::UnesiSifru()
 {
 	string novaSifra;
 	char ch;
-	ch = _getch();
+	ch = getChar();
 	while (ch != 13) {  // Provjeri za ENTER key ASCII 13
 		if (ch != 8) {   // Provjeri za backspace ASCII 8
 			novaSifra.push_back(ch);
@@ -176,7 +180,7 @@ string Korisnik::UnesiSifru()
 			novaSifra.pop_back();
 			cout << "\b \b";  // Obrisi zadnju * (asterisk)
 		}
-		ch = _getch();
+		ch = getChar();
 	}
 	cout << endl;
 	return novaSifra;
@@ -220,3 +224,5 @@ string Korisnik::vrati_ignorisiDvotacku(string imeDatoteke)
 		return NULL;
 	}
 }
+
+#endif

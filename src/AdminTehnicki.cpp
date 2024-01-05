@@ -1,3 +1,6 @@
+#ifndef GETCH_H
+#define GETCH_H
+
 #include "Korisnik.h"
 #include "Admin.h"
 #include <iostream>
@@ -173,3 +176,4 @@ bool AdminTehnicki::provjeriKorisnickoImeAdminT(const string username)
 	return file.good();
 }
 
+#endif

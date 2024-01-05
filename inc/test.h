@@ -1,5 +1,5 @@
 #pragma once
-#include<iostream>
+#include <iostream>
 
 class test {
 	private: 
