@@ -7,6 +7,8 @@
 #include "Klijent.h"
 #include <string>
 #include <fstream>
+#include <filesystem>
+namespace fs = std::filesystem;
 using namespace std;
 
 Klijent::Klijent(const string C_Ime, const string C_Prezime,
@@ -22,61 +24,65 @@ Klijent::Klijent(const string C_Ime, const string C_Prezime,
 
 void Klijent::upisFajla(string korisnicko_ime)
 {
-	ofstream file(korisnicko_ime + ".txt", ios::app);
-	try {
-		if (!file.is_open())
-		{
-			throw FajlNijeOtvoren();
-		}
-	}
-	catch (const FajlNijeOtvoren& e)
+	if (!provjeriPutanju(putanja))
 	{
-		cout << e.what() << endl;
+		return;
 	}
-	file << "Korisnicko Ime:" << korisnicko_ime << "\n";
-	file << "Sifra:" << sifra << "\n";
-	file << "Ime:" << Ime << "\n";
-	file << "Prezime:" << Prezime << "\n";
-	file << "Email:" << email << "\n";
+	else
+	{
+		ofstream file(putanja + korisnicko_ime + ".txt", ios::app);
+		try {
+			if (!file.is_open())
+			{
+				throw FajlNijeOtvoren();
+			}
+		}
+		catch (const FajlNijeOtvoren& e)
+		{
+			cout << e.what() << endl;
+		}
+		file << "Korisnicko Ime:" << korisnicko_ime << "\n";
+		file << "Sifra:" << sifra << "\n";
+		file << "Ime:" << Ime << "\n";
+		file << "Prezime:" << Prezime << "\n";
+		file << "Email:" << email << "\n";
+	}
 }
 void Klijent::ispisFajla(string korisnicko_ime)
 {
 	//ovdje provjerava da li je klijent u bazi podataka
-	try {
-		if (!zauzetKorisnickoIme(korisnicko_ime))
-		{
-			throw KorisnickoImeNijePronadjeno();
-		}
-	}
-	catch (const KorisnickoImeNijePronadjeno& e)
-	{
-		cout << e.what() << endl;
-	}
+	if (pronadjiKorisnickoIme(korisnicko_ime)) {
 
-	ifstream out(korisnicko_ime + ".txt");
-	try {
-		if (!out.is_open())
-		{
-			throw FajlNijeOtvoren();
+		ifstream out(putanja + korisnicko_ime + ".txt");
+		try {
+			if (!out.is_open())
+			{
+				throw FajlNijeOtvoren();
+			}
+			else
+			{
+				string K_korisnickoIme, K_sifra, K_Ime, K_prezime, Email;
+				getline(out, K_korisnickoIme);
+				cout << "Korisnicko Ime: "; ignorisiDvotacku(K_korisnickoIme);
+				getline(out, K_sifra);
+				cout << "Sifra: ";  ignorisiDvotacku(K_sifra);
+				getline(out, K_Ime);
+				cout << "Ime: "; ignorisiDvotacku(K_Ime);
+				getline(out, K_prezime);
+				cout << "Prezime: "; ignorisiDvotacku(K_prezime);
+				getline(out, Email);
+				cout << "Email: ";  ignorisiDvotacku(Email);
+			}
 		}
-		else
+		catch (const FajlNijeOtvoren& e)
 		{
-			string K_korisnickoIme, K_sifra, K_Ime, K_prezime, Email;
-			getline(out, K_korisnickoIme);
-			cout << "Korisnicko Ime: "; ignorisiDvotacku(K_korisnickoIme);
-			getline(out, K_sifra);
-			cout << "Sifra: ";  ignorisiDvotacku(K_sifra);
-			getline(out, K_Ime);
-			cout << "Ime: "; ignorisiDvotacku(K_Ime);
-			getline(out, K_prezime);
-			cout << "Prezime: "; ignorisiDvotacku(K_prezime);
-			getline(out, Email);
-			cout << "Email: ";  ignorisiDvotacku(Email);
+			cout << e.what() << endl;
+			return;
 		}
 	}
-	catch (const FajlNijeOtvoren& e)
+	else
 	{
-		cout << e.what() << endl;
+		cout << "Korisnicko ime nije pronadjeno." << endl;
 	}
 }
 
@@ -165,7 +171,7 @@ void Klijent::Ulogovanje()
 	cout << "Unesite korisnicko ime" << endl;
 	cin >> K_korisnickoIme;
 
-	ifstream file(K_korisnickoIme + ".txt");
+	ifstream file(putanja+K_korisnickoIme + ".txt");
 	try {
 		if (!file.is_open())
 		{
@@ -181,6 +187,7 @@ void Klijent::Ulogovanje()
 	catch (const FajlNijeOtvoren& e)
 	{
 		cout << e.what() << endl;
+		return;
 	}
 	cout << "Unesite sifru" << endl;
 	K_sifra = UnesiSifru();
@@ -194,9 +201,8 @@ void Klijent::Ulogovanje()
 		}
 		else
 		{
-			K_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat); // paziiiiiiiiiiiiiiiiiiiiiiiii
+			K_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
 			cout << "Dobrodosli " << K_rezultat << " nazad!" << endl;
-			cout << "Dobrodosli" << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}

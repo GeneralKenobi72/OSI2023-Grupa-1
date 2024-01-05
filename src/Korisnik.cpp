@@ -8,6 +8,11 @@
 #include "Izuzeci.h"
 #include "Korisnik.h"
 #include "getChar.h"
+#endif
+
+#include <filesystem>
+namespace fs = std::filesystem;
+
 using namespace std;
 
 // ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponašanja
@@ -157,9 +162,9 @@ bool Korisnik::ValidnaSifra(string sifra)
 
 //f-ja provjerava preko imena fajla da li je korisnicko ime zauzeto ili da li postoji u bazi podataka
 //ako datoteka postoji vraca true, inace false
-bool Korisnik::zauzetKorisnickoIme(const string korisnicko_ime)
+bool Korisnik::pronadjiKorisnickoIme(const string korisnicko_ime)
 {
-	ifstream file(korisnicko_ime + ".txt");
+	ifstream file(putanja+korisnicko_ime + ".txt");
 	return file.good();
 }
 
@@ -171,7 +176,7 @@ string Korisnik::UnesiSifru()
 	string novaSifra;
 	char ch;
 	ch = getChar();
-	while (ch != '\n') {  // Provjeri za ENTER key ASCII 13
+	while (ch!=13) {  // Provjeri za ENTER key ASCII 13
 		if (ch != 8) {   // Provjeri za backspace ASCII 8
 			novaSifra.push_back(ch);
 			cout << '*' << std::flush;
@@ -188,12 +193,24 @@ string Korisnik::UnesiSifru()
 
 string Korisnik::provjeriKorisnickoIme(string korisnico_ime)
 {
-	while (!zauzetKorisnickoIme(korisnico_ime))
+	while (pronadjiKorisnickoIme(korisnico_ime))
 	{
 		cout << "Korisnicko ime je zauzeto! " << endl;
 		cin >> korisnico_ime;
 	}
 	return korisnico_ime;
+}
+
+bool Korisnik::provjeriPutanju(string putanja)
+{
+	if (!filesystem::exists(putanja)) {
+		if (!filesystem::create_directory(putanja)) {
+			cerr << "Greska prilikom stvaranja direktorija!" << endl;
+			return false;
+		}
+		return true;
+	}
+	return false;
 }
 
 //f-ja koja ignorise string do pojave ':'
@@ -224,5 +241,3 @@ string Korisnik::vrati_ignorisiDvotacku(string imeDatoteke)
 		return NULL;
 	}
 }
-
-#endif

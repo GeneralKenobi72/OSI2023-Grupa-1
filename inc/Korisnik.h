@@ -6,6 +6,8 @@
 #include "Izuzeci.h"
 #include "getChar.h"
 using namespace std;
+#include <filesystem>
+namespace fs = std::filesystem;
 
 class Korisnik {
 public:
@@ -20,9 +22,9 @@ public:
 	bool ValidanEmail(string email);
 	bool ValidnaSifra(string sifra);
 
-	//f-ja provjerava preko imena fajla da li je korisnicko ime zauzeto 
+	//f-ja provjerava preko imena fajla da li je korisnicko ime pronadjeno 
 	//ako datoteka postoji vraca true, inače false
-	bool zauzetKorisnickoIme(const string korisnicko_ime);
+	bool pronadjiKorisnickoIme(const string korisnicko_ime);
 
 	//f-ja koju ce dijeliti svi ucesnici za unos sifre
 	//Unosom se svaki put pojavljuje *
@@ -35,6 +37,7 @@ public:
 	string getSifra() { return sifra; }
 	string getKorisnickoIme() { return korisnickoIme; }
 	string getEmail() { return email; }
+	bool provjeriPutanju(string putanja);
 
 protected:
 	//f-ja koja ignorise string do pojave ':'
@@ -49,6 +52,7 @@ protected:
 	string Ime, Prezime;
 	string email;
 	string sifra;
+	string putanja = "data\\";
 	//opciono string userEmail;
 };
 

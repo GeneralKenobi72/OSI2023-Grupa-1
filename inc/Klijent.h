@@ -3,6 +3,8 @@
 #include "Korisnik.h"
 #include <string>
 #include <fstream>
+#include <filesystem>
+namespace fs = std::filesystem;
 using namespace std;
 
 class Klijent : public Korisnik {

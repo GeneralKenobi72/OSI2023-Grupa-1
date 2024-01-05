@@ -4,7 +4,10 @@
 #else
 #include <termios.h>
 #include <unistd.h>
-#endif
+#include <conio.h>
+#include <termios.h>
+#include <unistd.h>
+#endif 
 #include <stdio.h>
 
 char getChar();

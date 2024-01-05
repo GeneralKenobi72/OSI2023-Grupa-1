@@ -24,7 +24,7 @@ string RadnikR::fajlKorisnickoImeRadnikaT(const string fileIme) {
 
 bool RadnikR::provjeriKorisnickoImeRadnikaT(const string korisnickoIme)
 {
-	ifstream file(korisnickoIme + "_radnikRegistracija.txt");
+	ifstream file(putanja+korisnickoIme + "_radnikRegistracija.txt");
 	return file.good();
 }
 
@@ -42,7 +42,7 @@ void RadnikR::postaviInfo(string korisnickoIme)
 		cout << e.what() << endl;
 	}
 
-	ifstream out(korisnickoIme + "_radnikRegistracija.txt");
+	ifstream out(putanja+korisnickoIme + "_radnikRegistracija.txt");
 	try {
 		if (!out.is_open())
 		{
@@ -82,7 +82,7 @@ void RadnikR::ispisFajla(string korisnickoIme)
 	{
 		cout << e.what() << endl;
 	}
-	ifstream out(korisnickoIme + "_radnikRegistracija.txt");
+	ifstream out(putanja+korisnickoIme + "_radnikRegistracija.txt");
 	try {
 		if (!out.is_open())
 		{
@@ -124,7 +124,7 @@ void RadnikR::Ulogovanje()
 		cin >> R_korisnickoIme;
 	}
 
-	ifstream file(R_korisnickoIme + "_radnikRegistracija.txt");
+	ifstream file(putanja+R_korisnickoIme + "_radnikRegistracija.txt");
 	try {
 		if (!file.is_open())
 		{
@@ -155,7 +155,6 @@ void RadnikR::Ulogovanje()
 		{
 			R_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
 			cout << "Dobrodosli " << R_rezultat << " nazad!" << endl;
-			cout << "Dobrodosli " << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}

@@ -26,7 +26,7 @@ void AdminTehnicki::Prijava()
 		cin >> AT_korisnickoIme;
 	}
 
-	ifstream file(AT_korisnickoIme + "_administratorTehnicki.txt");
+	ifstream file(putanja+AT_korisnickoIme + "_administratorTehnicki.txt");
 	try {
 		if (!file.is_open())
 		{
@@ -133,13 +133,13 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 {
 	string KorisnickoImeRadnikaT;
 
-	if (!provjeriKorisnickoImeAdminT(KorisnickoImeRadnikaT + "_radnikTehnicki"))
+	if (!provjeriKorisnickoImeAdminT(KorisnickoImeRadnikaT))
 	{
 		cout << "Nalog nije pronadjen." << endl;
 	}
 	else
 	{
-		if (remove((KorisnickoImeRadnikaT + "_radnikTehnicki.txt").c_str()) == 0) {
+		if (remove((putanja+KorisnickoImeRadnikaT + "_radnikTehnicki.txt").c_str()) == 0) {
 			cout << "Nalog radnika tehnickog pregleda uspjesno obrisan." << endl;
 		}
 		else {
@@ -156,7 +156,7 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 //kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 void AdminTehnicki::PregledNalogaRadnika()
 {
-	for (const auto& entry : fs::directory_iterator("./")) { //Ovo je trenutni direktorijum 
+	for (const auto& entry : fs::directory_iterator(putanja)) { //Ovo je trenutni direktorijum 
 		string imeFajla = entry.path().filename().string();
 
 		if (imeFajla.find("_radnikTehnicki.txt") != string::npos) {
@@ -172,7 +172,7 @@ void AdminTehnicki::ispisInfoRadnika(string userNameRadnikT)
 
 bool AdminTehnicki::provjeriKorisnickoImeAdminT(const string username)
 {
-	ifstream file(username + "_administratorTehnicki.txt");
+	ifstream file(putanja+username + "_administratorTehnicki.txt");
 	return file.good();
 }
 

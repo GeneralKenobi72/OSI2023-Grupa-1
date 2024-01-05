@@ -1,6 +1,3 @@
-#ifndef GETCH_H
-#define GETCH_H
-
 #include "RadnikRegistracija.h"
 #include "RadnikTehnicki.h"
 #include "Radnik.h"
@@ -11,20 +8,22 @@ using namespace std;
 
 int main()
 {
-	AdminTehnicki a;
-	a.Prijava();
-		
+	Klijent klijent1;
+	klijent1.Ulogovanje();
+	cout << "Radnik ulogovanje" << endl;
+	RadnikT radnik1;
+	radnik1.Ulogovanje();
 
-	RadnikT radnikT;
+	cout << "Ulogovanje admina tehnicki" << endl;
+	AdminTehnicki admin1;
+	admin1.Prijava();
+
+	cout << "Pregeld radnika tehnickog" << endl;
+	admin1.PregledNalogaRadnika();
+
+	cout << "Za detaljniju info unesite radnika tehinckoh" << endl;
 	string username;
-	RadnikR radnikR;
-	cout << "Provjera da li radnik za registraciju postoji?" << endl;
 	cin >> username;
-	radnikR.ispisFajla(username);
-	AdminTehnicki adminT;
-	cout << "Pregeld radnika tehnickog:" << endl;
-	adminT.PregledNalogaRadnika();
+	admin1.ispisInfoRadnika(username);
 	return 0;
 }
-
-#endif

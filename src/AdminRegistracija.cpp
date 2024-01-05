@@ -24,7 +24,7 @@ void AdminRegistracija::Prijava()
 		cin >> AR_korisnickoIme;
 	}
 
-	ifstream file(AR_korisnickoIme + "_administratorRegistracija.txt");
+	ifstream file(putanja+AR_korisnickoIme + "_administratorRegistracija.txt");
 	try {
 		if (!file.is_open())
 		{
@@ -65,13 +65,13 @@ void AdminRegistracija::obrisiRadnikaRegistracija()
 {
 	string KorisnickoImeRadnikaR;
 
-	if (!provjeriKorisnickoImeAdminaR(KorisnickoImeRadnikaR + "_radnikRegistracija"))
+	if (!provjeriKorisnickoImeAdminaR(KorisnickoImeRadnikaR))
 	{
 		cout << "Nalog nije pronadjen." << endl;
 	}
 	else
 	{
-		if (remove((KorisnickoImeRadnikaR + "_radnikRegistracija.txt").c_str()) == 0) {
+		if (remove((putanja+KorisnickoImeRadnikaR + "_radnikRegistracija.txt").c_str()) == 0) {
 			cout << "Nalog radnika za registraciju uspjesno obrisan." << endl;
 		}
 		else {
@@ -85,7 +85,7 @@ void AdminRegistracija::obrisiRadnikaRegistracija()
 //kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 void AdminRegistracija::PregledNalogaRadnika()
 {
-	for (const auto& entry : fs::directory_iterator("./")) { //Ovo je trenutni direktorijum 
+	for (const auto& entry : fs::directory_iterator(putanja)) { //Ovo je trenutni direktorijum 
 		string fileIme = entry.path().filename().string();
 
 		if (fileIme.find("_radnikRegistracija.txt") != string::npos) {
@@ -101,7 +101,7 @@ void AdminRegistracija::ispisInfoRadnika(string userNameRadnikR)
 
 bool AdminRegistracija::provjeriKorisnickoImeAdminaR(const string username)
 {
-	ifstream file(username + "_administratorRegistracija.txt");
+	ifstream file(putanja+username + "_administratorRegistracija.txt");
 	return file.good();
 }
 
