@@ -171,10 +171,10 @@ string Korisnik::UnesiSifru()
 	string novaSifra;
 	char ch;
 	ch = getChar();
-	while (ch != 13) {  // Provjeri za ENTER key ASCII 13
+	while (ch != '\n') {  // Provjeri za ENTER key ASCII 13
 		if (ch != 8) {   // Provjeri za backspace ASCII 8
 			novaSifra.push_back(ch);
-			cout << '*';
+			cout << '*' << std::flush;
 		}
 		else if (!novaSifra.empty()) {
 			novaSifra.pop_back();
