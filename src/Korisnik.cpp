@@ -10,7 +10,7 @@
 #ifdef _WIN32
 #include <conio.h>
 #else
-#include "getch.h"
+#include "getChar.h"
 #endif
 using namespace std;
 
@@ -174,7 +174,7 @@ string Korisnik::UnesiSifru()
 {
 	string novaSifra;
 	char ch;
-	ch = getch();
+	ch = getChar();
 	while (ch != 13) {  // Provjeri za ENTER key ASCII 13
 		if (ch != 8) {   // Provjeri za backspace ASCII 8
 			novaSifra.push_back(ch);
@@ -184,7 +184,7 @@ string Korisnik::UnesiSifru()
 			novaSifra.pop_back();
 			cout << "\b \b";  // Obrisi zadnju * (asterisk)
 		}
-		ch = getch();
+		ch = getChar();
 	}
 	cout << endl;
 	return novaSifra;

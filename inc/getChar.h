@@ -3,4 +3,4 @@
 #include <unistd.h>
 #include <stdio.h>
 
-char getch();
+char getChar();

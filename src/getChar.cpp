@@ -1,4 +1,4 @@
-#include "getch.h"
+#include "getChar.h"
 
 #ifdef _WIN32
 #include <conio.h>
@@ -7,7 +7,7 @@
 #include <unistd.h>
 #endif
 
-char getch() {
+char getChar() {
 #ifdef _WIN32
     return _getch();
 #else
