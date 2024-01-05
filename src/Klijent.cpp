@@ -46,6 +46,8 @@ void Klijent::upisFajla(string korisnicko_ime)
 		file << "Ime:" << Ime << "\n";
 		file << "Prezime:" << Prezime << "\n";
 		file << "Email:" << email << "\n";
+		file.flush();
+		file.close();
 	}
 }
 void Klijent::ispisFajla(string korisnicko_ime)

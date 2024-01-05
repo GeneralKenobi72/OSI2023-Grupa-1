@@ -210,7 +210,7 @@ bool Korisnik::provjeriPutanju(string putanja)
 		}
 		return true;
 	}
-	return false;
+	return true;
 }
 
 //f-ja koja ignorise string do pojave ':'
