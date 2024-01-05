@@ -16,6 +16,8 @@ private:
 	RadnikT radnikTehnicki;
 
 public:
+	AdminTehnicki(std::string Ime, std::string Prezime, std::string sifra, std::string email) noexcept
+		: Admin(Ime, Prezime, sifra, email) {}
 	AdminTehnicki() noexcept : Admin() {}
 
 	void Prijava();

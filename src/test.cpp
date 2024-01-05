@@ -11,6 +11,10 @@ using namespace std;
 
 int main()
 {
+	AdminTehnicki a;
+	a.Prijava();
+		
+
 	RadnikT radnikT;
 	string username;
 	RadnikR radnikR;
