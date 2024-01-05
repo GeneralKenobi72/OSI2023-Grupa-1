@@ -1,12 +1,5 @@
 #include "getChar.h"
 
-#ifdef _WIN32
-#include <conio.h>
-#else
-#include <termios.h>
-#include <unistd.h>
-#endif
-
 char getChar() {
 #ifdef _WIN32
     return _getch();

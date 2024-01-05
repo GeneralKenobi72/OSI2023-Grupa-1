@@ -7,11 +7,7 @@
 #include <cctype>
 #include "Izuzeci.h"
 #include "Korisnik.h"
-#ifdef _WIN32
-#include <conio.h>
-#else
 #include "getChar.h"
-#endif
 using namespace std;
 
 // ove dvije funkcije(ValidFirtName i ValidLastName) su istog ponašanja
