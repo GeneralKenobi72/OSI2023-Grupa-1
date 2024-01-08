@@ -14,19 +14,18 @@
 namespace fs = std::filesystem;
 using namespace std;
 
-void AdminTehnicki::Prijava()
+bool AdminTehnicki::Ulogovanje()
 {
 	string AT_korisnickoIme, AT_sifra, rezultat,
 		korisnickoIme_rezultat, sifra_rezultat;
 	cout << "Unesite korisnicko ime" << endl;
 	cin >> AT_korisnickoIme;
-
 	while (!provjeriKorisnickoImeAdminT(AT_korisnickoIme)) {
 		cout << "Korisnicko ime nije pronadjeno! Molim unesite ponovo." << endl;
 		cin >> AT_korisnickoIme;
 	}
 
-	ifstream file(AT_korisnickoIme + "_administratorTehnicki.txt");
+	ifstream file(putanja+AT_korisnickoIme + "_administratorTehnicki.txt");
 	try {
 		if (!file.is_open())
 		{
@@ -42,6 +41,7 @@ void AdminTehnicki::Prijava()
 	catch (const FajlNijeOtvoren& e)
 	{
 		cout << e.what() << endl;
+		return false;
 	}
 	cout << "Unesite sifru" << endl;
 	AT_sifra = UnesiSifru();
@@ -60,15 +60,15 @@ void AdminTehnicki::Prijava()
 			break;
 		}
 	}
+	ulogovan = true;
+	return true;
 }
 
 //Ovdje treba jos doraditi kod dodajRadnikaTehnicki()
 void AdminTehnicki::dodajRadnikaTehnicki()
 {
 	string KorisnickoImeRadnikaT, LozinkaRadnikaT,
-		ImeRadnikaT, PrezimeRadnikT, EmailRadnikaT;
-	cout << "Unesite korisnicko ime." << endl;
-	cin >> KorisnickoImeRadnikaT;
+		ImeRadnikaT, PrezimeRadnikT, EmailRadnikaT,DatumRodjenjaRT;
 	cout << "Unesite Ime." << endl;
 	while (1)
 	{
@@ -79,7 +79,7 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 				throw InvalidIme();
 			}
 			else {
-				Ime = ImeRadnikaT;
+				radnikTehnicki.postaviIme( ImeRadnikaT);
 				break;
 			}
 		}
@@ -98,7 +98,7 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 				throw InvalidIme();
 			}
 			else {
-				Prezime = PrezimeRadnikT;
+				 radnikTehnicki.postaviPrezime( PrezimeRadnikT);
 				break;
 			}
 		}
@@ -108,38 +108,104 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 		}
 	}
 	cout << "Unesite Email." << endl;
-
-
-	ofstream file(KorisnickoImeRadnikaT + "_radnikTehnicki.txt");
-	try {
-		if (!file.is_open())
-		{
-			throw FajlNijeOtvoren();
+	while (1) {
+		cin >> EmailRadnikaT;
+		try {
+			if (ValidanEmail(EmailRadnikaT))
+			{
+				radnikTehnicki.postaviEmail(EmailRadnikaT);
+				break;
+			}
+			else
+			{
+				throw InvalidEmail();
+			}
 		}
-		else
+		catch (const InvalidEmail& e)
 		{
-			file << "Korisnicko ime:" << KorisnickoImeRadnikaT << "\n";
+			cout << e.what() << endl;
 		}
 	}
-	catch (FajlNijeOtvoren& e)
+	cout << "Unestie datum rodjenja." << endl;
+	cin >> DatumRodjenjaRT;
+	radnikTehnicki.postaviDatumRodjenja(DatumRodjenjaRT);
+	radnikTehnicki.postaviPozicija();
+	cout << "Unesite korisnicko ime." << endl;
+	cin >> KorisnickoImeRadnikaT;
+	while (radnikTehnicki.provjeriKorisnickoImeRadnikaT(KorisnickoImeRadnikaT))
 	{
-		cout << e.what() << endl;
+		cout << "Korisnicko Ime zauzeto. Unesite ponovo." << endl;
+		cin >> KorisnickoImeRadnikaT;
 	}
-	//TODO: implementirati ostalo
+	radnikTehnicki.postaviKorisnickoIme(KorisnickoImeRadnikaT);
+	cout << "Unesite sifru." << endl;
+	int i = 0;
+	do {
+		LozinkaRadnikaT = radnikTehnicki.UnesiSifru();
+		i++;
+	} while (i < 10 && !ValidnaSifra(LozinkaRadnikaT));
+	radnikTehnicki.postaviSifra(LozinkaRadnikaT);
+	cout << "Unesite kod verifikacije." << endl;
+	string kod;
+	cin >> kod;
+	if (kod != "RT-")
+	{
+		cout << "Kod verifikacije neispravan." << endl;
+		podaciValidni = false;
+		return;
+	}
+	cout << "Proces autentifikacije..." << endl;
+	if (podaciValidni) {
+		//ovjde mozemo dodati sleep() da se ceka neko vrijeme dok se ne izvrsi autentifikacija
+		ofstream file(putanja+KorisnickoImeRadnikaT + "_radnikTehnicki.txt");
+		try {
+			if (!file.is_open())
+			{
+				throw FajlNijeOtvoren();
+			}
+			else
+			{
+				file << "Korisnicko ime:" << KorisnickoImeRadnikaT << "\n";
+				file << "Sifra:" << LozinkaRadnikaT << "\n";
+				file << "Ime:" << ImeRadnikaT << "\n";
+				file << "Prezime:" << PrezimeRadnikT << "\n";
+				file << "Email:" << EmailRadnikaT << "\n";
+				file << "Datum rodjenja:" << DatumRodjenjaRT << "\n";
+				file << "Pozicija:" << "Radnik za Tehnicki Pregled" << "\n";
+				cout << "Uspjesno kreiran nalog." << endl;
+				radnikTehnicki.setRegistraciju();
+			}
+		}
+		catch (FajlNijeOtvoren& e)
+		{
+			cout << e.what() << endl;
+			return;
+		}
+	}
+	else {
+		cout << "Zahtijev za registraciju nije odobren. Molim pokusajte ponovo." << endl;
+	}
 
 }
 
 void AdminTehnicki::obrisiRadnikaTehnicki()
 {
+	if (provjeriUlogovanje() != true)
+	{
+		cout << "Potrebno je da se ulogujete!" << endl;
+		return;
+	}
 	string KorisnickoImeRadnikaT;
+	cout << "Unesite korisnicko ime radnika za tehnicki ciji se nalog brise." << endl;
+	cin >> KorisnickoImeRadnikaT;
 
-	if (!provjeriKorisnickoImeAdminT(KorisnickoImeRadnikaT + "_radnikTehnicki"))
+	if (!radnikTehnicki.provjeriKorisnickoImeRadnikaT(KorisnickoImeRadnikaT))
 	{
 		cout << "Nalog nije pronadjen." << endl;
 	}
 	else
 	{
-		if (remove((KorisnickoImeRadnikaT + "_radnikTehnicki.txt").c_str()) == 0) {
+		if (remove((putanja+KorisnickoImeRadnikaT + "_radnikTehnicki.txt").c_str()) == 0) {
 			cout << "Nalog radnika tehnickog pregleda uspjesno obrisan." << endl;
 		}
 		else {
@@ -156,7 +222,12 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 //kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 void AdminTehnicki::PregledNalogaRadnika()
 {
-	for (const auto& entry : fs::directory_iterator("./")) { //Ovo je trenutni direktorijum 
+	if (provjeriUlogovanje() != true)
+	{
+		cout << "Potrebno je da se ulogujete!" << endl;
+		return;
+	}
+	for (const auto& entry : fs::directory_iterator(putanja)) { //Ovo je trenutni direktorijum 
 		string imeFajla = entry.path().filename().string();
 
 		if (imeFajla.find("_radnikTehnicki.txt") != string::npos) {
@@ -167,13 +238,118 @@ void AdminTehnicki::PregledNalogaRadnika()
 
 void AdminTehnicki::ispisInfoRadnika(string userNameRadnikT)
 {
+	if (provjeriUlogovanje() != true)
+	{
+		cout << "Potrebno je da se ulogujete!" << endl;
+		return;
+	}
 	radnikTehnicki.ispisFajla(userNameRadnikT);
+}
+
+bool AdminTehnicki::provjeriAdminTehnicki(string korisnickoIme_, string sifra_)
+{
+	ifstream fajl(putanja + korisnickoIme_ + "_administratorTehnicki.txt");
+	if (!fajl.is_open())
+	{
+		//cout << "Greska pri pristupu datoteke AT." << endl;
+		return false;
+	}
+	string linija1, linija2;
+	getline(fajl, linija1);
+	getline(fajl, linija2);
+	string rez1 = vrati_ignorisiDvotacku(linija1);
+	string rez2 = vrati_ignorisiDvotacku(linija2);
+	int i = 0;
+	for (; i < 3; i++)
+	{
+		if (rez1 != korisnickoIme_)
+		{
+			cout << "Unesite korisnicko ime ponovo." << endl;
+			cin >> korisnickoIme_;
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (i == 3)
+	{
+		cout << "Pogresno korisnicko ime." << endl;
+		return false;
+	}
+	i = 0;
+	for (; i < 3; i++)
+	{
+		if (rez2 != sifra_)
+		{
+			cout << "Unesite sifru ponovo. " << endl;
+			sifra_ = UnesiSifru();
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (i == 3)
+	{
+		cout << "Pogresna sifra." << endl;
+		return false;
+	}
+	return true;
 }
 
 bool AdminTehnicki::provjeriKorisnickoImeAdminT(const string username)
 {
-	ifstream file(username + "_administratorTehnicki.txt");
+	ifstream file(putanja+username + "_administratorTehnicki.txt");
 	return file.good();
+}
+void AdminTehnicki::prikaziMeni()
+{
+	bool kraj = false;
+	string ime;
+	while (!kraj) {
+		int izbor;
+		cout << endl;
+		cout << "Meni za Admina T" << endl;
+		cout << "1. Ulogovanje" << endl;
+		cout << "2. Dodaj Radnika za Tehnicki" << endl;
+		cout << "3. Obrisi radika za Tehnicki" << endl;
+		cout << "4. Pregled radnika za Tehnicki" << endl;
+		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
+		cout << "6. Odjava" << endl;
+		cout << "7. Izlaz" << endl;
+		cout << "Unesite izbor: ";
+		cin >> izbor;
+
+		switch (izbor) {
+		case 1:
+			Ulogovanje();
+			break;
+		case 2:
+			dodajRadnikaTehnicki();
+			break;
+		case 3:
+			obrisiRadnikaTehnicki();
+			break;
+		case 4:
+			PregledNalogaRadnika();
+			break;
+		case 5:
+			cout << "Unesite korisnicko ime radnika." << endl;
+			cin >> ime;
+			ispisInfoRadnika(ime);
+			break;
+		case 6:
+			Odjava();
+			break;
+		case 7:
+			kraj = true;
+			break;
+		default:
+			cout << "Nepostojeca opcija!" << endl;
+			break;
+		}
+	}
 }
 
 #endif

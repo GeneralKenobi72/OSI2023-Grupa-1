@@ -7,6 +7,8 @@
 #include "Klijent.h"
 #include <string>
 #include <fstream>
+#include <filesystem>
+namespace fs = std::filesystem;
 using namespace std;
 
 Klijent::Klijent(const string C_Ime, const string C_Prezime,
@@ -22,61 +24,67 @@ Klijent::Klijent(const string C_Ime, const string C_Prezime,
 
 void Klijent::upisFajla(string korisnicko_ime)
 {
-	ofstream file(korisnicko_ime + ".txt", ios::app);
-	try {
-		if (!file.is_open())
-		{
-			throw FajlNijeOtvoren();
-		}
-	}
-	catch (const FajlNijeOtvoren& e)
+	if (!provjeriPutanju(putanja))
 	{
-		cout << e.what() << endl;
+		return;
 	}
-	file << "Korisnicko Ime:" << korisnicko_ime << "\n";
-	file << "Sifra:" << sifra << "\n";
-	file << "Ime:" << Ime << "\n";
-	file << "Prezime:" << Prezime << "\n";
-	file << "Email:" << email << "\n";
+	else
+	{
+		ofstream file(putanja + korisnicko_ime + ".txt", ios::app);
+		try {
+			if (!file.is_open())
+			{
+				throw FajlNijeOtvoren();
+			}
+		}
+		catch (const FajlNijeOtvoren& e)
+		{
+			cout << e.what() << endl;
+		}
+		file << "Korisnicko Ime:" << korisnicko_ime << "\n";
+		file << "Sifra:" << sifra << "\n";
+		file << "Ime:" << Ime << "\n";
+		file << "Prezime:" << Prezime << "\n";
+		file << "Email:" << email << "\n";
+		file.flush();
+		file.close();
+	}
 }
 void Klijent::ispisFajla(string korisnicko_ime)
 {
 	//ovdje provjerava da li je klijent u bazi podataka
-	try {
-		if (!zauzetKorisnickoIme(korisnicko_ime))
-		{
-			throw KorisnickoImeNijePronadjeno();
-		}
-	}
-	catch (const KorisnickoImeNijePronadjeno& e)
-	{
-		cout << e.what() << endl;
-	}
+	if (pronadjiKorisnickoIme(korisnicko_ime)) {
 
-	ifstream out(korisnicko_ime + ".txt");
-	try {
-		if (!out.is_open())
-		{
-			throw FajlNijeOtvoren();
+		ifstream out(putanja + korisnicko_ime + ".txt");
+		try {
+			if (!out.is_open())
+			{
+				throw FajlNijeOtvoren();
+			}
+			else
+			{
+				string K_korisnickoIme, K_sifra, K_Ime, K_prezime, Email;
+				getline(out, K_korisnickoIme);
+				cout << "Korisnicko Ime: "; ignorisiDvotacku(K_korisnickoIme);
+				getline(out, K_sifra);
+				cout << "Sifra: ";  ignorisiDvotacku(K_sifra);
+				getline(out, K_Ime);
+				cout << "Ime: "; ignorisiDvotacku(K_Ime);
+				getline(out, K_prezime);
+				cout << "Prezime: "; ignorisiDvotacku(K_prezime);
+				getline(out, Email);
+				cout << "Email: ";  ignorisiDvotacku(Email);
+			}
 		}
-		else
+		catch (const FajlNijeOtvoren& e)
 		{
-			string K_korisnickoIme, K_sifra, K_Ime, K_prezime, Email;
-			getline(out, K_korisnickoIme);
-			cout << "Korisnicko Ime: "; ignorisiDvotacku(K_korisnickoIme);
-			getline(out, K_sifra);
-			cout << "Sifra: ";  ignorisiDvotacku(K_sifra);
-			getline(out, K_Ime);
-			cout << "Ime: "; ignorisiDvotacku(K_Ime);
-			getline(out, K_prezime);
-			cout << "Prezime: "; ignorisiDvotacku(K_prezime);
-			getline(out, Email);
-			cout << "Email: ";  ignorisiDvotacku(Email);
+			cout << e.what() << endl;
+			return;
 		}
 	}
-	catch (const FajlNijeOtvoren& e)
+	else
 	{
-		cout << e.what() << endl;
+		cout << "Korisnicko ime nije pronadjeno." << endl;
 	}
 }
 
@@ -97,7 +105,7 @@ void Klijent::novaRegistracija()
 				throw InvalidIme();
 			}
 			else {
-				Ime = K_Ime;
+				this->Ime = K_Ime;
 				break;
 			}
 		}
@@ -116,7 +124,7 @@ void Klijent::novaRegistracija()
 				throw InvalidPrezime();
 			}
 			else {
-				Prezime = K_Prezime;
+				this->Prezime = K_Prezime;
 				break;
 			}
 		}
@@ -131,7 +139,7 @@ void Klijent::novaRegistracija()
 		try {
 			if (ValidanEmail(K_email))
 			{
-				email = K_email;
+				this->email = K_email;
 				break;
 			}
 			else
@@ -148,24 +156,28 @@ void Klijent::novaRegistracija()
 	cin >> K_korisnickoIme;
 	string result = provjeriKorisnickoIme(K_korisnickoIme);
 	korisnickoIme = result;
-	cout << "Password" << endl;
+	cout << "Sifra" << endl;
 	int i = 0;
 	do {
 		K_sifra = UnesiSifru();
 		i++;
 	} while (i < 10 && !ValidnaSifra(K_sifra));
-	sifra = K_sifra;
+	this->sifra = K_sifra;
+	this->registrovan = true;
 	upisFajla(korisnickoIme);
 }
 
-void Klijent::Ulogovanje()
+bool Klijent::Ulogovanje()
 {
 	string K_korisnickoIme, K_sifra, rezultat,
 		korisnickoIme_rezultat, sifra_rezultat;
 	cout << "Unesite korisnicko ime" << endl;
 	cin >> K_korisnickoIme;
-
-	ifstream file(K_korisnickoIme + ".txt");
+	if (!pronadjiKorisnickoIme(K_korisnickoIme))
+	{
+		return false;
+	}
+	ifstream file(putanja+K_korisnickoIme + ".txt");
 	try {
 		if (!file.is_open())
 		{
@@ -181,6 +193,7 @@ void Klijent::Ulogovanje()
 	catch (const FajlNijeOtvoren& e)
 	{
 		cout << e.what() << endl;
+		return false;
 	}
 	cout << "Unesite sifru" << endl;
 	K_sifra = UnesiSifru();
@@ -194,12 +207,98 @@ void Klijent::Ulogovanje()
 		}
 		else
 		{
-			K_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat); // paziiiiiiiiiiiiiiiiiiiiiiiii
+			K_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
 			cout << "Dobrodosli " << K_rezultat << " nazad!" << endl;
-			cout << "Dobrodosli" << korisnickoIme_rezultat << " nazad!" << endl;
 			break;
 		}
 	}
+	this->ulogovan = true;
+	return true;
+}
+
+void Klijent::prikaziMeni()
+{
+	int izbor;
+	bool kraj = false;
+	while (!kraj) {
+		cout << "Meni za Klijenta" << endl;
+		cout << "1. Registracija" << endl;
+		cout << "2. Ulogovanje" << endl;
+		cout << "3. Odjava" << endl;
+		cout << "4. Izlaz." << endl;
+		cout << "Unesite izbor: ";
+		cin >> izbor;
+
+		switch (izbor) {
+		case 1:
+			novaRegistracija();
+			break;
+		case 2:
+			Ulogovanje();
+			break;
+		case 3:
+			Odjava();
+			break;
+		case 4:
+			kraj = true;
+			break;
+		default:
+			cout << "Nepostojeca opcija!" << endl;
+			break;
+		}
+	}
+}
+
+bool Klijent::provjeriKlijenta(string korisnickoIme_, string sifra_)
+{
+	ifstream fajl(putanja + korisnickoIme_ + ".txt");
+	if (!fajl.is_open())
+	{
+		//cout << "Greska pri pristupu datoteke." << endl;
+		//return false;
+	}
+	string linija1, linija2;
+	getline(fajl, linija1);
+	getline(fajl, linija2);
+	string rez1 = vrati_ignorisiDvotacku(linija1);
+	string rez2 = vrati_ignorisiDvotacku(linija2);
+	int i = 0;
+	for (; i < 5; i++)
+	{
+		if (rez1 != korisnickoIme_)
+		{
+			cout << "Unesite korisnicko ime ponovo." << endl;
+			cin >> korisnickoIme_;
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (i == 5)
+	{
+		cout << "Pogresno korisnicko ime." << endl;
+		return false;
+	}
+	i = 0;
+	for (; i < 5; i++)
+	{
+		if (rez2 != sifra_)
+		{
+			cout << "Unesite sifru ponovo. " << endl;
+			sifra_ = UnesiSifru();
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (i == 5)
+	{
+		cout << "Pogresna sifra." << endl;
+		return false;
+	}
+	return true;
 }
 
 #endif

@@ -14,11 +14,13 @@ class AdminTehnicki : public Admin
 {
 private:
 	RadnikT radnikTehnicki;
-
 public:
+	AdminTehnicki(std::string Ime, std::string Prezime, std::string sifra, std::string email) noexcept
+		: Admin(Ime, Prezime, sifra, email) {}
 	AdminTehnicki() noexcept : Admin() {}
+	AdminTehnicki(bool ulogovan) noexcept : Admin() { this->ulogovan = ulogovan; }
 
-	void Prijava();
+	bool Ulogovanje() override;
 	//Ovdje treba jos doraditi kod dodajRadnikaTehnicki()
 	void dodajRadnikaTehnicki();
 	void obrisiRadnikaTehnicki();
@@ -30,7 +32,28 @@ public:
 	//kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 	void PregledNalogaRadnika();
 	void ispisInfoRadnika(string userNameRadnikT);
+	void prikaziMeni() override;
+	bool provjeriAdminTehnicki(string korisnickoIme_, string sifra_);
+	Korisnik* provjeri(string korisnickoIme, string sifra) override
+	{
+		if (this->provjeriAdminTehnicki(korisnickoIme, sifra)) {
+				return new AdminTehnicki(true);
+		}
+		else {
+				//cout << "Niste ovlasteni administrator za tehnicki pregled i ne mozete se prijaviti kao administrator." << endl;
+				return nullptr;
+		}
+	}
 private:
-
+	bool provjeriUlogovanje() override {
+		if (ulogovan == false)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
 	bool provjeriKorisnickoImeAdminT(const string username);
 };

@@ -12,4 +12,5 @@ protected:
 	string pozicija;
 public:
 	Radnik() noexcept : Korisnik() {}
+	void postaviDatumRodjenja(string datumRodjenja) { this->datumRodjenja = datumRodjenja; }
 };

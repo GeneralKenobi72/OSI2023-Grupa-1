@@ -4,7 +4,7 @@
 #else
 #include <termios.h>
 #include <unistd.h>
-#endif
+#endif 
 #include <stdio.h>
 
 char getChar();

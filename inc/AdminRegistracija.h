@@ -14,9 +14,12 @@ class AdminRegistracija : public Admin
 private:
 	RadnikR radnikRegistracija;
 public:
+	AdminRegistracija(std::string Ime, std::string Prezime, std::string sifra, std::string email) noexcept
+		: Admin(Ime, Prezime, sifra, email) {}
 	AdminRegistracija() noexcept : Admin() {}
+	AdminRegistracija(bool ulogovan) noexcept : Admin() { this->ulogovan = ulogovan; }
 
-	void Prijava();
+	bool Ulogovanje() override;
 
 	void obrisiRadnikaRegistracija();
 
@@ -26,7 +29,29 @@ public:
 	void PregledNalogaRadnika();
 
 	void ispisInfoRadnika(string userNameRadnikR);
+	void prikaziMeni() override;
+	bool provjeriAdminRegistracija(string korisnickoIme, string sifra);
+	void dodajRadnikaRegistracija();
+	bool provjeriUlogovanje() override {
+		if (ulogovan == false)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	Korisnik* provjeri(string korisnickoIme, string sifra) override
+	{
+		if (this->provjeriAdminRegistracija(korisnickoIme, sifra)) {
+			return new AdminRegistracija(true);
+		}
+		else {
+			//cout << "Niste ovlasteni administrator za tehnicki pregled i ne mozete se prijaviti kao administrator." << endl;
+			return nullptr;
+		}
+	}
 private:
-
 	bool provjeriKorisnickoImeAdminaR(const string username);
 };
