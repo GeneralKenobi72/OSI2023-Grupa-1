@@ -38,7 +38,15 @@ public:
 	string getKorisnickoIme() { return korisnickoIme; }
 	string getEmail() { return email; }
 	bool provjeriPutanju(string putanja);
-
+	virtual bool Ulogovanje() = 0;
+	virtual void prikaziMeni() = 0;
+	void postaviKorisnickoIme(string korisnickoIme) {
+		this->korisnickoIme = korisnickoIme;
+	}
+	void postaviIme(string Ime) { this->Ime = Ime; }
+	void postaviPrezime(string Prezime) { this->Prezime = Prezime; }
+	void postaviSifra(string sifra) { this->sifra = sifra; }
+	void postaviEmail(string email) { this->email = email; }
 protected:
 	//f-ja koja ignorise string do pojave ':'
 	//Prilikom ispisa iz datoteke-> Username:
@@ -48,11 +56,21 @@ protected:
 	//ima istu logiku kao i gornja funkcija, s tim što sada vraca rezultat
 	string vrati_ignorisiDvotacku(string imeDatoteke);
 	//int userID;
+	virtual bool provjeriUlogovanje() = 0;
+	void Odjava()
+	{
+			this->korisnickoIme = "";
+			this->sifra = "";
+			this->ulogovan = false;
+			cout << "Uspjesno ste odjavljeni." << endl;
+	}
 	string korisnickoIme;
 	string Ime, Prezime;
 	string email;
 	string sifra;
 	string putanja = "data\\";
+	bool registrovan = false;
+	bool ulogovan= false;
 	//opciono string userEmail;
 };
 

@@ -105,7 +105,7 @@ void Klijent::novaRegistracija()
 				throw InvalidIme();
 			}
 			else {
-				Ime = K_Ime;
+				this->Ime = K_Ime;
 				break;
 			}
 		}
@@ -124,7 +124,7 @@ void Klijent::novaRegistracija()
 				throw InvalidPrezime();
 			}
 			else {
-				Prezime = K_Prezime;
+				this->Prezime = K_Prezime;
 				break;
 			}
 		}
@@ -139,7 +139,7 @@ void Klijent::novaRegistracija()
 		try {
 			if (ValidanEmail(K_email))
 			{
-				email = K_email;
+				this->email = K_email;
 				break;
 			}
 			else
@@ -156,23 +156,27 @@ void Klijent::novaRegistracija()
 	cin >> K_korisnickoIme;
 	string result = provjeriKorisnickoIme(K_korisnickoIme);
 	korisnickoIme = result;
-	cout << "Password" << endl;
+	cout << "Sifra" << endl;
 	int i = 0;
 	do {
 		K_sifra = UnesiSifru();
 		i++;
 	} while (i < 10 && !ValidnaSifra(K_sifra));
-	sifra = K_sifra;
+	this->sifra = K_sifra;
+	this->registrovan = true;
 	upisFajla(korisnickoIme);
 }
 
-void Klijent::Ulogovanje()
+bool Klijent::Ulogovanje()
 {
 	string K_korisnickoIme, K_sifra, rezultat,
 		korisnickoIme_rezultat, sifra_rezultat;
 	cout << "Unesite korisnicko ime" << endl;
 	cin >> K_korisnickoIme;
-
+	if (!pronadjiKorisnickoIme(K_korisnickoIme))
+	{
+		return false;
+	}
 	ifstream file(putanja+K_korisnickoIme + ".txt");
 	try {
 		if (!file.is_open())
@@ -189,7 +193,7 @@ void Klijent::Ulogovanje()
 	catch (const FajlNijeOtvoren& e)
 	{
 		cout << e.what() << endl;
-		return;
+		return false;
 	}
 	cout << "Unesite sifru" << endl;
 	K_sifra = UnesiSifru();
@@ -205,6 +209,41 @@ void Klijent::Ulogovanje()
 		{
 			K_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
 			cout << "Dobrodosli " << K_rezultat << " nazad!" << endl;
+			break;
+		}
+	}
+	this->ulogovan = true;
+	return true;
+}
+
+void Klijent::prikaziMeni()
+{
+	int izbor;
+	bool kraj = false;
+	while (!kraj) {
+		cout << "Meni za Klijenta" << endl;
+		cout << "1. Registracija" << endl;
+		cout << "2. Ulogovanje" << endl;
+		cout << "3. Odjava" << endl;
+		cout << "4. Izlaz." << endl;
+		cout << "Unesite izbor: ";
+		cin >> izbor;
+
+		switch (izbor) {
+		case 1:
+			novaRegistracija();
+			break;
+		case 2:
+			Ulogovanje();
+			break;
+		case 3:
+			Odjava();
+			break;
+		case 4:
+			kraj = true;
+			break;
+		default:
+			cout << "Nepostojeca opcija!" << endl;
 			break;
 		}
 	}

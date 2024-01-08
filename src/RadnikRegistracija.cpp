@@ -7,6 +7,7 @@
 #include <string>
 #include <fstream>
 #include "RadnikRegistracija.h"
+#include <functional>
 using namespace std;
 
 // Vraca podstring od pocetka do pozicije underscore-a
@@ -22,7 +23,7 @@ string RadnikR::fajlKorisnickoImeRadnikaT(const string fileIme) {
 	}
 }
 
-bool RadnikR::provjeriKorisnickoImeRadnikaT(const string korisnickoIme)
+bool RadnikR::provjeriKorisnickoImeRadnikaR(const string korisnickoIme)
 {
 	ifstream file(putanja+korisnickoIme + "_radnikRegistracija.txt");
 	return file.good();
@@ -32,7 +33,7 @@ bool RadnikR::provjeriKorisnickoImeRadnikaT(const string korisnickoIme)
 void RadnikR::postaviInfo(string korisnickoIme)
 {
 	try {
-		if (!provjeriKorisnickoImeRadnikaT(korisnickoIme))
+		if (!provjeriKorisnickoImeRadnikaR(korisnickoIme))
 		{
 			throw KorisnickoImeNijePronadjeno();
 		}
@@ -73,7 +74,7 @@ void RadnikR::postaviInfo(string korisnickoIme)
 void RadnikR::ispisFajla(string korisnickoIme)
 {
 	try {
-		if (!provjeriKorisnickoImeRadnikaT(korisnickoIme))
+		if (!provjeriKorisnickoImeRadnikaR(korisnickoIme))
 		{
 			throw KorisnickoImeNijePronadjeno();
 		}
@@ -112,16 +113,21 @@ void RadnikR::ispisFajla(string korisnickoIme)
 	}
 }
 
-void RadnikR::Ulogovanje()
+bool RadnikR::Ulogovanje()
 {
 	string R_korisnickoIme, R_sifra, rezultat,
 		korisnickoIme_rezultat, sifra_rezultat;
 	cout << "Unesite korisnicko ime" << endl;
 	cin >> R_korisnickoIme;
-
-	while (!provjeriKorisnickoImeRadnikaT(R_korisnickoIme)) {
+	int i = 0;
+	while (!provjeriKorisnickoImeRadnikaR(R_korisnickoIme) && i<5) {
 		cout << "Korisnicko ime nije pronadjeno! Molim unesite ponovo." << endl;
 		cin >> R_korisnickoIme;
+		i++;
+	}
+	if (i == 5)
+	{
+		return false;
 	}
 
 	ifstream file(putanja+R_korisnickoIme + "_radnikRegistracija.txt");
@@ -140,6 +146,7 @@ void RadnikR::Ulogovanje()
 	catch (const FajlNijeOtvoren& e)
 	{
 		cout << e.what() << endl;
+		return false;
 	}
 	cout << "Unesite sifru" << endl;
 	R_sifra = UnesiSifru();
@@ -154,10 +161,116 @@ void RadnikR::Ulogovanje()
 		else
 		{
 			R_rezultat = vrati_ignorisiDvotacku(korisnickoIme_rezultat);
-			cout << "Dobrodosli " << R_rezultat << " nazad!" << endl;
+			korisnickoIme = R_rezultat;
+			sifra = R_sifra;
+			cout << "Dobrodosli " << korisnickoIme << " nazad!" << endl;
+			break;
+		}
+	}
+	ulogovan = true;
+	return true;
+}
+
+void RadnikR::prikaziMeni()
+{
+	bool kraj = false;
+	while (!kraj) {
+		int izbor;
+		cout << endl;
+		cout << "1. Registracija" << endl;
+		cout << "2. Ulogovanje" << endl;
+		cout << "3. Odjava" << endl;
+		cout << "4. Izlaz" << endl;
+		cout << "Unesite izbor: ";
+		cin >> izbor;
+
+		switch (izbor) {
+		case 1:
+			// Logika za registraciju
+			dodajRadnikaFunc();
+			break;
+		case 2:
+			if (!Ulogovanje()) {
+				cout << "Izgleda da niste registrovani." << endl;
+				cout << "Da li zelite da se registrujete? (da/Da): ";
+				string da;
+				cin >> da;
+				while (da != "da" && da != "Da")
+				{
+					cout << "Greska. Unesite ponovo:";
+					cin >> da;
+				}
+
+				continue;
+			}
+			else {
+
+			}
+			break;
+		case 3:
+			Odjava();
+			break;
+		case 4:
+			kraj = true;
+			break;
+		default:
+			cout << "Nepostojeca opcija!" << endl;
 			break;
 		}
 	}
 }
+
+bool RadnikR::provjeriRadnikaRegistracija(string korisnickoIme_, string sifra_)
+{
+	ifstream fajl(putanja + korisnickoIme_ + "_radnikRegistracija.txt");
+	if (!fajl.is_open())
+	{
+		cout << "Greska pri pristupu datoteke." << endl;
+		return false;
+	}
+	string linija1, linija2;
+	getline(fajl, linija1);
+	getline(fajl, linija2);
+	string rez1 = vrati_ignorisiDvotacku(linija1);
+	string rez2 = vrati_ignorisiDvotacku(linija2);
+	int i = 0;
+	for (; i < 3; i++)
+	{
+		if (rez1 != korisnickoIme_)
+		{
+			cout << "Unesite korisnicko ime ponovo." << endl;
+			cin >> korisnickoIme_;
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (i == 3)
+	{
+		cout << "Pogresno korisnicko ime." << endl;
+		return false;
+	}
+	i = 0;
+	for (; i < 3; i++)
+	{
+		if (rez2 != sifra_)
+		{
+			cout << "Unesite sifru ponovo. " << endl;
+			sifra_ = UnesiSifru();
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (i == 3)
+	{
+		cout << "Pogresna sifra." << endl;
+		return false;
+	}
+	return true;
+}
+
 
 #endif

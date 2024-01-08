@@ -17,8 +17,9 @@ public:
 	AdminRegistracija(std::string Ime, std::string Prezime, std::string sifra, std::string email) noexcept
 		: Admin(Ime, Prezime, sifra, email) {}
 	AdminRegistracija() noexcept : Admin() {}
+	AdminRegistracija(bool ulogovan) noexcept : Admin() { this->ulogovan = ulogovan; }
 
-	void Prijava();
+	bool Ulogovanje() override;
 
 	void obrisiRadnikaRegistracija();
 
@@ -28,7 +29,19 @@ public:
 	void PregledNalogaRadnika();
 
 	void ispisInfoRadnika(string userNameRadnikR);
+	void prikaziMeni() override;
+	bool provjeriAdminRegistracija(string korisnickoIme, string sifra);
+	void dodajRadnikaRegistracija();
+	bool provjeriUlogovanje() override {
+		if (ulogovan == false)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
 private:
-
 	bool provjeriKorisnickoImeAdminaR(const string username);
 };

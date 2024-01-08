@@ -8,6 +8,8 @@ using namespace std;
 class Admin : public Korisnik {
 protected:
 	bool registrovan = true;
+	bool podaciValidni = true;
+	//bool provjeriUlogovanje() override { return false; }
 public:
 	Admin(const string, const string, const string, const string);
 	Admin() : Korisnik() {}
@@ -16,4 +18,5 @@ public:
 	string getSifra();
 	string getKorisnickoIme();
 	string getEmail();
+	bool Ulogovanje() override { return false; }
 };

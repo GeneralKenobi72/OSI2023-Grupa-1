@@ -4,9 +4,6 @@
 #else
 #include <termios.h>
 #include <unistd.h>
-#include <conio.h>
-#include <termios.h>
-#include <unistd.h>
 #endif 
 #include <stdio.h>
 
