@@ -47,6 +47,7 @@ public:
 	void postaviPrezime(string Prezime) { this->Prezime = Prezime; }
 	void postaviSifra(string sifra) { this->sifra = sifra; }
 	void postaviEmail(string email) { this->email = email; }
+	virtual Korisnik* provjeri(string, string) = 0;
 protected:
 	//f-ja koja ignorise string do pojave ':'
 	//Prilikom ispisa iz datoteke-> Username:

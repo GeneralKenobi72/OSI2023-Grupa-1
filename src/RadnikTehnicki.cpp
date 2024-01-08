@@ -34,7 +34,7 @@ bool RadnikT::provjeriRadnikaTehnicki(string korisnickoIme_, string sifra_)
 	ifstream fajl(putanja + korisnickoIme_ + "_radnikTehnicki.txt");
 	if (!fajl.is_open())
 	{
-		cout << "Greska pri pristupu datoteke." << endl;
+		//cout << "Greska pri pristupu datoteke RT." << endl;
 		return false;
 	}
 	string linija1, linija2;
@@ -232,6 +232,7 @@ void RadnikT::prikaziMeni()
 	while (!kraj) {
 		int izbor;
 		cout << endl;
+		cout << "Meni za Radnika T" << endl;
 		cout << "1. Registracija" << endl;
 		cout << "2. Ulogovanje" << endl;
 		cout << "3. Odjava" << endl;

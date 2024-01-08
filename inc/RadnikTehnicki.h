@@ -40,4 +40,25 @@ public:
 	void postaviPozicija() { pozicija = "Radnik za Tehnicki Pregled"; }
 	string vratiPoziciju(){ return pozicija; }
 	void setRegistraciju() { this->registrovan = true; }
+	Korisnik* provjeri(string korisnickoIme, string sifra) override
+	{
+		if (this->provjeriRadnikaTehnicki(korisnickoIme, sifra)) {
+			return new RadnikT(true);
+		}
+		else {
+			cout << "Izgleda da nemate nalog." << endl;
+			cout << "Nova registracija? (da/Da)" << endl;
+			string da;
+			cin >> da;
+			if (da == "da" || da == "Da")
+			{
+				cout << "Prikaz Meni" << endl;
+				return new RadnikT(dodajRadnikaFunc);
+			}
+			else
+			{
+				return nullptr;
+			}
+		}
+	}
 };

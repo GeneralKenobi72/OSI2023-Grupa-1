@@ -251,7 +251,7 @@ bool AdminTehnicki::provjeriAdminTehnicki(string korisnickoIme_, string sifra_)
 	ifstream fajl(putanja + korisnickoIme_ + "_administratorTehnicki.txt");
 	if (!fajl.is_open())
 	{
-		cout << "Greska pri pristupu datoteke." << endl;
+		//cout << "Greska pri pristupu datoteke AT." << endl;
 		return false;
 	}
 	string linija1, linija2;
@@ -310,6 +310,7 @@ void AdminTehnicki::prikaziMeni()
 	while (!kraj) {
 		int izbor;
 		cout << endl;
+		cout << "Meni za Admina T" << endl;
 		cout << "1. Ulogovanje" << endl;
 		cout << "2. Dodaj Radnika za Tehnicki" << endl;
 		cout << "3. Obrisi radika za Tehnicki" << endl;

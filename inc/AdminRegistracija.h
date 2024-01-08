@@ -42,6 +42,16 @@ public:
 			return true;
 		}
 	}
+	Korisnik* provjeri(string korisnickoIme, string sifra) override
+	{
+		if (this->provjeriAdminRegistracija(korisnickoIme, sifra)) {
+			return new AdminRegistracija(true);
+		}
+		else {
+			//cout << "Niste ovlasteni administrator za tehnicki pregled i ne mozete se prijaviti kao administrator." << endl;
+			return nullptr;
+		}
+	}
 private:
 	bool provjeriKorisnickoImeAdminaR(const string username);
 };

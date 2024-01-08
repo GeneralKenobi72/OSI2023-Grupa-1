@@ -213,6 +213,7 @@ bool Korisnik::provjeriPutanju(string putanja)
 	return true;
 }
 
+
 //f-ja koja ignorise string do pojave ':'
 //Prilikom ispisa iz datoteke-> Korisnicko ime:
 //                              Sifra:

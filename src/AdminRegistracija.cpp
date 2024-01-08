@@ -124,7 +124,7 @@ bool AdminRegistracija::provjeriAdminRegistracija(string korisnickoIme_, string 
 	ifstream fajl(putanja + korisnickoIme_ + "_administratorRegistracija.txt");
 	if (!fajl.is_open())
 	{
-		cout << "Greska pri pristupu datoteke." << endl;
+		//cout << "Greska pri pristupu datoteke AR." << endl;
 		return false;
 	}
 	string linija1, linija2;
@@ -316,6 +316,7 @@ void AdminRegistracija::prikaziMeni()
 	while (!kraj) {
 		int izbor;
 		cout << endl;
+		cout << "Meni za Admina R" << endl;
 		cout << "1. Ulogovanje" << endl;
 		cout << "2. Dodaj Radnika za Registraciju" << endl;
 		cout << "3. Obrisi radika za Registraciju" << endl;

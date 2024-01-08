@@ -9,7 +9,7 @@
 namespace fs = std::filesystem;
 using namespace std;
 #include <string>
-Korisnik* autentifikacija(int tipKorisnika, AdminRegistracija& adminR, AdminTehnicki& adminT) {
+/*Korisnik* autentifikacija(int tipKorisnika, AdminRegistracija& adminR, AdminTehnicki& adminT) {
     if (tipKorisnika == 1) { // AdminTehnicki
         string korisnickoIme, sifra;
         cout << "Unesite korisnicko ime: ";
@@ -122,10 +122,30 @@ bool potvrdaIzbora(int tipKorisnika) {
     cout << "Izabrali ste tip korisnika: " << tipKorisnika << ". Da li ste sigurni? (da/ne): ";
     cin >> odgovor;
     return odgovor == "da";
+}*/
+string unesi_sifru(){
+    string novaSifra;
+	char ch;
+	ch = getChar();
+	while (ch!=13) {  // Provjeri za ENTER key ASCII 13
+		if (ch != 8) {   // Provjeri za backspace ASCII 8
+			novaSifra.push_back(ch);
+			cout << '*' << std::flush;
+		}
+		else if (!novaSifra.empty()) {
+			novaSifra.pop_back();
+			cout << "\b \b";  // Obrisi zadnju * (asterisk)
+		}
+		ch = getChar();
+	}
+	cout << endl;
+	return novaSifra;
 }
+
 int main()
 {
-    while (true) {
+    /*
+     while (true) {
         int tipKorisnika = odrediTipKorisnika();
 
         if (tipKorisnika == 0) {
@@ -160,8 +180,67 @@ int main()
         if (odgovor != "da") {
             break;
         }
+    }*/
+    
+    string korisnickoIme;
+    string sifra;
+   
+    cout << "Unesite korisnicko ime: ";
+    cin >> korisnickoIme;
+    cout << "Unesite sifru: ";
+    sifra = unesi_sifru();
+ 
+    Korisnik* prijavljeniKorisnik = nullptr;
+   
+    Korisnik* adminRegistracija = new AdminRegistracija();
+    prijavljeniKorisnik = adminRegistracija->provjeri(korisnickoIme, sifra);
+    if (prijavljeniKorisnik) {
+        prijavljeniKorisnik->prikaziMeni();
+        delete prijavljeniKorisnik;
     }
+    delete adminRegistracija;
 
+    // Provjeri admina za tehnicki pregled
+    Korisnik* adminTehnicki = new AdminTehnicki();
+    prijavljeniKorisnik = adminTehnicki->provjeri(korisnickoIme, sifra);
+    if (prijavljeniKorisnik) {
+        prijavljeniKorisnik->prikaziMeni();
+        delete prijavljeniKorisnik;
+    }
+    delete adminTehnicki;
+
+    // Provjeri radnika za registraciju
+    Korisnik* radnikRegistracija = new RadnikR();
+    prijavljeniKorisnik = radnikRegistracija->provjeri(korisnickoIme, sifra);
+    if (prijavljeniKorisnik) {
+        prijavljeniKorisnik->prikaziMeni();
+        delete prijavljeniKorisnik;
+    }
+    delete radnikRegistracija;
+
+    // Provjeri radnika za tehnicki pregled
+    Korisnik* radnikTehnicki = new RadnikT();
+    prijavljeniKorisnik = radnikTehnicki->provjeri(korisnickoIme, sifra);
+    if (prijavljeniKorisnik) {
+        prijavljeniKorisnik->prikaziMeni();
+        delete prijavljeniKorisnik;
+    }
+    delete radnikTehnicki;
+
+    // Provjeri klijenta
+    Korisnik* klijent = new Klijent();
+    prijavljeniKorisnik = klijent->provjeri(korisnickoIme, sifra);
+    if (prijavljeniKorisnik) {
+        prijavljeniKorisnik->prikaziMeni();
+        delete prijavljeniKorisnik;
+    }
+    delete klijent;
+
+    // Ako nijedan nije prijavljen
+    if (!prijavljeniKorisnik) {
+        cout << "Niste prijavljeni. Provjerite korisnicko ime i sifru." << endl;
+        return 0;
+    }
     return 0;
 
 }

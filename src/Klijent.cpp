@@ -249,4 +249,56 @@ void Klijent::prikaziMeni()
 	}
 }
 
+bool Klijent::provjeriKlijenta(string korisnickoIme_, string sifra_)
+{
+	ifstream fajl(putanja + korisnickoIme_ + ".txt");
+	if (!fajl.is_open())
+	{
+		//cout << "Greska pri pristupu datoteke." << endl;
+		//return false;
+	}
+	string linija1, linija2;
+	getline(fajl, linija1);
+	getline(fajl, linija2);
+	string rez1 = vrati_ignorisiDvotacku(linija1);
+	string rez2 = vrati_ignorisiDvotacku(linija2);
+	int i = 0;
+	for (; i < 5; i++)
+	{
+		if (rez1 != korisnickoIme_)
+		{
+			cout << "Unesite korisnicko ime ponovo." << endl;
+			cin >> korisnickoIme_;
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (i == 5)
+	{
+		cout << "Pogresno korisnicko ime." << endl;
+		return false;
+	}
+	i = 0;
+	for (; i < 5; i++)
+	{
+		if (rez2 != sifra_)
+		{
+			cout << "Unesite sifru ponovo. " << endl;
+			sifra_ = UnesiSifru();
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (i == 5)
+	{
+		cout << "Pogresna sifra." << endl;
+		return false;
+	}
+	return true;
+}
+
 #endif

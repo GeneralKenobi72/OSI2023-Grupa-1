@@ -177,6 +177,7 @@ void RadnikR::prikaziMeni()
 	while (!kraj) {
 		int izbor;
 		cout << endl;
+		cout << "Meni za Radnika R" << endl;
 		cout << "1. Registracija" << endl;
 		cout << "2. Ulogovanje" << endl;
 		cout << "3. Odjava" << endl;
@@ -225,7 +226,7 @@ bool RadnikR::provjeriRadnikaRegistracija(string korisnickoIme_, string sifra_)
 	ifstream fajl(putanja + korisnickoIme_ + "_radnikRegistracija.txt");
 	if (!fajl.is_open())
 	{
-		cout << "Greska pri pristupu datoteke." << endl;
+		//cout << "Greska pri pristupu datoteke RR." << endl;
 		return false;
 	}
 	string linija1, linija2;

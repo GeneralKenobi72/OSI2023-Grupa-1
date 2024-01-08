@@ -34,6 +34,16 @@ public:
 	void ispisInfoRadnika(string userNameRadnikT);
 	void prikaziMeni() override;
 	bool provjeriAdminTehnicki(string korisnickoIme_, string sifra_);
+	Korisnik* provjeri(string korisnickoIme, string sifra) override
+	{
+		if (this->provjeriAdminTehnicki(korisnickoIme, sifra)) {
+				return new AdminTehnicki(true);
+		}
+		else {
+				//cout << "Niste ovlasteni administrator za tehnicki pregled i ne mozete se prijaviti kao administrator." << endl;
+				return nullptr;
+		}
+	}
 private:
 	bool provjeriUlogovanje() override {
 		if (ulogovan == false)

@@ -39,4 +39,25 @@ public:
 	void postaviPozicija() { pozicija = "Radnik za Registraciju";  }
 	string vratiPoziciju() { return pozicija; }
 	void setRegistraciju() { this->registrovan = true; }
+	Korisnik* provjeri(string korisnickoIme, string sifra) override
+	{
+		if (this->provjeriRadnikaRegistracija(korisnickoIme, sifra)) {
+			return new RadnikR(true);
+		}
+		else {
+			cout << "Izgleda da nemate nalog." << endl;
+			cout << "Nova registracija? (da/Da)" << endl;
+			string da;
+			cin >> da;
+			if (da == "da" || da == "Da")
+			{
+				cout << "Prikaz Meni" << endl;
+				return new RadnikR(dodajRadnikaFunc);
+			}
+			else
+			{
+				return nullptr;
+			}
+		}
+	}
 };
