@@ -24,6 +24,8 @@ private:
 		}
 	}
 public:
+	RadnikT(std::string ime, std::string prezime, std::string korisnicko,
+			std::string sifra, std::string email) : Radnik(ime,prezime,korisnicko,sifra,email) {};
 	RadnikT() noexcept : Radnik() {}
 	RadnikT(function<void()> func) : Radnik(), dodajRadnikaFunc(func) {}
 	//Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled

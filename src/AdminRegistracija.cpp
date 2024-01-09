@@ -24,7 +24,7 @@ bool AdminRegistracija::Ulogovanje()
 		cin >> AR_korisnickoIme;
 	}
 
-	ifstream file(putanja+AR_korisnickoIme + "_administratorRegistracija.txt");
+	ifstream file(putanja+AR_korisnickoIme + ".txt");
 	try {
 		if (!file.is_open())
 		{
@@ -121,7 +121,7 @@ void AdminRegistracija::ispisInfoRadnika(string userNameRadnikR)
 
 bool AdminRegistracija::provjeriAdminRegistracija(string korisnickoIme_, string sifra_)
 {
-	ifstream fajl(putanja + korisnickoIme_ + "_administratorRegistracija.txt");
+	ifstream fajl(putanja + korisnickoIme_ + ".txt");
 	if (!fajl.is_open())
 	{
 		//cout << "Greska pri pristupu datoteke AR." << endl;
@@ -305,7 +305,7 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 
 bool AdminRegistracija::provjeriKorisnickoImeAdminaR(const string username)
 {
-	ifstream file(putanja+username + "_administratorRegistracija.txt");
+	ifstream file(putanja+username + ".txt");
 	return file.good();
 }
 
@@ -317,38 +317,34 @@ void AdminRegistracija::prikaziMeni()
 		int izbor;
 		cout << endl;
 		cout << "Meni za Admina R" << endl;
-		cout << "1. Ulogovanje" << endl;
-		cout << "2. Dodaj Radnika za Registraciju" << endl;
-		cout << "3. Obrisi radika za Registraciju" << endl;
-		cout << "4. Pregled radnika za Registraciju" << endl;
-		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
-		cout << "6. Odjava" << endl;
-		cout << "7. Izlaz" << endl;
+		cout << "1. Dodaj Radnika za Registraciju" << endl;
+		cout << "2. Obrisi radika za Registraciju" << endl;
+		cout << "3. Pregled radnika za Registraciju" << endl;
+		cout << "4. Ispis detaljnijih informacija o radniku" << endl;
+		cout << "5. Odjava" << endl;
+		cout << "6. Izlaz" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
 		switch (izbor) {
 		case 1:
-			Ulogovanje();
-			break;
-		case 2:
 			dodajRadnikaRegistracija();
 			break;
-		case 3:
+		case 2:
 			obrisiRadnikaRegistracija();
 			break;
-		case 4:
+		case 3:
 			PregledNalogaRadnika();
 			break;
-		case 5:
+		case 4:
 			cout << "Unesite korisnicko ime radnika." << endl;
 			cin >> ime;
 			ispisInfoRadnika(ime);
 			break;
-		case 6:
+		case 5:
 			Odjava();
 			break;
-		case 7:
+		case 6:
 			kraj = true;
 			break;
 		default:

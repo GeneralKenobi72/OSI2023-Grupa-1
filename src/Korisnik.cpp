@@ -8,7 +8,6 @@
 #include "Izuzeci.h"
 #include "Korisnik.h"
 #include "getChar.h"
-#endif
 
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -176,7 +175,11 @@ string Korisnik::UnesiSifru()
 	string novaSifra;
 	char ch;
 	ch = getChar();
+	#ifdef _WIN32
 	while (ch!=13) {  // Provjeri za ENTER key ASCII 13
+	#else
+	while (ch!='\n') {
+	#endif
 		if (ch != 8) {   // Provjeri za backspace ASCII 8
 			novaSifra.push_back(ch);
 			cout << '*' << std::flush;
@@ -242,3 +245,5 @@ string Korisnik::vrati_ignorisiDvotacku(string imeDatoteke)
 		return NULL;
 	}
 }
+
+#endif

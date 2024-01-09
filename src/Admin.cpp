@@ -8,11 +8,12 @@
 #include "Admin.h"
 using namespace std;
 
-Admin::Admin(const string A_Ime, const string A_Prezime, const string A_sifra, const string A_email)
+Admin::Admin(const string A_Ime, const string A_Prezime, const string KorisnickoIme, const string A_sifra, const string A_email)
 	: Korisnik()
 {
 	Ime = A_Ime;
 	Prezime = A_Prezime;
+	korisnickoIme = KorisnickoIme;
 	email = A_email;
 	sifra = A_sifra;
 }

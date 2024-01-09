@@ -14,8 +14,8 @@ class AdminRegistracija : public Admin
 private:
 	RadnikR radnikRegistracija;
 public:
-	AdminRegistracija(std::string Ime, std::string Prezime, std::string sifra, std::string email) noexcept
-		: Admin(Ime, Prezime, sifra, email) {}
+	AdminRegistracija(std::string Ime, std::string Prezime, std::string korisnickoIme, std::string sifra, std::string email) noexcept
+		: Admin(Ime, Prezime, korisnickoIme, sifra, email) {}
 	AdminRegistracija() noexcept : Admin() {}
 	AdminRegistracija(bool ulogovan) noexcept : Admin() { this->ulogovan = ulogovan; }
 

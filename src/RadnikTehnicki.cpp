@@ -25,13 +25,13 @@ string RadnikT::fajlKorisnickoImeRadnikaT(const string fileIme) {
 
 bool RadnikT::provjeriKorisnickoImeRadnikaT(const string korisnickoIme)
 {
-	ifstream file(putanja+korisnickoIme + "_radnikTehnicki.txt");
+	ifstream file(putanja+korisnickoIme + ".txt");
 	return file.good();
 }
 
 bool RadnikT::provjeriRadnikaTehnicki(string korisnickoIme_, string sifra_)
 {
-	ifstream fajl(putanja + korisnickoIme_ + "_radnikTehnicki.txt");
+	ifstream fajl(putanja + korisnickoIme_ + ".txt");
 	if (!fajl.is_open())
 	{
 		//cout << "Greska pri pristupu datoteke RT." << endl;
@@ -96,7 +96,7 @@ void RadnikT::postaviInfo(string korisnickoIme)
 		cout << e.what() << endl;
 	}
 
-	ifstream out(putanja+korisnickoIme + "_radnikTehnicki.txt");
+	ifstream out(putanja+korisnickoIme + ".txt");
 	try {
 		if (!out.is_open())
 		{
@@ -136,7 +136,7 @@ void RadnikT::ispisFajla(string korisnicko_ime)
 	{
 		cout << e.what() << endl;
 	}
-	ifstream out(putanja+korisnicko_ime + "_radnikTehnicki.txt");
+	ifstream out(putanja+korisnicko_ime + ".txt");
 	try {
 		if (!out.is_open())
 		{
@@ -185,7 +185,7 @@ bool RadnikT::Ulogovanje()
 	{
 		return false;
 	}
-	ifstream file(putanja+R_korisnickoIme + "_radnikTehnicki.txt");
+	ifstream file(putanja+R_korisnickoIme + ".txt");
 	try {
 		if (!file.is_open())
 		{
@@ -233,40 +233,16 @@ void RadnikT::prikaziMeni()
 		int izbor;
 		cout << endl;
 		cout << "Meni za Radnika T" << endl;
-		cout << "1. Registracija" << endl;
-		cout << "2. Ulogovanje" << endl;
-		cout << "3. Odjava" << endl;
-		cout << "4. Izlaz" << endl;
+		cout << "1. Odjava" << endl;
+		cout << "2. Izlaz" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
 		switch (izbor) {
 		case 1:
-			// Logika za registraciju
-			dodajRadnikaFunc();
-			break;
-		case 2:
-			if (!Ulogovanje()) {
-				cout << "Izgleda da niste registrovani." << endl;
-				cout << "Da li zelite da se registrujete? (da/Da): ";
-				string da;
-				cin >> da;
-				while (da != "da" && da!="Da")
-				{
-					cout << "Greska. Unesite ponovo:";
-					cin >> da;
-				}
-
-				continue;
-			}
-			else {
-
-			}
-			break;
-		case 3:
 			Odjava();
 			break;
-		case 4:
+		case 2:
 			kraj = true;
 			break;
 		default:
