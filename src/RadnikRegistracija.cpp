@@ -179,15 +179,12 @@ void RadnikR::prikaziMeni()
 		cout << endl;
 		cout << "Meni za Radnika R" << endl;
 		cout << "1. Odjava" << endl;
-		cout << "2. Izlaz" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
 		switch (izbor) {
 		case 1:
 			Odjava();
-			break;
-		case 2:
 			kraj = true;
 			break;
 		default:

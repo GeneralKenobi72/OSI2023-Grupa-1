@@ -316,7 +316,6 @@ void AdminTehnicki::prikaziMeni()
 		cout << "3. Pregled radnika za Tehnicki" << endl;
 		cout << "4. Ispis detaljnijih informacija o radniku" << endl;
 		cout << "5. Odjava" << endl;
-		cout << "6. Izlaz" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -337,8 +336,6 @@ void AdminTehnicki::prikaziMeni()
 			break;
 		case 5:
 			Odjava();
-			break;
-		case 6:
 			kraj = true;
 			break;
 		default:

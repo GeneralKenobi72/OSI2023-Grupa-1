@@ -241,6 +241,7 @@ void RadnikT::prikaziMeni()
 		switch (izbor) {
 		case 1:
 			Odjava();
+			kraj = true;
 			break;
 		case 2:
 			kraj = true;

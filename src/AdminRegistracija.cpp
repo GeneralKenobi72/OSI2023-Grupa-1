@@ -322,7 +322,6 @@ void AdminRegistracija::prikaziMeni()
 		cout << "3. Pregled radnika za Registraciju" << endl;
 		cout << "4. Ispis detaljnijih informacija o radniku" << endl;
 		cout << "5. Odjava" << endl;
-		cout << "6. Izlaz" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -343,8 +342,6 @@ void AdminRegistracija::prikaziMeni()
 			break;
 		case 5:
 			Odjava();
-			break;
-		case 6:
 			kraj = true;
 			break;
 		default:

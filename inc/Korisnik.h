@@ -54,6 +54,7 @@ public:
 	#else
 	string putanja = "data/";
 	#endif
+	bool ulogovan= false;
 protected:
 	//f-ja koja ignorise string do pojave ':'
 	//Prilikom ispisa iz datoteke-> Username:
@@ -75,7 +76,6 @@ protected:
 	string email;
 	string sifra;
 	bool registrovan = false;
-	bool ulogovan= false;
 	//opciono string userEmail;
 };
 
