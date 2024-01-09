@@ -64,7 +64,6 @@ bool AdminTehnicki::Ulogovanje()
 	return true;
 }
 
-//Ovdje treba jos doraditi kod dodajRadnikaTehnicki()
 void AdminTehnicki::dodajRadnikaTehnicki()
 {
 	string KorisnickoImeRadnikaT, LozinkaRadnikaT,
@@ -126,9 +125,6 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 			cout << e.what() << endl;
 		}
 	}
-	cout << "Unestie datum rodjenja." << endl;
-	cin >> DatumRodjenjaRT;
-	radnikTehnicki.postaviDatumRodjenja(DatumRodjenjaRT);
 	radnikTehnicki.postaviPozicija();
 	cout << "Unesite korisnicko ime." << endl;
 	cin >> KorisnickoImeRadnikaT;
@@ -145,19 +141,10 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 		i++;
 	} while (i < 10 && !ValidnaSifra(LozinkaRadnikaT));
 	radnikTehnicki.postaviSifra(LozinkaRadnikaT);
-	cout << "Unesite kod verifikacije." << endl;
-	string kod;
-	cin >> kod;
-	if (kod != "RT-")
-	{
-		cout << "Kod verifikacije neispravan." << endl;
-		podaciValidni = false;
-		return;
-	}
 	cout << "Proces autentifikacije..." << endl;
 	if (podaciValidni) {
 		//ovjde mozemo dodati sleep() da se ceka neko vrijeme dok se ne izvrsi autentifikacija
-		ofstream file(putanja+KorisnickoImeRadnikaT + "_radnikTehnicki.txt");
+		ofstream file(putanja+KorisnickoImeRadnikaT + ".txt");
 		try {
 			if (!file.is_open())
 			{
@@ -170,8 +157,7 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 				file << "Ime:" << ImeRadnikaT << "\n";
 				file << "Prezime:" << PrezimeRadnikT << "\n";
 				file << "Email:" << EmailRadnikaT << "\n";
-				file << "Datum rodjenja:" << DatumRodjenjaRT << "\n";
-				file << "Pozicija:" << "Radnik za Tehnicki Pregled" << "\n";
+				file << "funkcija:" << "radnikT" << "\n";
 				cout << "Uspjesno kreiran nalog." << endl;
 				radnikTehnicki.setRegistraciju();
 			}
@@ -199,13 +185,19 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 	cout << "Unesite korisnicko ime radnika za tehnicki ciji se nalog brise." << endl;
 	cin >> KorisnickoImeRadnikaT;
 
+	cout << "Da li ste sigurni da zelite obrisati nalog radnika " << KorisnickoImeRadnikaT << "?(da/Ne)" << endl;
+	string daNe;
+	cin >> daNe;
+	if(daNe != "da")
+		return;
+
 	if (!radnikTehnicki.provjeriKorisnickoImeRadnikaT(KorisnickoImeRadnikaT))
 	{
 		cout << "Nalog nije pronadjen." << endl;
 	}
 	else
 	{
-		if (remove((putanja+KorisnickoImeRadnikaT + "_radnikTehnicki.txt").c_str()) == 0) {
+		if (remove((putanja+KorisnickoImeRadnikaT + ".txt").c_str()) == 0) {
 			cout << "Nalog radnika tehnickog pregleda uspjesno obrisan." << endl;
 		}
 		else {

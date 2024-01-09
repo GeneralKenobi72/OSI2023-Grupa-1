@@ -230,6 +230,7 @@ void Klijent::prikaziMeni()
 		switch (izbor) {
 		case 1:
 			Odjava();
+			this->ulogovan = false;
 			kraj = true;
 			break;
 		default:

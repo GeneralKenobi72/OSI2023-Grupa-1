@@ -20,7 +20,6 @@ string putanja = "data/";
 Korisnik* koSeLoguje(string korisnickoIme) {
 	string Ime, Prezime, Sifra, Email, s;
 	ifstream file(putanja+korisnickoIme+".txt");
-	cout << korisnickoIme << endl;
 	try {
 		if (!file.is_open())
 		{
@@ -46,7 +45,6 @@ Korisnik* koSeLoguje(string korisnickoIme) {
 		cout << e.what() << endl;
 		return nullptr;
 	}
-	cout << "Ime: " << Ime << " Funckija: " << s << endl;
 	if(s == "klijent"){
 		Klijent* k = new Klijent(Ime, Prezime, korisnickoIme, Sifra, Email);
 		k->ulogovan = true;
@@ -114,7 +112,7 @@ bool ulogujSe() {
 		else
 		{
 			Korisnik* k = koSeLoguje(korisnickoImeUnos);
-			cout << "Dobrodosli " << korisnickoImeUnos << " nazad!" << endl;
+			cout << "\nDobrodosli " << korisnickoImeUnos << " nazad!" << endl;
 			k->prikaziMeni();
 			delete(k);
 			break;
