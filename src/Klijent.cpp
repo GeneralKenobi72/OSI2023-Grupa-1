@@ -46,6 +46,7 @@ void Klijent::upisFajla(string korisnicko_ime)
 		file << "Ime:" << Ime << "\n";
 		file << "Prezime:" << Prezime << "\n";
 		file << "Email:" << email << "\n";
+		file << "Funkcija:klijent" << "\n";
 		file.flush();
 		file.close();
 	}
@@ -222,24 +223,14 @@ void Klijent::prikaziMeni()
 	bool kraj = false;
 	while (!kraj) {
 		cout << "Meni za Klijenta" << endl;
-		cout << "1. Registracija" << endl;
-		cout << "2. Ulogovanje" << endl;
-		cout << "3. Odjava" << endl;
-		cout << "4. Izlaz." << endl;
+		cout << "1. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
 		switch (izbor) {
 		case 1:
-			novaRegistracija();
-			break;
-		case 2:
-			Ulogovanje();
-			break;
-		case 3:
 			Odjava();
-			break;
-		case 4:
+			this->ulogovan = false;
 			kraj = true;
 			break;
 		default:

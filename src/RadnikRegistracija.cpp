@@ -25,7 +25,7 @@ string RadnikR::fajlKorisnickoImeRadnikaT(const string fileIme) {
 
 bool RadnikR::provjeriKorisnickoImeRadnikaR(const string korisnickoIme)
 {
-	ifstream file(putanja+korisnickoIme + "_radnikRegistracija.txt");
+	ifstream file(putanja+korisnickoIme + ".txt");
 	return file.good();
 }
 
@@ -43,7 +43,7 @@ void RadnikR::postaviInfo(string korisnickoIme)
 		cout << e.what() << endl;
 	}
 
-	ifstream out(putanja+korisnickoIme + "_radnikRegistracija.txt");
+	ifstream out(putanja+korisnickoIme + ".txt");
 	try {
 		if (!out.is_open())
 		{
@@ -83,7 +83,7 @@ void RadnikR::ispisFajla(string korisnickoIme)
 	{
 		cout << e.what() << endl;
 	}
-	ifstream out(putanja+korisnickoIme + "_radnikRegistracija.txt");
+	ifstream out(putanja+korisnickoIme + ".txt");
 	try {
 		if (!out.is_open())
 		{
@@ -178,40 +178,14 @@ void RadnikR::prikaziMeni()
 		int izbor;
 		cout << endl;
 		cout << "Meni za Radnika R" << endl;
-		cout << "1. Registracija" << endl;
-		cout << "2. Ulogovanje" << endl;
-		cout << "3. Odjava" << endl;
-		cout << "4. Izlaz" << endl;
+		cout << "1. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
 		switch (izbor) {
 		case 1:
-			// Logika za registraciju
-			dodajRadnikaFunc();
-			break;
-		case 2:
-			if (!Ulogovanje()) {
-				cout << "Izgleda da niste registrovani." << endl;
-				cout << "Da li zelite da se registrujete? (da/Da): ";
-				string da;
-				cin >> da;
-				while (da != "da" && da != "Da")
-				{
-					cout << "Greska. Unesite ponovo:";
-					cin >> da;
-				}
-
-				continue;
-			}
-			else {
-
-			}
-			break;
-		case 3:
 			Odjava();
-			break;
-		case 4:
+			this->ulogovan = false;	
 			kraj = true;
 			break;
 		default:

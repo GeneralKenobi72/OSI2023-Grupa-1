@@ -29,7 +29,7 @@ public:
 	//f-ja koju ce dijeliti svi ucesnici za unos sifre
 	//Unosom se svaki put pojavljuje *
 	//npr. Enter password:******
-	string UnesiSifru();
+	static string UnesiSifru();
 
 	string provjeriKorisnickoIme(string korisnico_ime);
 	string getIme() { return Ime; }
@@ -48,6 +48,13 @@ public:
 	void postaviSifra(string sifra) { this->sifra = sifra; }
 	void postaviEmail(string email) { this->email = email; }
 	virtual Korisnik* provjeri(string, string) = 0;
+	static string vrati_ignorisiDvotacku(string imeDatoteke);
+	#ifdef _WIN32
+	string putanja = "data\\";
+	#else
+	string putanja = "data/";
+	#endif
+	bool ulogovan= false;
 protected:
 	//f-ja koja ignorise string do pojave ':'
 	//Prilikom ispisa iz datoteke-> Username:
@@ -55,7 +62,6 @@ protected:
 	// itd. ce ignorisati te ispisati samo username, password...
 	void ignorisiDvotacku(string imeDatoteke);
 	//ima istu logiku kao i gornja funkcija, s tim što sada vraca rezultat
-	string vrati_ignorisiDvotacku(string imeDatoteke);
 	//int userID;
 	virtual bool provjeriUlogovanje() = 0;
 	void Odjava()
@@ -69,9 +75,7 @@ protected:
 	string Ime, Prezime;
 	string email;
 	string sifra;
-	string putanja = "data\\";
 	bool registrovan = false;
-	bool ulogovan= false;
 	//opciono string userEmail;
 };
 

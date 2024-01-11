@@ -15,8 +15,8 @@ class AdminTehnicki : public Admin
 private:
 	RadnikT radnikTehnicki;
 public:
-	AdminTehnicki(std::string Ime, std::string Prezime, std::string sifra, std::string email) noexcept
-		: Admin(Ime, Prezime, sifra, email) {}
+	AdminTehnicki(std::string Ime, std::string Prezime, std::string korisnickoIme, std::string sifra, std::string email) noexcept
+		: Admin(Ime, Prezime,korisnickoIme, sifra, email) {}
 	AdminTehnicki() noexcept : Admin() {}
 	AdminTehnicki(bool ulogovan) noexcept : Admin() { this->ulogovan = ulogovan; }
 

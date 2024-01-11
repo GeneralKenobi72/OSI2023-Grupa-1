@@ -25,7 +25,7 @@ bool AdminTehnicki::Ulogovanje()
 		cin >> AT_korisnickoIme;
 	}
 
-	ifstream file(putanja+AT_korisnickoIme + "_administratorTehnicki.txt");
+	ifstream file(putanja+AT_korisnickoIme + ".txt");
 	try {
 		if (!file.is_open())
 		{
@@ -64,7 +64,6 @@ bool AdminTehnicki::Ulogovanje()
 	return true;
 }
 
-//Ovdje treba jos doraditi kod dodajRadnikaTehnicki()
 void AdminTehnicki::dodajRadnikaTehnicki()
 {
 	string KorisnickoImeRadnikaT, LozinkaRadnikaT,
@@ -126,9 +125,6 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 			cout << e.what() << endl;
 		}
 	}
-	cout << "Unestie datum rodjenja." << endl;
-	cin >> DatumRodjenjaRT;
-	radnikTehnicki.postaviDatumRodjenja(DatumRodjenjaRT);
 	radnikTehnicki.postaviPozicija();
 	cout << "Unesite korisnicko ime." << endl;
 	cin >> KorisnickoImeRadnikaT;
@@ -145,19 +141,10 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 		i++;
 	} while (i < 10 && !ValidnaSifra(LozinkaRadnikaT));
 	radnikTehnicki.postaviSifra(LozinkaRadnikaT);
-	cout << "Unesite kod verifikacije." << endl;
-	string kod;
-	cin >> kod;
-	if (kod != "RT-")
-	{
-		cout << "Kod verifikacije neispravan." << endl;
-		podaciValidni = false;
-		return;
-	}
 	cout << "Proces autentifikacije..." << endl;
 	if (podaciValidni) {
 		//ovjde mozemo dodati sleep() da se ceka neko vrijeme dok se ne izvrsi autentifikacija
-		ofstream file(putanja+KorisnickoImeRadnikaT + "_radnikTehnicki.txt");
+		ofstream file(putanja+KorisnickoImeRadnikaT + ".txt");
 		try {
 			if (!file.is_open())
 			{
@@ -170,8 +157,7 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 				file << "Ime:" << ImeRadnikaT << "\n";
 				file << "Prezime:" << PrezimeRadnikT << "\n";
 				file << "Email:" << EmailRadnikaT << "\n";
-				file << "Datum rodjenja:" << DatumRodjenjaRT << "\n";
-				file << "Pozicija:" << "Radnik za Tehnicki Pregled" << "\n";
+				file << "funkcija:" << "radnikT" << "\n";
 				cout << "Uspjesno kreiran nalog." << endl;
 				radnikTehnicki.setRegistraciju();
 			}
@@ -199,13 +185,19 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 	cout << "Unesite korisnicko ime radnika za tehnicki ciji se nalog brise." << endl;
 	cin >> KorisnickoImeRadnikaT;
 
+	cout << "Da li ste sigurni da zelite obrisati nalog radnika " << KorisnickoImeRadnikaT << "?(da/Ne)" << endl;
+	string daNe;
+	cin >> daNe;
+	if(daNe != "da")
+		return;
+
 	if (!radnikTehnicki.provjeriKorisnickoImeRadnikaT(KorisnickoImeRadnikaT))
 	{
 		cout << "Nalog nije pronadjen." << endl;
 	}
 	else
 	{
-		if (remove((putanja+KorisnickoImeRadnikaT + "_radnikTehnicki.txt").c_str()) == 0) {
+		if (remove((putanja+KorisnickoImeRadnikaT + ".txt").c_str()) == 0) {
 			cout << "Nalog radnika tehnickog pregleda uspjesno obrisan." << endl;
 		}
 		else {
@@ -248,7 +240,7 @@ void AdminTehnicki::ispisInfoRadnika(string userNameRadnikT)
 
 bool AdminTehnicki::provjeriAdminTehnicki(string korisnickoIme_, string sifra_)
 {
-	ifstream fajl(putanja + korisnickoIme_ + "_administratorTehnicki.txt");
+	ifstream fajl(putanja + korisnickoIme_ + ".txt");
 	if (!fajl.is_open())
 	{
 		//cout << "Greska pri pristupu datoteke AT." << endl;
@@ -300,7 +292,7 @@ bool AdminTehnicki::provjeriAdminTehnicki(string korisnickoIme_, string sifra_)
 
 bool AdminTehnicki::provjeriKorisnickoImeAdminT(const string username)
 {
-	ifstream file(putanja+username + "_administratorTehnicki.txt");
+	ifstream file(putanja+username + ".txt");
 	return file.good();
 }
 void AdminTehnicki::prikaziMeni()
@@ -311,38 +303,31 @@ void AdminTehnicki::prikaziMeni()
 		int izbor;
 		cout << endl;
 		cout << "Meni za Admina T" << endl;
-		cout << "1. Ulogovanje" << endl;
-		cout << "2. Dodaj Radnika za Tehnicki" << endl;
-		cout << "3. Obrisi radika za Tehnicki" << endl;
-		cout << "4. Pregled radnika za Tehnicki" << endl;
-		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
-		cout << "6. Odjava" << endl;
-		cout << "7. Izlaz" << endl;
+		cout << "1. Dodaj Radnika za Tehnicki" << endl;
+		cout << "2. Obrisi radika za Tehnicki" << endl;
+		cout << "3. Pregled radnika za Tehnicki" << endl;
+		cout << "4. Ispis detaljnijih informacija o radniku" << endl;
+		cout << "5. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
 		switch (izbor) {
 		case 1:
-			Ulogovanje();
-			break;
-		case 2:
 			dodajRadnikaTehnicki();
 			break;
-		case 3:
+		case 2:
 			obrisiRadnikaTehnicki();
 			break;
-		case 4:
+		case 3:
 			PregledNalogaRadnika();
 			break;
-		case 5:
+		case 4:
 			cout << "Unesite korisnicko ime radnika." << endl;
 			cin >> ime;
 			ispisInfoRadnika(ime);
 			break;
-		case 6:
+		case 5:
 			Odjava();
-			break;
-		case 7:
 			kraj = true;
 			break;
 		default:

@@ -14,24 +14,24 @@ class AdminRegistracija : public Admin
 private:
 	RadnikR radnikRegistracija;
 public:
-	AdminRegistracija(std::string Ime, std::string Prezime, std::string sifra, std::string email) noexcept
-		: Admin(Ime, Prezime, sifra, email) {}
+	AdminRegistracija(std::string Ime, std::string Prezime, std::string korisnickoIme, std::string sifra, std::string email) noexcept
+		: Admin(Ime, Prezime, korisnickoIme, sifra, email) {}
 	AdminRegistracija() noexcept : Admin() {}
 	AdminRegistracija(bool ulogovan) noexcept : Admin() { this->ulogovan = ulogovan; }
 
 	bool Ulogovanje() override;
 
-	void obrisiRadnikaRegistracija();
 
 	//Funkcija za pregled svih radnika za registraciju gdje se ispisuju korisnicka imena
 	//dodatno mozemo imati funckiju gdje na osnovu tih imena pristupamo datoteci za jos detaljnije informacija 
 	//kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 	void PregledNalogaRadnika();
 
+	void dodajRadnikaRegistracija();
+	void obrisiRadnikaRegistracija();
 	void ispisInfoRadnika(string userNameRadnikR);
 	void prikaziMeni() override;
 	bool provjeriAdminRegistracija(string korisnickoIme, string sifra);
-	void dodajRadnikaRegistracija();
 	bool provjeriUlogovanje() override {
 		if (ulogovan == false)
 		{

@@ -24,7 +24,7 @@ bool AdminRegistracija::Ulogovanje()
 		cin >> AR_korisnickoIme;
 	}
 
-	ifstream file(putanja+AR_korisnickoIme + "_administratorRegistracija.txt");
+	ifstream file(putanja+AR_korisnickoIme + ".txt");
 	try {
 		if (!file.is_open())
 		{
@@ -73,13 +73,20 @@ void AdminRegistracija::obrisiRadnikaRegistracija()
 	string KorisnickoImeRadnikaR;
 	cout << "Unesite korisnicko ime radnika za registraciju." << endl;
 	cin >> KorisnickoImeRadnikaR;
+
+	cout << "Da li ste sigurni da zelite obrisati nalog radnika " << KorisnickoImeRadnikaR << "?(da/Ne)" << endl;
+	string daNe;
+	cin >> daNe;
+	if(daNe != "da")
+		return;
+
 	if (!radnikRegistracija.provjeriKorisnickoImeRadnikaR(KorisnickoImeRadnikaR))
 	{
 		cout << "Nalog nije pronadjen." << endl;
 	}
 	else
 	{
-		if (remove((putanja+KorisnickoImeRadnikaR + "_radnikRegistracija.txt").c_str()) == 0) {
+		if (remove((putanja+KorisnickoImeRadnikaR + ".txt").c_str()) == 0) {
 			cout << "Nalog radnika za registraciju uspjesno obrisan." << endl;
 		}
 		else {
@@ -121,7 +128,7 @@ void AdminRegistracija::ispisInfoRadnika(string userNameRadnikR)
 
 bool AdminRegistracija::provjeriAdminRegistracija(string korisnickoIme_, string sifra_)
 {
-	ifstream fajl(putanja + korisnickoIme_ + "_administratorRegistracija.txt");
+	ifstream fajl(putanja + korisnickoIme_ + ".txt");
 	if (!fajl.is_open())
 	{
 		//cout << "Greska pri pristupu datoteke AR." << endl;
@@ -238,9 +245,6 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 			cout << e.what() << endl;
 		}
 	}
-	cout << "Unestie datum rodjenja." << endl;
-	cin >> DatumRodjenjaRR;
-	radnikRegistracija.postaviDatumRodjenja(DatumRodjenjaRR);
 	radnikRegistracija.postaviPozicija();
 
 	cout << "Unesite korisnicko ime." << endl;
@@ -259,20 +263,11 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 		i++;
 	} while (i < 10 && !ValidnaSifra(LozinkaRadnikaR));
 	radnikRegistracija.postaviSifra(LozinkaRadnikaR);
-	cout << "Unesite kod verifikacije." << endl;
-	string kod;
-	cin >> kod;
-	if (kod != "RR-") // Kod za verifikaciju radnika registracije
-	{
-		cout << "Kod verifikacije neispravan." << endl;
-		podaciValidni = false;
-		return;
-	}
 
 	cout << "Proces autentifikacije..." << endl;
 	if (podaciValidni) {
 		// Ovdje mozemo dodati sleep()
-		ofstream file(putanja + KorisnickoImeRadnikaR + "_radnikRegistracija.txt");
+		ofstream file(putanja + KorisnickoImeRadnikaR + ".txt");
 		try {
 			if (!file.is_open())
 			{
@@ -285,8 +280,7 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 				file << "Ime:" << ImeRadnikaR << "\n";
 				file << "Prezime:" << PrezimeRadnikR << "\n";
 				file << "Email:" << EmailRadnikaR << "\n";;
-				file << "Datum rodjenja:" << DatumRodjenjaRR << "\n";
-				file << "Pozicija:" << "Radnik za Registraciju" << "\n";
+				file << "funkcija:" << "radnikR" << "\n";
 				cout << "Uspjesno kreiran nalog." << endl;
 				radnikRegistracija.setRegistraciju();
 			}
@@ -305,7 +299,7 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 
 bool AdminRegistracija::provjeriKorisnickoImeAdminaR(const string username)
 {
-	ifstream file(putanja+username + "_administratorRegistracija.txt");
+	ifstream file(putanja+username + ".txt");
 	return file.good();
 }
 
@@ -316,39 +310,34 @@ void AdminRegistracija::prikaziMeni()
 	while (!kraj) {
 		int izbor;
 		cout << endl;
-		cout << "Meni za Admina R" << endl;
-		cout << "1. Ulogovanje" << endl;
-		cout << "2. Dodaj Radnika za Registraciju" << endl;
-		cout << "3. Obrisi radika za Registraciju" << endl;
-		cout << "4. Pregled radnika za Registraciju" << endl;
-		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
-		cout << "6. Odjava" << endl;
-		cout << "7. Izlaz" << endl;
+		cout << "Meni za Admina Registracija" << endl;
+		cout << "1. Dodaj Radnika za Registraciju" << endl;
+		cout << "2. Obrisi radika za Registraciju" << endl;
+		cout << "3. Pregled radnika za Registraciju" << endl;
+		cout << "4. Ispis detaljnijih informacija o radniku" << endl;
+		cout << "5. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
 		switch (izbor) {
 		case 1:
-			Ulogovanje();
-			break;
-		case 2:
 			dodajRadnikaRegistracija();
 			break;
-		case 3:
+		case 2:
 			obrisiRadnikaRegistracija();
 			break;
-		case 4:
+		case 3:
 			PregledNalogaRadnika();
 			break;
-		case 5:
+		case 4:
 			cout << "Unesite korisnicko ime radnika." << endl;
 			cin >> ime;
 			ispisInfoRadnika(ime);
 			break;
-		case 6:
+		case 5:
 			Odjava();
-			break;
-		case 7:
+			this->ulogovan = false;
+			this->ulogovan = false;
 			kraj = true;
 			break;
 		default:

@@ -11,7 +11,7 @@ protected:
 	bool podaciValidni = true;
 	//bool provjeriUlogovanje() override { return false; }
 public:
-	Admin(const string, const string, const string, const string);
+	Admin(const string, const string, const string, const string, const string);
 	Admin() : Korisnik() {}
 	string getIme();
 	string getPrezime();

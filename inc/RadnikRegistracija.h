@@ -27,6 +27,8 @@ public:
 	RadnikR() noexcept : Radnik() {}
 	RadnikR(function<void()> func) : Radnik(), dodajRadnikaFunc(func) {}
 	RadnikR(bool ulogovan) noexcept : Radnik() { this->ulogovan = ulogovan; }
+	RadnikR(std::string ime, std::string prezime, std::string korisnicko,
+			std::string sifra, std::string email) : Radnik(ime,prezime,korisnicko,sifra,email) {};
 	//Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled iz postojece datoteke
 	void postaviInfo(string korisnickoIme);
 
