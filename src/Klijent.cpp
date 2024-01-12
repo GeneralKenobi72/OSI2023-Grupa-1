@@ -356,6 +356,10 @@ void Klijent::unesiPodatke()
 
 void Klijent::odaberiTermin()
 {
+	if (!provjeriUlogovanje())
+	{
+		return;
+	}
 	cout << "====Odabir termina za tehnicki pregled=====" << endl;
 	ifstream file(putanja + "Termini.txt");
 	if (!file)
@@ -363,52 +367,73 @@ void Klijent::odaberiTermin()
 		cout << "Error kod otvaranja Termina" << endl;
 		return;
 	}
+	vector<Termin> termini;
 	string fileKorisnickoIme, fileDatum, fileVrijeme;
 	while (file >> fileKorisnickoIme >> fileDatum >> fileVrijeme) {
+		Termin temp(fileKorisnickoIme, fileDatum, fileVrijeme, "");
+		termini.push_back(temp);
 		if (fileKorisnickoIme == this->getKorisnickoIme()) {
 			cout << "Izgleda da imate zakazni termin." << endl;
 			return;
 		}
 	}
+	file.close();
+
+	sort(termini.begin(), termini.end());
+
 	unesiPodatke();
-	if (!provjeriUlogovanje())
-	{
-		return;
-	}
+
 	string datum, vrijeme, korisnicko_ime;
 	korisnicko_ime = getKorisnickoIme();
 	string reg_broj = getRegistarskiBroj();
+	Termin temp;
+	Termin slobodanTermin = temp.nadjiSlobodanTermin(termini, korisnicko_ime);
 
-	int statusTermina;
-	do {
-		cout << "Unesite datum (godina-mjesec-dan): ";
-		cin >> datum;
-		cout << "Unesite vrijeme (SS:MM): ";
-		cin >> vrijeme;
+	cout << "Predlozeni slobodan termin je: " << slobodanTermin.datum << " u " << slobodanTermin.vrijeme << endl;
+	cout << "Da li zelite rezervisati ovaj termin? (da/ne): ";
+	string da;
+	cin >> da;
+	if (da == "da")
+	{
+		upisiTerminUFajl(this->getKorisnickoIme(), slobodanTermin.datum, slobodanTermin.vrijeme);
+		cout << "Vas termin je uspjesno zakazan." << endl;
+	}
+	else {
+		int statusTermina;
+		do {
+			do {
+				cout << "Unesite datum (godina.mjesec.dan): ";
+				cin >> datum;
+			} while (!jeValidanDatum(datum));
+			do {
+				cout << "Unesite vrijeme (SS:MM): ";
+				cin >> vrijeme;
+			} while (!jeValidnoVrijeme(vrijeme));
 
-		if (!jeVrijemeURadnomVremenu(vrijeme)) {
-			cout << "Uneseno vrijeme nije unutar radnog vremena. Molimo unesite vrijeme izmeðu 08:00 i 20:00." << endl;
-			continue;
-		}
+				if (!jeVrijemeURadnomVremenu(vrijeme)) {
+					cout << "Uneseno vrijeme nije unutar radnog vremena. Molimo unesite vrijeme izmeðu 08:00 i 20:00." << endl;
+					continue;
+				}
 
-		statusTermina = provjeriTermin(datum, vrijeme);
+				statusTermina = provjeriTermin(datum, vrijeme);
 
-		if (statusTermina == -2) {
-			cout << "Vrijeme termina je zauzeto. Molim unesite ponovo." << endl;
-		}
-		else if (statusTermina == -3) {
-			cout << "Svi termini za ovaj datum su zauzeti. Molimo izaberite drugi datum." << endl;
-		}
-		else if (statusTermina == -1)
-		{
-			cout << "Vas termin je zakazan." << endl;
-			break;
-		}
+				if (statusTermina == -2) {
+					cout << "Vrijeme termina je zauzeto. Molim unesite ponovo." << endl;
+				}
+				else if (statusTermina == -3) {
+					cout << "Svi termini za ovaj datum su zauzeti. Molimo izaberite drugi datum." << endl;
+				}
+				else if (statusTermina == -1)
+				{
+					cout << "Vas termin je zakazan." << endl;
+					break;
+				}
 
-	} while (statusTermina != 1);
+		}while (statusTermina != 1);
 
-	//Termin noviTermin(korisnicko_ime, datum, vrijeme, reg_broj);
-	upisiTerminUFajl(korisnicko_ime, datum, vrijeme);
+		//Termin noviTermin(korisnicko_ime, datum, vrijeme, reg_broj);
+		upisiTerminUFajl(korisnicko_ime, datum, vrijeme);
+	}
 }
 
 int Klijent::provjeriTermin(const string& datum, const string& vrijeme)

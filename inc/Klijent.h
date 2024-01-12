@@ -89,7 +89,7 @@ public:
 		ss >> sati >> dvotacka >> minute;
 
 		// nE moze se zakazivati poslije 20:00
-		if (sati > 20 || sati<8)
+		if (sati > 20 || sati < 8)
 		{
 			cout << "Vrijeme je van radnog vremena." << endl;
 			return false;
@@ -97,4 +97,38 @@ public:
 		return true;
 	}
 	void otkaziTermin();
+	bool jeValidnoVrijeme(const string& vrijeme) {
+		int sati, minute;
+		if (sscanf_s(vrijeme.c_str(), "%d:%d", &sati, &minute) != 2) {
+			return false;
+		}
+		return sati >= 8 && sati <= 20 && minute >= 0 && minute < 60;
+	}
+	bool jeValidanDatum(const string& datum) {
+		int godina, mjesec, dan;
+		if (sscanf_s(datum.c_str(), "%d.%d.%d", &godina, &mjesec, &dan) != 3) {
+			return false;
+		}
+
+		struct tm unetiDatum = { 0 };
+		unetiDatum.tm_year = godina - 1900;
+		unetiDatum.tm_mon = mjesec - 1;
+		unetiDatum.tm_mday = dan;
+
+		time_t trenutnoVrijeme = time(0);
+		struct tm trenutno;
+		localtime_s(&trenutno, &trenutnoVrijeme);
+
+		time_t unetiDatumTemp = mktime(&unetiDatum);
+		time_t trenutnoTemp = mktime(&trenutno);
+		if (unetiDatumTemp>= trenutnoTemp)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 };

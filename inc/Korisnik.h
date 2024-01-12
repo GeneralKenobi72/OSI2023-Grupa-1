@@ -6,6 +6,10 @@
 #include "Izuzeci.h"
 #include "getChar.h"
 #include <cstdlib>
+#include "Termin.h"
+#include <chrono>
+#include <algorithm>
+#include <ctime>
 #include <sstream>
 using namespace std;
 #include <filesystem>
