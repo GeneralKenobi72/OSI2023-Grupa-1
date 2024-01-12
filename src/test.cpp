@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <fstream>
 #include <functional>
+#include "Termin.h"
 namespace fs = std::filesystem;
 using namespace std;
 #include <string>

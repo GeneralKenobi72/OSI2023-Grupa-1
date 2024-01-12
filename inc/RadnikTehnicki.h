@@ -1,9 +1,12 @@
 #pragma once
 #include <iostream>
 #include "Korisnik.h"
+#include "Klijent.h"
 #include "Radnik.h"
 #include <string>
 #include <fstream>
+#include "Termin.h"
+#include <vector>
 #include <functional>
 using namespace std;
 
@@ -23,6 +26,7 @@ private:
 			return true;
 		}
 	}
+	Klijent klijent;
 public:
 	RadnikT(std::string ime, std::string prezime, std::string korisnicko,
 			std::string sifra, std::string email) : Radnik(ime,prezime,korisnicko,sifra,email) {};
@@ -63,4 +67,38 @@ public:
 			}
 		}
 	}
+
+	void unesiPodatke(const string& korisnickoImeKlijenta);
+	void odaberiTermin();
+	int provjeriTermin(const string& datum, const string& vrijeme);
+	void upisiTerminUFajl(const string&, const string&, const string&);
+
+	int vrijemeUMinute(const string& vrijeme) {
+		int sati, minute;
+		char dvotacka;
+
+		istringstream stream(vrijeme);
+		stream >> sati >> dvotacka >> minute;
+
+		return sati * 60 + minute;
+	}
+	bool jeVrijemeURadnomVremenu(const string& vrijeme) {
+		int sati, minute;
+		char dvotacka;
+		stringstream ss(vrijeme);
+		ss >> sati >> dvotacka >> minute;
+
+		// nE moze se zakazivati poslije 20:00
+		if (sati > 20 || sati < 8)
+		{
+			cout << "Vrijeme je van radnog vremena." << endl;
+			return false;
+		}
+		return true;
+	}
+
+	void otkazivanjeTermina();
+	void izmjeniTermin();
+	void pregledTermina();
+	void ispisInfoKlijenta();
 };

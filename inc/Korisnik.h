@@ -5,6 +5,8 @@
 #include <cctype>
 #include "Izuzeci.h"
 #include "getChar.h"
+#include <cstdlib>
+#include <sstream>
 using namespace std;
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -37,6 +39,9 @@ public:
 	string getSifra() { return sifra; }
 	string getKorisnickoIme() { return korisnickoIme; }
 	string getEmail() { return email; }
+
+	void setKorisnickoIme(string korisnickoIme) { this->korisnickoIme = korisnickoIme; }
+
 	bool provjeriPutanju(string putanja);
 	virtual bool Ulogovanje() = 0;
 	virtual void prikaziMeni() = 0;
