@@ -325,22 +325,22 @@ void Klijent::unesiPodatke()
 	string godinaProizvodnje;
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	do {
-		cout << "Unesite marku vozila: ";
+		cout << "Unesite marku vozila(npr. Golf): ";
 		getline(cin, markaVozila);
 	} while (!ValidnoVozilo(markaVozila));
 	setMarkaVozila(markaVozila);
 	do {
-		cout << "Unesite model vozila: ";
+		cout << "Unesite model vozila(npr. mk6): ";
 		getline(cin, modelVozila);
 	} while (!ValidnoVozilo(modelVozila));
 	setModelVozila(modelVozila);
 	do {
-		cout << "Unesite godinu proizvodnje vozila: ";
+		cout << "Unesite godinu proizvodnje vozila(npr. 2012): ";
 		getline(cin, godinaProizvodnje);
 	} while (!ValidnaGodina(godinaProizvodnje));
 	setGodinaProizvodnje(godinaProizvodnje);
 	do {
-		cout << "Unesite registarski broj vozila: ";
+		cout << "Unesite registarski broj vozila(npr. O46K457): ";
 		getline(cin, registarskiBroj);
 	} while (!ValidanRegistracijskiBroj(registarskiBroj));
 	setRegistarskiBroj(registarskiBroj);

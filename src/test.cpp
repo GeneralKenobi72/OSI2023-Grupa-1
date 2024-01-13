@@ -166,7 +166,7 @@ int main()
 	while(true) {
 		int opcija = pocetniMeni();
 		if(opcija == 1) {
-			Klijent k(false);
+			Klijent k(true);
 			k.novaRegistracija();	
 			k.prikaziMeni();
 		}
