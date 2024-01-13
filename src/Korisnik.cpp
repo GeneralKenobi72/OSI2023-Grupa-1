@@ -60,7 +60,7 @@ bool Korisnik::ValidnoPrezime(string prezime)
 
 bool Korisnik::ValidanEmail(string email)
 {
-	if (!isalpha(email[0]))
+	if (!isalpha(email[0]) && !isdigit(email[0]))
 	{
 		return false;
 	}
@@ -107,7 +107,7 @@ bool Korisnik::ValidnaSifra(string sifra)
 {
 	int broj = 0, velikaSlova = 0, malaSlova = 0, specijalniChar = 0;
 	try {
-		if (sifra.size() <= 4 && sifra.size() >= 15)
+		if (sifra.size() <= 4 && sifra.size() >= 16)
 		{
 			throw InvalidSifra();
 		}
