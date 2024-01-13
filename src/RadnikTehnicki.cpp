@@ -8,6 +8,9 @@
 #include <fstream>
 #include "RadnikTehnicki.h"
 #include <functional>
+#include <vector>
+#include "Termin.h"
+
 using namespace std;
 
 // Vraca podstring od pocetka do pozicije underscore-a
@@ -81,6 +84,200 @@ bool RadnikT::provjeriRadnikaTehnicki(string korisnickoIme_, string sifra_)
 	return true;
 }
 
+void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
+{
+	if (!provjeriUlogovanje())
+	{
+		cout << "Niste ulogovani." << endl;
+		return;
+	}
+	string markaVozila, modelVozila, registarskiBroj;
+	string godinaProizvodnje;
+
+	ofstream file(putanja + korisnickoImeKlijenta + ".txt", ios::app);
+	try {
+		if (!file.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+		else
+		{
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			do {
+				cout << "Unesite marku vozila klijenta " << korisnickoImeKlijenta << ": ";
+				getline(cin, markaVozila);
+			} while (!ValidnoVozilo(markaVozila));
+			
+			do {
+				cout << "Unesite model vozila klijenta " << korisnickoImeKlijenta << ": ";
+				getline(cin, modelVozila);
+			} while (!ValidnoVozilo(modelVozila));
+			
+			do {
+				cout << "Unesite godinu proizvodnje vozila klijenta " << korisnickoImeKlijenta << ": ";
+				getline(cin, godinaProizvodnje);
+			} while (!ValidnaGodina(godinaProizvodnje));
+
+			do {
+				cout << "Unesite registarski broj vozila klijenta " << korisnickoImeKlijenta << ": ";
+				getline(cin, registarskiBroj);
+			} while (!ValidanRegistracijskiBroj(registarskiBroj));
+			string korisnicko_ime = getKorisnickoIme();
+
+			file << "Model vozila:" << modelVozila << "\n";
+			file << "Marka vozila:" << markaVozila << "\n";
+			file << "Godina proizvodnje:" << godinaProizvodnje << "\n";
+			file << "Registarski broj vozila:" << registarskiBroj << "\n";
+		}
+	}
+	catch (const FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+	}
+
+}
+
+void RadnikT::odaberiTermin()
+{
+	if (!provjeriUlogovanje())
+	{
+		cout << "Niste ulogovani." << endl;
+		return;
+	}
+	ifstream file1(putanja + "Termini.txt");
+	if (!file1)
+	{
+		cout << "Error kod otvaranja Termina" << endl;
+		return;
+	}
+	cout << "Unesite korisnicko ime klijenta" << endl;
+	string korisnickoImeKlijenta;
+	cin >> korisnickoImeKlijenta;
+	string fileKorisnickoIme, fileDatum, fileVrijeme;
+	if (pronadjiKorisnickoIme(korisnickoImeKlijenta)==false)
+	{
+		cout << "Korisnik ne postoji. " << endl;
+		return;
+	}
+	vector<Termin> termini;
+	while (file1 >> fileKorisnickoIme >> fileDatum >> fileVrijeme) {
+		Termin temp(fileKorisnickoIme, fileDatum, fileVrijeme, "");
+		termini.push_back(temp);
+		if (fileKorisnickoIme == korisnickoImeKlijenta) {
+			cout << "Izgleda da klijent ima zakazni termin." << endl;
+			return;
+		}
+	}
+
+	file1.close();
+
+	sort(termini.begin(), termini.end());
+
+	unesiPodatke(korisnickoImeKlijenta);
+	string datum, vrijeme;
+	Termin temp;
+	Termin slobodanTermin = temp.nadjiSlobodanTermin(termini,korisnickoImeKlijenta);
+
+	cout << "Predlozeni slobodan termin je: " << slobodanTermin.datum << " u " << slobodanTermin.vrijeme << endl;
+	cout << "Da li zelite rezervisati ovaj termin? (da/ne): ";
+	string da;
+	cin >> da;
+	if (da == "da")
+	{
+		upisiTerminUFajl(this->getKorisnickoIme(), slobodanTermin.datum, slobodanTermin.vrijeme);
+		cout << "Termin klijenta je uspjesno zakazan." << endl;
+	}
+	else {
+
+		int statusTermina;
+		do {
+
+			do {
+				cout << "Unesite datum (godina.mjesec.dan): ";
+				cin >> datum;
+			} while (!jeValidanDatum(datum));
+			do {
+				cout << "Unesite vrijeme (SS:MM): ";
+				cin >> vrijeme;
+			} while (!jeValidnoVrijeme(vrijeme));
+
+			if (!jeVrijemeURadnomVremenu(vrijeme)) {
+				cout << "Uneseno vrijeme nije unutar radnog vremena. Molimo unesite vrijeme izmeðu 08:00 i 20:00." << endl;
+				continue;
+			}
+
+			statusTermina = provjeriTermin(datum, vrijeme);
+
+			if (statusTermina == -2) {
+				cout << "Vrijeme termina je zauzeto. Molim unesite ponovo." << endl;
+			}
+			else if (statusTermina == -3) {
+				cout << "Svi termini za ovaj datum su zauzeti. Molimo izaberite drugi datum." << endl;
+			}
+			else if (statusTermina == -1)
+			{
+				cout << "Vas termin je zakazan." << endl;
+				break;
+			}
+
+		} while (statusTermina != 1);
+
+		//Termin noviTermin(korisnicko_ime, datum, vrijeme, reg_broj);
+		upisiTerminUFajl(korisnickoImeKlijenta, datum, vrijeme);
+	}
+}
+
+int RadnikT::provjeriTermin(const string& datum, const string& vrijeme)
+{
+	ifstream file(putanja + "Termini.txt");
+	string fileKorisnickoIme, fileDatum, fileVrijeme;
+	int brojTermina = 0;
+	while (file >> fileKorisnickoIme >> fileDatum >> fileVrijeme) {
+
+		if (fileKorisnickoIme == getKorisnickoIme())
+		{
+			file.close();
+			return -1;
+		}
+		else if (fileDatum == datum) {
+			brojTermina++;
+			//ovdje se gleda razlika vremena da bude veca od 30 minuta, kako bi se mogao termin zakazati
+			int razlikaUMinutama = abs(vrijemeUMinute(vrijeme) - vrijemeUMinute(fileVrijeme));
+			if (razlikaUMinutama < 30) { // Ako je razlika manja od 30 minuta, termin je zauzet
+				file.close();
+				return -2;
+			}
+		}
+
+	}
+	if (brojTermina >= 24) {
+		file.close();
+		return -3;
+	}
+
+	file.close();
+	cout << "Uspjesno zakazan termin." << endl;
+	return 1;
+}
+
+void RadnikT::upisiTerminUFajl(const string& kIme, const string& datum, const string& vrijeme)
+{
+	ofstream file(putanja + "Termini.txt", ios::app);
+	try {
+		if (!file.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+		else
+		{
+			file << kIme << " " << datum << " " << vrijeme << "\n";
+		}
+	}
+	catch (const FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+	}
+}
 
 //Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled
 void RadnikT::postaviInfo(string korisnickoIme)
@@ -222,8 +419,185 @@ bool RadnikT::Ulogovanje()
 			break;
 		}
 	}
-	ulogovan = true;
+	this->ulogovan = true;
 	return true;
+}
+void RadnikT::otkazivanjeTermina()
+{
+	if (!provjeriUlogovanje())
+	{
+		cout << "Niste ulogovani." << endl;
+		return;
+	}
+	ifstream file1(putanja + "Termini.txt");
+	if (!file1)
+	{
+		cout << "Error kod otvaranja Termina" << endl;
+		return;
+	}
+	cout << "Unesite korisnicko ime klijenta ciji se termin otkazuje." << endl;
+	string korisnickoImeKlijenta;
+	cin >> korisnickoImeKlijenta;
+	string fileKorisnickoIme, fileDatum, fileVrijeme;
+	if (pronadjiKorisnickoIme(korisnickoImeKlijenta) == false)
+	{
+		cout << "Klijent ne postoji. " << endl;
+		return;
+	}
+	while (file1 >> fileKorisnickoIme >> fileDatum >> fileVrijeme) {
+		if (fileKorisnickoIme != korisnickoImeKlijenta) {
+			cout <<"Klijenta nije moguce pronaci u listi termina." << endl;
+			return;
+		}
+	}
+	string line;
+	vector<string> lines;
+
+	bool found = false;
+
+	// Cita datoteku i sprema sve linije osim one koja se treba obrisati
+	while (getline(file1, line)) {
+		if (line.find(korisnickoIme) == string::npos) {
+			lines.push_back(line);
+		}
+		else {
+			found = true;
+		}
+	}
+
+	file1.close();
+
+	if (!found) {
+		cout << "Termin nije pronadjen." << endl;
+		return;
+	}
+	ofstream outFile(putanja + "Termini.txt");
+	for (const auto& savedLine : lines) {
+		outFile << savedLine << endl;
+	}
+	cout << "Termin uspjesno otkazan." << endl;
+}
+
+void RadnikT::izmjeniTermin()
+{
+	Termin t;
+	vector<Termin> termini=t.ucitajTermine();
+	string korisnickoIme, datum, vrijeme;
+
+	cout << "Unesite korisnicko ime klijenta za izmjenu termina "<<endl;
+	cin >> korisnickoIme;
+	bool terminPronadjen = false;
+	for (auto& termin : termini) {
+		if (termin.korisnickoIme == korisnickoIme) {
+			terminPronadjen = true;
+			int statusTermina;
+			do {
+				do {
+					cout << "Unesite datum (godina.mjesec.dan): ";
+					cin >> datum;
+				} while (!jeValidanDatum(datum));
+				do {
+					cout << "Unesite vrijeme (SS:MM): ";
+					cin >> vrijeme;
+				} while (!jeValidnoVrijeme(vrijeme));
+
+				if (!jeVrijemeURadnomVremenu(vrijeme)) {
+					cout << "Molimo unesite vrijeme izmeðu 08:00 i 20:00." << endl;
+					continue;
+				}
+
+				statusTermina = provjeriTermin(datum, vrijeme);
+
+				if (statusTermina == -2) {
+					cout << "Vrijeme termina je zauzeto. Molim unesite ponovo." << endl;
+				}
+				else if (statusTermina == -3) {
+					cout << "Svi termini za ovaj datum su zauzeti. Molimo izaberite drugi datum." << endl;
+				}
+				else {
+					break;
+				}
+
+			} while (statusTermina != 1);
+			termin.setDatum(datum);
+			termin.setVrijeme(vrijeme);
+			break;
+		}
+	}
+	if (!terminPronadjen)
+	{
+		cout << "Korisnicko ime nije pronadjeno." << endl;
+		return;
+	}
+	ofstream file(putanja+"Termini.txt", ios::out | ios::trunc);
+	for (const auto& termin : termini) {
+		file << termin.korisnickoIme << " " << termin.datum << " " << termin.vrijeme << endl;
+	}
+	file.close();
+
+	cout << "Termin je uspjesno izmijenjen." << endl;
+}
+
+void RadnikT::pregledTermina()
+{
+	ifstream file(putanja + "Termini.txt");
+	string kIme, kDatum, kVrijeme;
+	cout << "====Pregled termina za tehnicki pregled vozila====" << endl;
+	while (file >> kIme >> kDatum >> kVrijeme)
+	{
+		cout <<"Korisnicko ime: " << kIme << "[ datum: " << kDatum << ", vrijeme: " << kVrijeme <<" ]" << endl;
+	}
+	file.close();
+}
+
+void RadnikT::ispisInfoKlijenta()
+{
+	cout << "Unesite korisnicko ime klijenta za tehnicki pregled." << endl;
+	string kIme;
+	cin >> kIme;
+	ifstream file(putanja + "Termini.txt");
+	string fileIme, kDatum, kVrijeme;
+	bool pronadjen = false;
+	while (file >> fileIme >> kDatum>> kVrijeme)
+	{
+		if (kIme == fileIme)
+		{
+			pronadjen = true;
+			break;
+		}
+	}
+	if (!pronadjen)
+	{
+		cout << "Ne postoji klijent sa zakazanim terminom." << endl;
+		return;
+	}
+	else {
+		file.close();
+		string linija;
+		ifstream klijentFile(putanja + kIme + ".txt");
+		try {
+			if (!klijentFile.is_open())
+			{
+				throw FajlNijeOtvoren();
+			}
+			else
+			{
+				while (getline(klijentFile, linija)) {
+					if (linija.find("Korisnicko Ime:") == string::npos &&
+						linija.find("Sifra:") == string::npos &&
+						linija.find("Funkcija:") == string::npos) {
+						cout << linija << endl;
+					}
+				}
+			}
+		}
+		catch (const FajlNijeOtvoren& e)
+		{
+			cout << e.what() << endl;
+			return;
+		}
+		klijentFile.close();
+	}
 }
 
 void RadnikT::prikaziMeni()
@@ -234,7 +608,10 @@ void RadnikT::prikaziMeni()
 		cout << endl;
 		cout << "Meni za Radnika T" << endl;
 		cout << "1. Odjava" << endl;
-		cout << "2. Izlaz" << endl;
+		cout << "2. Izmjena termina" << endl;
+		cout << "3. Unos termina" << endl;
+		cout << "4. Pregled termina" << endl;
+		cout << "5. Pregled detaljnijih informacija klijenta sa zakazanim terminom" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -245,7 +622,16 @@ void RadnikT::prikaziMeni()
 			kraj = true;
 			break;
 		case 2:
-			kraj = true;
+			izmjeniTermin();
+			break;
+		case 3:
+			odaberiTermin();
+			break;
+		case 4:
+			pregledTermina();
+			break;
+		case 5:
+			ispisInfoKlijenta();
 			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;

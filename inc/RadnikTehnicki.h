@@ -1,9 +1,12 @@
 #pragma once
 #include <iostream>
 #include "Korisnik.h"
+#include "Klijent.h"
 #include "Radnik.h"
 #include <string>
 #include <fstream>
+#include "Termin.h"
+#include <vector>
 #include <functional>
 using namespace std;
 
@@ -23,6 +26,7 @@ private:
 			return true;
 		}
 	}
+	Klijent klijent;
 public:
 	RadnikT(std::string ime, std::string prezime, std::string korisnicko,
 			std::string sifra, std::string email) : Radnik(ime,prezime,korisnicko,sifra,email) {};
@@ -63,4 +67,86 @@ public:
 			}
 		}
 	}
+
+	void unesiPodatke(const string& korisnickoImeKlijenta);
+	void odaberiTermin();
+	int provjeriTermin(const string& datum, const string& vrijeme);
+	void upisiTerminUFajl(const string&, const string&, const string&);
+
+	int vrijemeUMinute(const string& vrijeme) {
+		int sati, minute;
+		char dvotacka;
+
+		istringstream stream(vrijeme);
+		stream >> sati >> dvotacka >> minute;
+
+		return sati * 60 + minute;
+	}
+	bool jeVrijemeURadnomVremenu(const string& vrijeme) {
+		int sati, minute;
+		char dvotacka;
+		stringstream ss(vrijeme);
+		ss >> sati >> dvotacka >> minute;
+
+		// nE moze se zakazivati poslije 20:00
+		if (sati > 20 || sati < 8)
+		{
+			cout << "Vrijeme je van radnog vremena." << endl;
+			return false;
+		}
+		return true;
+	}
+	bool jeValidnoVrijeme(const string& vrijeme) {
+		int sati, minute;
+         #ifdef _WIN32 
+		if (sscanf_s(vrijeme.c_str(), "%d:%d", &sati, &minute) != 2) {
+			return false;
+		}
+        #else 
+		if (sscanf(vrijeme.c_str(), "%d:%d", &sati, &minute) != 2) {
+			return false;
+		}
+        #endif
+		return sati >= 8 && sati <= 20 && minute >= 0 && minute < 60;
+	}
+	bool jeValidanDatum(const string& datum) {
+		int godina, mjesec, dan;
+        #ifdef _WIN32
+		if (sscanf_s(datum.c_str(), "%d.%d.%d", &godina, &mjesec, &dan) != 3) {
+			return false;
+		}
+        #else
+		if (sscanf(datum.c_str(), "%d.%d.%d", &godina, &mjesec, &dan) != 3) {
+			return false;
+		}
+        #endif
+
+		struct tm unetiDatum = { 0 };
+		unetiDatum.tm_year = godina - 1900;
+		unetiDatum.tm_mon = mjesec - 1;
+		unetiDatum.tm_mday = dan;
+
+		time_t trenutnoVrijeme = time(0);
+		struct tm trenutno;
+        #ifdef _WIN32
+		localtime_s(&trenutno, &trenutnoVrijeme);
+        #else
+		localtime_r(&trenutnoVrijeme, &trenutno);
+         #endif
+
+		time_t unetiDatumTemp = mktime(&unetiDatum);
+		time_t trenutnoTemp = mktime(&trenutno);
+		if (unetiDatumTemp >= trenutnoTemp)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	void otkazivanjeTermina();
+	void izmjeniTermin();
+	void pregledTermina();
+	void ispisInfoKlijenta();
 };

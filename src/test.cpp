@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <fstream>
 #include <functional>
+#include "Termin.h"
 namespace fs = std::filesystem;
 using namespace std;
 #include <string>
@@ -165,7 +166,7 @@ int main()
 	while(true) {
 		int opcija = pocetniMeni();
 		if(opcija == 1) {
-			Klijent k(false);
+			Klijent k(true);
 			k.novaRegistracija();	
 			k.prikaziMeni();
 		}

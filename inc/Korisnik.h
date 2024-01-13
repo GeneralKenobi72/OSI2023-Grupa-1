@@ -5,6 +5,12 @@
 #include <cctype>
 #include "Izuzeci.h"
 #include "getChar.h"
+#include <cstdlib>
+#include "Termin.h"
+#include <chrono>
+#include <algorithm>
+#include <ctime>
+#include <sstream>
 using namespace std;
 #include <filesystem>
 namespace fs = std::filesystem;
@@ -37,6 +43,9 @@ public:
 	string getSifra() { return sifra; }
 	string getKorisnickoIme() { return korisnickoIme; }
 	string getEmail() { return email; }
+
+	void setKorisnickoIme(string korisnickoIme) { this->korisnickoIme = korisnickoIme; }
+
 	bool provjeriPutanju(string putanja);
 	virtual bool Ulogovanje() = 0;
 	virtual void prikaziMeni() = 0;
@@ -55,6 +64,49 @@ public:
 	string putanja = "data/";
 	#endif
 	bool ulogovan= false;
+	//provjera Marke vozila i Modela vozila
+	bool ValidnoVozilo(const string& vozilo) {
+		if (vozilo.empty()) {
+			cout << "Nije validno." << endl;
+			return false;
+		}
+		for (char znak : vozilo) {
+			if (!isalnum(znak) && !isspace(znak)) {
+				cout << "Nije validno." << endl;
+				return false;
+			}
+		}
+
+		return true;
+	}
+	bool ValidnaGodina(const string& godinaStr) {
+		if (godinaStr.length() == 4) {
+			for (char c : godinaStr) {
+				if (!isdigit(c)) {
+					cout << "Nije validno." << endl;
+					return false;
+				}
+			}
+			int godina = std::stoi(godinaStr);
+			return (godina >= 1900 && godina <= 2024);
+		}
+		return false;
+	}
+	bool ValidanRegistracijskiBroj(const string& regBroj) {
+		if (regBroj.length() < 5 || regBroj.length() > 10) {
+			cout << "Nije validno." << endl;
+			return false;
+		}
+		for (char c : regBroj) {
+			if (!isalnum(c)) {
+				cout << "Nije validno." << endl;
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 protected:
 	//f-ja koja ignorise string do pojave ':'
 	//Prilikom ispisa iz datoteke-> Username:
