@@ -99,16 +99,29 @@ public:
 	void otkaziTermin();
 	bool jeValidnoVrijeme(const string& vrijeme) {
 		int sati, minute;
+        #ifdef _WIN32 
 		if (sscanf_s(vrijeme.c_str(), "%d:%d", &sati, &minute) != 2) {
 			return false;
 		}
+        #else 
+		if (sscanf(vrijeme.c_str(), "%d:%d", &sati, &minute) != 2) {
+			return false;
+		}
+        #endif
+
 		return sati >= 8 && sati <= 20 && minute >= 0 && minute < 60;
 	}
 	bool jeValidanDatum(const string& datum) {
 		int godina, mjesec, dan;
+        #ifdef _WIN32
 		if (sscanf_s(datum.c_str(), "%d.%d.%d", &godina, &mjesec, &dan) != 3) {
 			return false;
 		}
+        #else
+		if (sscanf(datum.c_str(), "%d.%d.%d", &godina, &mjesec, &dan) != 3) {
+			return false;
+		}
+        #endif
 
 		struct tm unetiDatum = { 0 };
 		unetiDatum.tm_year = godina - 1900;
@@ -117,7 +130,11 @@ public:
 
 		time_t trenutnoVrijeme = time(0);
 		struct tm trenutno;
+        #ifdef _WIN32
 		localtime_s(&trenutno, &trenutnoVrijeme);
+        #else
+		localtime_r(&trenutnoVrijeme, &trenutno);
+        #endif
 
 		time_t unetiDatumTemp = mktime(&unetiDatum);
 		time_t trenutnoTemp = mktime(&trenutno);

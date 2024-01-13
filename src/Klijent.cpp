@@ -106,10 +106,11 @@ void Klijent::novaRegistracija()
 	string K_sifra;
 	string K_korisnickoIme;
 	string K_email;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cout << "Ime " << endl;
 	while (1)
 	{
-		cin >> K_Ime;
+		getline(cin, K_Ime);
 		try {
 			if (!ValidnoIme(K_Ime))
 			{
@@ -128,7 +129,8 @@ void Klijent::novaRegistracija()
 	cout << "Prezime " << endl;
 	while (1)
 	{
-		cin >> K_Prezime;
+		//cin >> K_Prezime;
+		getline(cin, K_Prezime);
 		try {
 			if (!ValidnoPrezime(K_Prezime))
 			{
@@ -146,7 +148,8 @@ void Klijent::novaRegistracija()
 	}
 	cout << "Email" << endl;
 	while (1) {
-		cin >> K_email;
+		//cin >> K_email;
+		getline(cin, K_email);
 		try {
 			if (ValidanEmail(K_email))
 			{
@@ -320,18 +323,26 @@ void Klijent::unesiPodatke()
 	}
 	string markaVozila, modelVozila, registarskiBroj;
 	string godinaProizvodnje;
-
-	cout << "Unesite marku vozila: ";
-	cin >> markaVozila;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	do {
+		cout << "Unesite marku vozila: ";
+		getline(cin, markaVozila);
+	} while (!ValidnoVozilo(markaVozila));
 	setMarkaVozila(markaVozila);
-	cout << "Unesite model vozila: ";
-	cin >> modelVozila;
+	do {
+		cout << "Unesite model vozila: ";
+		getline(cin, modelVozila);
+	} while (!ValidnoVozilo(modelVozila));
 	setModelVozila(modelVozila);
-	cout << "Unesite godinu proizvodnje vozila: ";
-	cin >> godinaProizvodnje;
+	do {
+		cout << "Unesite godinu proizvodnje vozila: ";
+		getline(cin, godinaProizvodnje);
+	} while (!ValidnaGodina(godinaProizvodnje));
 	setGodinaProizvodnje(godinaProizvodnje);
-	cout << "Unesite registarski broj vozila: ";
-	cin >> registarskiBroj;
+	do {
+		cout << "Unesite registarski broj vozila: ";
+		getline(cin, registarskiBroj);
+	} while (!ValidanRegistracijskiBroj(registarskiBroj));
 	setRegistarskiBroj(registarskiBroj);
 	string korisnicko_ime = getKorisnickoIme();
 	ofstream file(putanja+korisnicko_ime+".txt", ios::app);

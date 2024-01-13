@@ -102,14 +102,26 @@ void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
 		}
 		else
 		{
-			cout << "Unesite marku vozila klijenta " << korisnickoImeKlijenta << ": ";
-			cin >> markaVozila;
-			cout << "Unesite model vozila klijenta " << korisnickoImeKlijenta << ": ";
-			cin >> modelVozila;
-			cout << "Unesite godinu proizvodnje vozila klijenta " << korisnickoImeKlijenta << ": ";
-			cin >> godinaProizvodnje;
-			cout << "Unesite registarski broj vozila klijenta " << korisnickoImeKlijenta << ": ";
-			cin >> registarskiBroj;
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			do {
+				cout << "Unesite marku vozila klijenta " << korisnickoImeKlijenta << ": ";
+				getline(cin, markaVozila);
+			} while (!ValidnoVozilo(markaVozila));
+			
+			do {
+				cout << "Unesite model vozila klijenta " << korisnickoImeKlijenta << ": ";
+				getline(cin, modelVozila);
+			} while (!ValidnoVozilo(modelVozila));
+			
+			do {
+				cout << "Unesite godinu proizvodnje vozila klijenta " << korisnickoImeKlijenta << ": ";
+				getline(cin, godinaProizvodnje);
+			} while (!ValidnaGodina(godinaProizvodnje));
+
+			do {
+				cout << "Unesite registarski broj vozila klijenta " << korisnickoImeKlijenta << ": ";
+				getline(cin, registarskiBroj);
+			} while (!ValidanRegistracijskiBroj(registarskiBroj));
 			string korisnicko_ime = getKorisnickoIme();
 
 			file << "Model vozila:" << modelVozila << "\n";

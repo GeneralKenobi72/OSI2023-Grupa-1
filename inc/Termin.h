@@ -47,9 +47,16 @@ public:
 	}
 	int vrijemeUMinute() const {
 		int sati, minute;
+        #ifdef _WIN32
 		if (sscanf_s(vrijeme.c_str(), "%d:%d", &sati, &minute) != 2) {
 			return -1;
 		}
+        #else
+		if (sscanf(vrijeme.c_str(), "%d:%d", &sati, &minute) != 2) {
+			return -1;
+		}
+        #endif
+
 		return sati * 60 + minute;
 	}
 	bool operator<(const Termin& t) const {
