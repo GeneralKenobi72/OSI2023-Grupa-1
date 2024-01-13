@@ -107,7 +107,7 @@ void Klijent::novaRegistracija()
 	string K_korisnickoIme;
 	string K_email;
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');
-	cout << "Ime " << endl;
+	cout << "Ime(npr. Marko): " << endl;
 	while (1)
 	{
 		getline(cin, K_Ime);
@@ -126,7 +126,7 @@ void Klijent::novaRegistracija()
 			cout << e.what() << endl;
 		}
 	}
-	cout << "Prezime " << endl;
+	cout << "Prezime(npr. Markovic): " << endl;
 	while (1)
 	{
 		//cin >> K_Prezime;
@@ -146,7 +146,7 @@ void Klijent::novaRegistracija()
 			cout << e.what() << endl;
 		}
 	}
-	cout << "Email" << endl;
+	cout << "Email(npr. markovi12@mail.com): " << endl;
 	while (1) {
 		//cin >> K_email;
 		getline(cin, K_email);
@@ -166,11 +166,11 @@ void Klijent::novaRegistracija()
 			cout << e.what() << endl;
 		}
 	}
-	cout << "Korisnicko Ime" << endl;
+	cout << "Korisnicko Ime(npr. MMark123)" << endl;
 	cin >> K_korisnickoIme;
 	string result = provjeriKorisnickoIme(K_korisnickoIme);
 	korisnickoIme = result;
-	cout << "Sifra" << endl;
+	cout << "Sifra(izmedju 4 i 16 karaktera, mora imati barem jedno veliko slovo i jedan broj)" << endl;
 	int i = 0;
 	do {
 		K_sifra = UnesiSifru();
