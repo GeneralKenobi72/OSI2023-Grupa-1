@@ -19,10 +19,11 @@ bool AdminTehnicki::Ulogovanje()
 	string AT_korisnickoIme, AT_sifra, rezultat,
 		korisnickoIme_rezultat, sifra_rezultat;
 	cout << "Unesite korisnicko ime" << endl;
-	cin >> AT_korisnickoIme;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	getline(cin,AT_korisnickoIme);
 	while (!provjeriKorisnickoImeAdminT(AT_korisnickoIme)) {
 		cout << "Korisnicko ime nije pronadjeno! Molim unesite ponovo." << endl;
-		cin >> AT_korisnickoIme;
+		getline(cin, AT_korisnickoIme);
 	}
 
 	ifstream file(putanja+AT_korisnickoIme + ".txt");
@@ -68,10 +69,11 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 {
 	string KorisnickoImeRadnikaT, LozinkaRadnikaT,
 		ImeRadnikaT, PrezimeRadnikT, EmailRadnikaT,DatumRodjenjaRT;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cout << "Unesite Ime." << endl;
 	while (1)
 	{
-		cin >> ImeRadnikaT;
+		getline(cin,ImeRadnikaT);
 		try {
 			if (!ValidnoIme(ImeRadnikaT))
 			{
@@ -90,7 +92,7 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 	cout << "Unesite Prezime." << endl;
 	while (1)
 	{
-		cin >> PrezimeRadnikT;
+		getline(cin,PrezimeRadnikT);
 		try {
 			if (!ValidnoIme(PrezimeRadnikT))
 			{
@@ -108,7 +110,7 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 	}
 	cout << "Unesite Email." << endl;
 	while (1) {
-		cin >> EmailRadnikaT;
+		getline(cin,EmailRadnikaT);
 		try {
 			if (ValidanEmail(EmailRadnikaT))
 			{
@@ -127,11 +129,11 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 	}
 	radnikTehnicki.postaviPozicija();
 	cout << "Unesite korisnicko ime." << endl;
-	cin >> KorisnickoImeRadnikaT;
+	getline(cin, KorisnickoImeRadnikaT);
 	while (radnikTehnicki.provjeriKorisnickoImeRadnikaT(KorisnickoImeRadnikaT))
 	{
 		cout << "Korisnicko Ime zauzeto. Unesite ponovo." << endl;
-		cin >> KorisnickoImeRadnikaT;
+		getline(cin, KorisnickoImeRadnikaT);
 	}
 	radnikTehnicki.postaviKorisnickoIme(KorisnickoImeRadnikaT);
 	cout << "Unesite sifru." << endl;

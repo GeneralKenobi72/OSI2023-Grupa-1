@@ -8,6 +8,9 @@
 #include "Termin.h"
 #include <vector>
 #include <functional>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 using namespace std;
 
 // RadnikT-za tehnicki pregled
@@ -27,6 +30,7 @@ private:
 		}
 	}
 	Klijent klijent;
+	bool potvrdaIzvjestaja = false;
 public:
 	RadnikT(std::string ime, std::string prezime, std::string korisnicko,
 			std::string sifra, std::string email) : Radnik(ime,prezime,korisnicko,sifra,email) {};
@@ -70,8 +74,8 @@ public:
 
 	void unesiPodatke(const string& korisnickoImeKlijenta);
 	void odaberiTermin();
-	int provjeriTermin(const string& datum, const string& vrijeme);
-	void upisiTerminUFajl(const string&, const string&, const string&);
+	int provjeriTermin(const string& datum, const string& vrijeme, const string&, const string&);
+	void upisiTerminUFajl(const string&, const string&, const string&, const string& );
 
 	int vrijemeUMinute(const string& vrijeme) {
 		int sati, minute;
@@ -149,4 +153,123 @@ public:
 	void izmjeniTermin();
 	void pregledTermina();
 	void ispisInfoKlijenta();
+
+	struct Izvjestaj {
+		Termin termin;
+		Vozilo vozilo;
+		string izvrseniRad;
+		vector<string> dodatniProblemi;
+	};
+	void popunjavanjeIzvjestaja();
+	void cuvanjeIzvjestaja(const Izvjestaj& izvjestaj);
+	void izdajPotvrdu(const Izvjestaj& izvjestaj);
+	bool voziloSpremnoZaRegistraciju(const Izvjestaj& izvjestaj) {
+		// Vozilo je spremno za registraciju ako nema dodatnih problema
+		return izvjestaj.dodatniProblemi.size() == 1 && izvjestaj.dodatniProblemi[0] == "Nema";
+	}
+	void centrirajTekst(const string& tekst, ofstream& file, int sirinaLinije = 153) {
+		int duzinaTeksta = tekst.length();
+		int pocetak = (sirinaLinije - duzinaTeksta) / 2;
+		string razmaci(pocetak, ' ');
+		file << razmaci << tekst << "\n";
+	}
+
+	string formatirajDatum(const std::tm& tm) {
+		ostringstream oss;
+		oss << put_time(&tm, "%Y.%m.%d");
+		return oss.str();
+	}
+
+	string dodajDaneNaDatum(int brojDana) {
+		time_t trenutno = time(nullptr);
+
+#ifdef _WIN32
+		std::tm tm;
+		localtime_s(&tm, &trenutno);
+#else
+		std::tm tm = *std::localtime(&trenutno);
+#endif
+		tm.tm_mday += brojDana;
+		std::mktime(&tm);
+
+		return formatirajDatum(tm);
+	}
+	bool provjeriPotvrduIzvjestaja()
+	{
+		if (potvrdaIzvjestaja == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	string izaberiVozilo(string korisnickoImeKlijnta)
+	{
+		ifstream file(putanja + "vozila.txt");
+		if (!file.is_open())
+		{
+			cout << "Ne moze se otvoriti datoteka." << endl;
+			return "";
+		}
+
+		vector<string> registarskiBrojevi;
+		string line;
+
+		while (getline(file, line))
+		{
+			if (line.find(korisnickoImeKlijnta + " ") == 0)
+			{
+				size_t lastSpace = line.find_last_of(" ");
+				string regBroj = line.substr(lastSpace + 1);
+				registarskiBrojevi.push_back(regBroj);
+			}
+		}
+
+		file.close();
+
+		if (registarskiBrojevi.empty())
+		{
+			cout << "Nemate registrovanih vozila." << endl;
+			return "";
+		}
+
+		cout << "Izaberite vozilo" << endl;
+		for (size_t i = 0; i < registarskiBrojevi.size(); i++)
+		{
+			cout << i + 1 << ". " << registarskiBrojevi[i] << endl;
+		}
+
+		int izbor;
+		do 
+		{
+			cout << "Unesite broj vozila: ";
+			cin >> izbor;
+		}while (isalpha(izbor));
+		if (izbor < 1 || izbor > registarskiBrojevi.size())
+		{
+			cout << "Neispravan izbor." << endl;
+			return "";
+		}
+
+		return registarskiBrojevi[izbor - 1];
+	}
+
+	bool daLiJeIzvjestajVecIzdat(const string& regBroj) {
+		ifstream fajl(putanja + "Izvjestaji.txt");
+		string linija;
+		while (getline(fajl, linija)) {
+			istringstream iss(linija);
+			vector<string> dijelovi;
+			string dio;
+			while (std::getline(iss, dio, ',')) {
+				dijelovi.push_back(dio);
+			}
+			if (dijelovi.size() > 6 && dijelovi[6] == regBroj) {
+				return true; 
+			}
+		}
+		return false;
+	}
 };

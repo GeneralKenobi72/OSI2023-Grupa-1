@@ -345,7 +345,39 @@ void Klijent::unesiPodatke()
 	} while (!ValidanRegistracijskiBroj(registarskiBroj));
 	setRegistarskiBroj(registarskiBroj);
 	string korisnicko_ime = getKorisnickoIme();
-	ofstream file(putanja+korisnicko_ime+".txt", ios::app);
+	string podaciVozila = markaVozila + " " + modelVozila + " " + godinaProizvodnje + " " + registarskiBroj;
+
+	ifstream fajlVozila(putanja+"vozila.txt");
+	string tempLine;
+	bool postoji = false;
+	while (getline(fajlVozila, tempLine)) {
+		if (tempLine.find(korisnicko_ime + " " + podaciVozila) != string::npos) {
+			postoji = true;
+			break;
+		}
+	}
+	fajlVozila.close();
+
+	if (!postoji) {
+		ofstream file(putanja+"vozila.txt", ios::app);
+		try {
+			if (!file.is_open()) {
+				throw FajlNijeOtvoren();
+			}
+			else {
+				file << korisnicko_ime << " " << podaciVozila << "\n";
+			}
+		}
+		catch (const FajlNijeOtvoren& e) {
+			cout << e.what() << endl;
+		}
+		file.close();
+	}
+	else {
+		cout << "Podaci o vozilu su vec upisani." << endl;
+	}
+
+	/*ofstream file(putanja + korisnicko_ime + ".txt", ios::app);
 	try {
 		if (!file.is_open())
 		{
@@ -362,7 +394,7 @@ void Klijent::unesiPodatke()
 	catch (const FajlNijeOtvoren& e)
 	{
 		cout << e.what() << endl;
-	}
+	}*/
 }
 
 void Klijent::odaberiTermin()
@@ -378,13 +410,33 @@ void Klijent::odaberiTermin()
 		cout << "Error kod otvaranja Termina" << endl;
 		return;
 	}
+	cout << "Da li klijent vec ima vozilo koje zeli odvesti na tehnicki pregled? (da/ne):";
+	string d;
+	cin >> d;
+	string regBroj;
+	if (d == "da" || d == "Da")
+	{
+		regBroj = izaberiVozilo();
+		if (regBroj.empty()) {
+			//cout << "Nema registrovanih vozila." << endl;
+			return;
+		}
+	}
+	else {
+		unesiPodatke();
+		regBroj = izaberiVozilo();
+		if (regBroj.empty()) {
+			//cout << "Nema registrovanih vozila." << endl;
+			return;
+		}
+	}
 	vector<Termin> termini;
-	string fileKorisnickoIme, fileDatum, fileVrijeme;
-	while (file >> fileKorisnickoIme >> fileDatum >> fileVrijeme) {
-		Termin temp(fileKorisnickoIme, fileDatum, fileVrijeme, "");
+	string fileKorisnickoIme, fileDatum, fileVrijeme, fileRegBroj;
+	while (file >> fileKorisnickoIme >> fileDatum >> fileVrijeme >> fileRegBroj) {
+		Termin temp(fileKorisnickoIme, fileDatum, fileVrijeme, fileRegBroj);
 		termini.push_back(temp);
-		if (fileKorisnickoIme == this->getKorisnickoIme()) {
-			cout << "Izgleda da imate zakazni termin." << endl;
+		if (fileKorisnickoIme == this->getKorisnickoIme() && fileRegBroj == regBroj) {
+			cout << "Izgleda da imate zakazni termin za vozilo : "<<regBroj << endl;
 			return;
 		}
 	}
@@ -392,13 +444,11 @@ void Klijent::odaberiTermin()
 
 	sort(termini.begin(), termini.end());
 
-	unesiPodatke();
-
 	string datum, vrijeme, korisnicko_ime;
 	korisnicko_ime = getKorisnickoIme();
-	string reg_broj = getRegistarskiBroj();
+	//string reg_broj = getRegistarskiBroj();
 	Termin temp;
-	Termin slobodanTermin = temp.nadjiSlobodanTermin(termini, korisnicko_ime);
+	Termin slobodanTermin = temp.nadjiSlobodanTermin(termini, korisnicko_ime,regBroj);
 
 	cout << "Predlozeni slobodan termin je: " << slobodanTermin.datum << " u " << slobodanTermin.vrijeme << endl;
 	cout << "Da li zelite rezervisati ovaj termin? (da/ne): ";
@@ -406,19 +456,20 @@ void Klijent::odaberiTermin()
 	cin >> da;
 	if (da == "da")
 	{
-		upisiTerminUFajl(this->getKorisnickoIme(), slobodanTermin.datum, slobodanTermin.vrijeme);
+		upisiTerminUFajl(this->getKorisnickoIme(), slobodanTermin.datum, slobodanTermin.vrijeme,regBroj);
 		cout << "Vas termin je uspjesno zakazan." << endl;
 	}
 	else {
 		int statusTermina;
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		do {
 			do {
 				cout << "Unesite datum (godina.mjesec.dan): ";
-				cin >> datum;
+				getline(cin, datum);
 			} while (!jeValidanDatum(datum));
 			do {
 				cout << "Unesite vrijeme (SS:MM): ";
-				cin >> vrijeme;
+				getline(cin, vrijeme);
 			} while (!jeValidnoVrijeme(vrijeme));
 
 				if (!jeVrijemeURadnomVremenu(vrijeme)) {
@@ -426,7 +477,7 @@ void Klijent::odaberiTermin()
 					continue;
 				}
 
-				statusTermina = provjeriTermin(datum, vrijeme);
+				statusTermina = provjeriTermin(datum, vrijeme,regBroj);
 
 				if (statusTermina == -2) {
 					cout << "Vrijeme termina je zauzeto. Molim unesite ponovo." << endl;
@@ -443,18 +494,18 @@ void Klijent::odaberiTermin()
 		}while (statusTermina != 1);
 
 		//Termin noviTermin(korisnicko_ime, datum, vrijeme, reg_broj);
-		upisiTerminUFajl(korisnicko_ime, datum, vrijeme);
+		upisiTerminUFajl(korisnicko_ime, datum, vrijeme, regBroj);
 	}
 }
 
-int Klijent::provjeriTermin(const string& datum, const string& vrijeme)
+int Klijent::provjeriTermin(const string& datum, const string& vrijeme, const string& regBroj)
 {
 	ifstream file(putanja+"Termini.txt");
-	string fileKorisnickoIme, fileDatum, fileVrijeme;
+	string fileKorisnickoIme, fileDatum, fileVrijeme, fileRegBroj;
 	int brojTermina = 0;
-	while (file >> fileKorisnickoIme >> fileDatum >> fileVrijeme) {
+	while (file >> fileKorisnickoIme >> fileDatum >> fileVrijeme >> fileRegBroj) {
 
-		if (fileKorisnickoIme == getKorisnickoIme())
+		if (fileKorisnickoIme == getKorisnickoIme() && fileRegBroj==regBroj)
 		{
 			file.close();
 			return -1;
@@ -480,7 +531,7 @@ int Klijent::provjeriTermin(const string& datum, const string& vrijeme)
 	return 1;
 }
 
-void Klijent::upisiTerminUFajl(const string& kIme, const string& datum,const string& vrijeme)
+void Klijent::upisiTerminUFajl(const string& kIme, const string& datum,const string& vrijeme, const string& regBroj)
 {
 	ofstream file(putanja + "Termini.txt", ios::app);
 	try {
@@ -490,7 +541,7 @@ void Klijent::upisiTerminUFajl(const string& kIme, const string& datum,const str
 		}
 		else
 		{
-			file<< getKorisnickoIme() << " " << datum << " " << vrijeme << "\n";
+			file << kIme << " " << datum << " " << vrijeme << " " << regBroj << "\n";
 		}
 	}
 	catch (const FajlNijeOtvoren& e)
@@ -500,33 +551,111 @@ void Klijent::upisiTerminUFajl(const string& kIme, const string& datum,const str
 }
 void Klijent::otkaziTermin()
 {
+	//cout << "Unesite registarski broj vozila za koje zelite otkazati termin ";
+	string regBrojZaOtkaz = izaberiVozilo();
+	/////Termini.txt
 	ifstream file(putanja+"Termini.txt");
 	string line;
 	vector<string> lines;
 
 	bool found = false;
 
-	// Cita datoteku i sprema sve linije osim one koja se treba obrisati
 	while (getline(file, line)) {
-		if (line.find(korisnickoIme) == string::npos) {
-			lines.push_back(line);
+		if (line.find(korisnickoIme) != string::npos && line.find(regBrojZaOtkaz) != string::npos) {
+			found = true;
 		}
 		else {
-			found = true;
+			lines.push_back(line);
 		}
 	}
 
 	file.close();
 
 	if (!found) {
-		cout << "Vas termin nije pronadjen." << endl;
+		cout << "Vas termin nije pronadjen za vozilo sa registarskim brojem : "<<regBrojZaOtkaz << endl;
 		return;
 	}
-	ofstream outFile(putanja+"Termini.txt");
+	ofstream outFile(putanja + "Termini.txt");
 	for (const auto& savedLine : lines) {
 		outFile << savedLine << endl;
 	}
-
+	////Vozila.txt
+	ifstream fileVozila(putanja + "vozila.txt");
+	try {
+		if (!fileVozila.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+	}
+	catch (FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+		return;
+	}
 	cout << "Termin uspjesno otkazan." << endl;
+	vector<string> linijeVozila;
+	bool voziloZaBrisanjePronadjeno = false;
+	string linijaVozila;
+	while (getline(fileVozila, linijaVozila)) {
+		if (linijaVozila.find(this->korisnickoIme) != string::npos && linijaVozila.find(regBrojZaOtkaz) != string::npos) {
+			voziloZaBrisanjePronadjeno = true;
+			continue; 
+		}
+		linijeVozila.push_back(linijaVozila);
+	}
+
+	fileVozila.close();
+
+	if (voziloZaBrisanjePronadjeno) {
+		ofstream outFileVozila(putanja + "vozila.txt");
+		if (!linijeVozila.empty()) {
+			for (size_t i = 0; i < linijeVozila.size() - 1; ++i) {
+				outFileVozila << linijeVozila[i] << endl;
+			}
+
+			outFileVozila << linijeVozila.back();
+		}
+		//cout << "Informacije o vozilu sa registarskim brojem " << regBrojZaOtkaz << " su uspjesno obrisane." << endl;
+	}
+	else {
+		//cout << "Nije pronadjeno vozilo sa registarskim brojem " << regBrojZaOtkaz  << endl;
+	}
+	/*ifstream fileKlijenta(putanja + getKorisnickoIme() + ".txt");
+	try {
+		if (!fileKlijenta.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+	}
+	catch (FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+		return;
+	}
+	vector<string> linijeZaSacuvati;
+	string linija;
+	int preskoci = 0;
+
+	while (getline(fileKlijenta, linija)) {
+		if (preskoci > 0) {
+			preskoci--;
+			continue;
+		}
+
+		if (linija.find("Registarski broj vozila:" + regBrojZaOtkaz) != string::npos) {
+			preskoci = 3;
+			continue;
+		}
+
+		linijeZaSacuvati.push_back(linija);
+	}
+
+	fileKlijenta.close();
+
+	ofstream outFileKlijenta(putanja + this->getKorisnickoIme() + ".txt");
+	for (const auto& linija : linijeZaSacuvati) {
+		outFileKlijenta << linija << endl;
+	}
+	outFileKlijenta.close();*/
 }
 #endif

@@ -78,9 +78,10 @@ bool provjeriKorisnickoIme(string s) {
 bool ulogujSe() {
 	string korisnickoImeUnos, sifraUnos,
 		   korisnickoIme, sifra;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	do {
 		std::cout << "Unesite korisnicko ime:";
-		std::cin >> korisnickoImeUnos;
+		getline(cin, korisnickoImeUnos);
 	} while(!provjeriKorisnickoIme(korisnickoImeUnos));
 
 	ifstream file(putanja+korisnickoImeUnos+".txt");
@@ -129,11 +130,11 @@ int pocetniMeni() {
 	std::cout << "====================================\n";
 	std::cout << "Opcije:\n";
 	std::cout << "1: Registracija\n";
-	std::cout << "2: Log in\n";
+	std::cout << "2: Ulogovanje\n";
 	std::cout << "3: Kraj rada\n";
 	std::cout << "Unos: ";
 	int opcija;
-	std::cin >> opcija;
+	cin >> opcija;
 	return opcija;
 }
 

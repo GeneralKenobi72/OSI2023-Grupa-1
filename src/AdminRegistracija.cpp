@@ -17,11 +17,12 @@ bool AdminRegistracija::Ulogovanje()
 	string AR_korisnickoIme, AR_sifra, rezultat,
 		korisnickoIme_rezultat, sifra_rezultat;
 	cout << "Unesite korisnicko ime" << endl;
-	cin >> AR_korisnickoIme;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	getline(cin, AR_korisnickoIme);
 
 	while (!provjeriKorisnickoImeAdminaR(AR_korisnickoIme)) {
 		cout << "Korisnicko ime nije pronadjeno! Molim unesite ponovo." << endl;
-		cin >> AR_korisnickoIme;
+		getline(cin, AR_korisnickoIme);
 	}
 
 	ifstream file(putanja+AR_korisnickoIme + ".txt");
@@ -72,7 +73,8 @@ void AdminRegistracija::obrisiRadnikaRegistracija()
 	}
 	string KorisnickoImeRadnikaR;
 	cout << "Unesite korisnicko ime radnika za registraciju." << endl;
-	cin >> KorisnickoImeRadnikaR;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	getline(cin, KorisnickoImeRadnikaR);
 
 	cout << "Da li ste sigurni da zelite obrisati nalog radnika " << KorisnickoImeRadnikaR << "?(da/Ne)" << endl;
 	string daNe;
@@ -211,11 +213,11 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 	}
 	string KorisnickoImeRadnikaR, LozinkaRadnikaR,
 		ImeRadnikaR, PrezimeRadnikR, EmailRadnikaR, DatumRodjenjaRR;
-
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cout << "Unesite Ime." << endl;
 	while (1)
 	{
-		cin >> ImeRadnikaR;
+		getline(cin,ImeRadnikaR);
 		try {
 			if (!ValidnoIme(ImeRadnikaR))
 			{
@@ -234,7 +236,7 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 	cout << "Unesite Prezime." << endl;
 	while (1)
 	{
-		cin >> PrezimeRadnikR;
+		getline(cin,PrezimeRadnikR);
 		try {
 			if (!ValidnoIme(PrezimeRadnikR))
 			{
@@ -252,7 +254,7 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 	}
 	cout << "Unesite Email." << endl;
 	while (1) {
-		cin >> EmailRadnikaR;
+		getline(cin, EmailRadnikaR);
 		try {
 			if (ValidanEmail(EmailRadnikaR))
 			{
@@ -272,11 +274,11 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 	radnikRegistracija.postaviPozicija();
 
 	cout << "Unesite korisnicko ime." << endl;
-	cin >> KorisnickoImeRadnikaR;
+	getline(cin,KorisnickoImeRadnikaR);
 	while (radnikRegistracija.provjeriKorisnickoImeRadnikaR(KorisnickoImeRadnikaR))
 	{
 		cout << "Korisnicko Ime zauzeto. Unesite ponovo." << endl;
-		cin >> KorisnickoImeRadnikaR;
+		getline(cin, KorisnickoImeRadnikaR);
 	}
 	radnikRegistracija.postaviKorisnickoIme(KorisnickoImeRadnikaR);
 
