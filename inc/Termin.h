@@ -5,13 +5,14 @@
 #include "Korisnik.h"
 #include <vector>
 #include <algorithm>
+#include <sstream>
 using namespace std;
 class Termin {
 public:
 	string datum;
 	string vrijeme;
-	string voziloID;
-	string status;
+	string voziloID="";
+	string status="";
 	string korisnickoIme;
 public:
 	Termin() {}
@@ -29,12 +30,12 @@ public:
 	string getStatus() { return this->status; }
 	string getKorisnickoIme() { return this->korisnickoIme; }
 	vector<Termin> ucitajTermine() {
-       #ifdef _WIN32
-		string putanja = "data\\";
-        #else
-		string putanja = "data/";
-        #endif
 		vector<Termin> termini;
+#ifdef _WIN32
+		string putanja = "data\\";
+#else
+		string putanja = "data/";
+#endif
 		ifstream file(putanja+"Termini.txt");
 		Termin temp;
 
@@ -87,3 +88,72 @@ public:
 		return slobodanTermin;
 	}
 };
+
+class Vozilo {
+public:
+	string marka;
+	string model;
+	string godinaProizvodnje;
+	string regBroj;
+	string korisnickoIme;
+	string imeKlijnta, prezimeKlijnta;
+	Vozilo() {}
+	Vozilo(string korisnickoIme, string marka, string model, string godProiz, string regBroj) : 
+		korisnickoIme(korisnickoIme) , marka(marka), model(model) , godinaProizvodnje(godProiz) {}
+	Vozilo ucitajPodatkeVozila(const string& korisnickoIme)
+	{
+#ifdef _WIN32
+		string putanja = "data\\";
+#else
+		string putanja = "data/";
+#endif
+		Vozilo vozilo;
+		ifstream datoteka(putanja + korisnickoIme + ".txt");
+		try {
+			if (!datoteka.is_open())
+			{
+				throw FajlNijeOtvoren();
+			}
+			else {
+				string linija;
+				while (getline(datoteka, linija)) {
+					istringstream iss(linija);
+					string kljuc;
+					getline(iss, kljuc, ':');
+
+					if (kljuc == "Marka vozila") {
+						getline(iss, vozilo.marka);
+					}
+					else if (kljuc == "Model vozila") {
+						getline(iss, vozilo.model);
+					}
+					else if (kljuc == "Godina proizvodnje") {
+						getline(iss, vozilo.godinaProizvodnje);
+					}
+					else if (kljuc == "Registarski broj vozila") {
+						getline(iss, vozilo.regBroj);
+					}
+					else if (kljuc == "Korisnicko Ime")
+					{
+						getline(iss, vozilo.korisnickoIme);
+					}
+					else if (kljuc == "Ime")
+					{
+						getline(iss, vozilo.imeKlijnta);
+					}
+					else if (kljuc == "Prezime")
+					{
+						getline(iss, vozilo.prezimeKlijnta);
+					}
+				}
+				datoteka.close();
+			}
+		}
+		catch (FajlNijeOtvoren& e)
+		{
+			cout << e.what() << endl;
+		}
+		return vozilo;
+	}
+};
+

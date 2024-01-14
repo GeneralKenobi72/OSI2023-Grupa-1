@@ -411,14 +411,15 @@ void Klijent::odaberiTermin()
 	}
 	else {
 		int statusTermina;
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		do {
 			do {
 				cout << "Unesite datum (godina.mjesec.dan): ";
-				cin >> datum;
+				getline(cin, datum);
 			} while (!jeValidanDatum(datum));
 			do {
 				cout << "Unesite vrijeme (SS:MM): ";
-				cin >> vrijeme;
+				getline(cin, datum);
 			} while (!jeValidnoVrijeme(vrijeme));
 
 				if (!jeVrijemeURadnomVremenu(vrijeme)) {
@@ -525,6 +526,36 @@ void Klijent::otkaziTermin()
 	ofstream outFile(putanja+"Termini.txt");
 	for (const auto& savedLine : lines) {
 		outFile << savedLine << endl;
+	}
+
+	ifstream fileKlijenta(putanja + getKorisnickoIme() + ".txt");
+	try {
+		if (!fileKlijenta.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+	}
+	catch (FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+		return;
+	}
+	vector<string> linije;
+	string linija;
+	while (getline(fileKlijenta, linija)) {
+		if (linija.find("Model vozila:") == string::npos &&
+			linija.find("Marka vozila:") == string::npos &&
+			linija.find("Godina proizvodnje:") == string::npos &&
+			linija.find("Registarski broj vozila:") == string::npos) {
+			linije.push_back(linija);
+		}
+	}
+	fileKlijenta.close();
+
+	// Ponovno otvorite datoteku u modu za pisanje
+	ofstream outFileKlijenta(putanja+getKorisnickoIme() + ".txt");
+	for (const auto& rezultat : linije) {
+		outFileKlijenta << rezultat << endl;
 	}
 
 	cout << "Termin uspjesno otkazan." << endl;

@@ -118,11 +118,12 @@ bool RadnikR::Ulogovanje()
 	string R_korisnickoIme, R_sifra, rezultat,
 		korisnickoIme_rezultat, sifra_rezultat;
 	cout << "Unesite korisnicko ime" << endl;
-	cin >> R_korisnickoIme;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	getline(cin, R_korisnickoIme);
 	int i = 0;
 	while (!provjeriKorisnickoImeRadnikaR(R_korisnickoIme) && i<5) {
 		cout << "Korisnicko ime nije pronadjeno! Molim unesite ponovo." << endl;
-		cin >> R_korisnickoIme;
+		getline(cin, R_korisnickoIme);
 		i++;
 	}
 	if (i == 5)

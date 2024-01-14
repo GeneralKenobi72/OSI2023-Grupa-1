@@ -8,6 +8,9 @@
 #include "Termin.h"
 #include <vector>
 #include <functional>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 using namespace std;
 
 // RadnikT-za tehnicki pregled
@@ -27,6 +30,7 @@ private:
 		}
 	}
 	Klijent klijent;
+	bool potvrdaIzvjestaja = false;
 public:
 	RadnikT(std::string ime, std::string prezime, std::string korisnicko,
 			std::string sifra, std::string email) : Radnik(ime,prezime,korisnicko,sifra,email) {};
@@ -149,4 +153,56 @@ public:
 	void izmjeniTermin();
 	void pregledTermina();
 	void ispisInfoKlijenta();
+
+	struct Izvjestaj {
+		Termin termin;
+		Vozilo vozilo;
+		string izvrseniRad;
+		vector<string> dodatniProblemi;
+	};
+	void popunjavanjeIzvjestaja();
+	void cuvanjeIzvjestaja(const Izvjestaj& izvjestaj);
+	void izdajPotvrdu(const Izvjestaj& izvjestaj);
+	bool voziloSpremnoZaRegistraciju(const Izvjestaj& izvjestaj) {
+		// Vozilo je spremno za registraciju ako nema dodatnih problema
+		return izvjestaj.dodatniProblemi.size() == 1 && izvjestaj.dodatniProblemi[0] == "Nema";
+	}
+	void centrirajTekst(const string& tekst, ofstream& file, int sirinaLinije = 153) {
+		int duzinaTeksta = tekst.length();
+		int pocetak = (sirinaLinije - duzinaTeksta) / 2;
+		string razmaci(pocetak, ' ');
+		file << razmaci << tekst << "\n";
+	}
+
+	string formatirajDatum(const std::tm& tm) {
+		ostringstream oss;
+		oss << put_time(&tm, "%Y.%m.%d");
+		return oss.str();
+	}
+
+	string dodajDaneNaDatum(int brojDana) {
+		time_t trenutno = time(nullptr);
+
+#ifdef _WIN32
+		std::tm tm;
+		localtime_s(&tm, &trenutno);
+#else
+		std::tm tm = *std::localtime(&trenutno);
+#endif
+		tm.tm_mday += brojDana;
+		std::mktime(&tm);
+
+		return formatirajDatum(tm);
+	}
+	bool provjeriPotvrduIzvjestaja()
+	{
+		if (potvrdaIzvjestaja == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 };
