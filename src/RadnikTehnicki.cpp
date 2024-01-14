@@ -789,12 +789,21 @@ void RadnikT::popunjavanjeIzvjestaja()
 		cout << i + 1 << ". " << vozilaKlijenta[i].regBroj << endl;
 	}
 	int izbor;
-	cout << "Unesite broj vozila: ";
-	cin >> izbor;
-	if (izbor < 1 || izbor > vozilaKlijenta.size()) {
-		cout << "Neispravan izbor." << endl;
-		return;
-	}
+	do {
+		cout << "Unesite broj vozila: ";
+		cin >> izbor;
+
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			continue;
+		}
+		if (izbor < 1 || izbor > vozilaKlijenta.size()) {
+			cout << "Neispravan izbor. Molimo unesite broj izmedju 1 i " << vozilaKlijenta.size() << "." << endl;
+		}
+
+	} while (izbor < 1 || izbor > vozilaKlijenta.size());
+
 
 	Vozilo odabranoVozilo = vozilaKlijenta[izbor - 1];
 

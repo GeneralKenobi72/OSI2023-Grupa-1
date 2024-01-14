@@ -112,14 +112,21 @@ public:
 		}
 
 		int izbor;
-		cout << "Unesite broj vozila: ";
-		cin >> izbor;
+		do {
+			cout << "Unesite broj vozila: ";
+			cin >> izbor;
 
-		if (izbor < 1 || izbor > registarskiBrojevi.size())
-		{
-			cout << "Neispravan izbor." << endl;
-			return "";
-		}
+			if (cin.fail()) {
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				continue;
+			}
+			if (izbor < 1 || izbor > registarskiBrojevi.size()) {
+				cout << "Neispravan izbor. Molimo unesite broj izmedju 1 i " << registarskiBrojevi.size() << "." << endl;
+			}
+
+		} while (izbor < 1 || izbor > registarskiBrojevi.size());
+
 
 		return registarskiBrojevi[izbor - 1];
 	}
