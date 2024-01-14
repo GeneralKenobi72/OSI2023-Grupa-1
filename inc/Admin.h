@@ -18,5 +18,7 @@ public:
 	string getSifra();
 	string getKorisnickoIme();
 	string getEmail();
+	void pretrazivanjeNalogaRadnika();
+	void pronadjiRadnike(std::string parametar, std::string informacija, std::string tipRadnika);
 	bool Ulogovanje() override { return false; }
 };
