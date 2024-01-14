@@ -31,6 +31,7 @@ public:
 	//dodatno mozemo imati funckiju gdje na osnovu tih imena pristupamo datoteci za jos detaljnije informacija 
 	//kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 	void PregledNalogaRadnika();
+	void pretrazivanjeNalogaRadnika() ;
 	void ispisInfoRadnika(string userNameRadnikT);
 	void prikaziMeni() override;
 	bool provjeriAdminTehnicki(string korisnickoIme_, string sifra_);

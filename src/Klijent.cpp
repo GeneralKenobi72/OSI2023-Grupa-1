@@ -42,12 +42,12 @@ void Klijent::upisFajla(string korisnicko_ime)
 		{
 			cout << e.what() << endl;
 		}
-		file << "Korisnicko Ime:" << korisnicko_ime << "\n";
+		file << "KorisnickoIme:" << korisnicko_ime << "\n";
 		file << "Sifra:" << sifra << "\n";
 		file << "Ime:" << Ime << "\n";
 		file << "Prezime:" << Prezime << "\n";
 		file << "Email:" << email << "\n";
-		file << "Funkcija:klijent" << "\n";
+		file << "funkcija:klijent" << "\n";
 		file.flush();
 		file.close();
 	}
