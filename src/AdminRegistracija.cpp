@@ -100,17 +100,41 @@ void AdminRegistracija::obrisiRadnikaRegistracija()
 //kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 void AdminRegistracija::PregledNalogaRadnika()
 {
-	if (provjeriUlogovanje() != true)
-	{
-		cout << "Potrebno je da se ulogujete!" << endl;
-		return;
-	}
-	for (const auto& entry : fs::directory_iterator(putanja)) { //Ovo je trenutni direktorijum 
-		string fileIme = entry.path().filename().string();
-
-		if (fileIme.find("_radnikRegistracija.txt") != string::npos) {
-			cout << "Radnik: " << fileIme.substr(0, fileIme.find("_radnikRegistracija.txt")) << endl;
+	for (const auto& entry : fs::directory_iterator("data")) {
+		if(fs::is_regular_file(entry.path())) {
+			std::ifstream fajl(entry.path());
+			if(!fajl.is_open()) {
+				std::cerr << "Nemoguce otvoriti fajl: " << putanja << std::endl;
+				continue;
+			}
+			std::string linija;
+			int brojLinije = 0;
+			bool pronadjen = false;
+			while(std::getline(fajl, linija)) {
+				brojLinije++;
+				if(linija == ("funkcija:radnikR")) {
+					pronadjen = true;
+					break;
+				}
+			}
+			fajl.close();
+			if(pronadjen) {
+				std::ifstream fajl(putanja);
+				if(!fajl.is_open()) {
+					std::cerr << "Nemoguce otvoriti fajl: " << putanja << std::endl;
+					continue;
+				}
+				int i=0;
+				while(std::getline(fajl, linija)) {
+					if(i != 1) {
+						std::cout << linija << endl;
+					}
+					i++;
+				}
+				std::cout << std::endl;
+			}
 		}
+
 	}
 }
 
@@ -314,8 +338,9 @@ void AdminRegistracija::prikaziMeni()
 		cout << "1. Dodaj Radnika za Registraciju" << endl;
 		cout << "2. Obrisi radika za Registraciju" << endl;
 		cout << "3. Pregled radnika za Registraciju" << endl;
-		cout << "4. Ispis detaljnijih informacija o radniku" << endl;
-		cout << "5. Odjava" << endl;
+		cout << "4. Pretrazivanje radnika za Registraciju" << endl;
+		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
+		cout << "6. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -330,11 +355,14 @@ void AdminRegistracija::prikaziMeni()
 			PregledNalogaRadnika();
 			break;
 		case 4:
+			pretrazivanjeNalogaRadnika();
+			break;
+		case 5:
 			cout << "Unesite korisnicko ime radnika." << endl;
 			cin >> ime;
 			ispisInfoRadnika(ime);
 			break;
-		case 5:
+		case 6:
 			Odjava();
 			this->ulogovan = false;
 			this->ulogovan = false;
@@ -347,5 +375,34 @@ void AdminRegistracija::prikaziMeni()
 	}
 }
 
+void AdminRegistracija::pretrazivanjeNalogaRadnika() {
+	std::cout << "Parametri za pretragu radnika:\n";
+	std::cout << "1. Korisnicko ime\n";
+	std::cout << "2. Ime\n";
+	std::cout << "3. Prezime\n";
+	std::cout << "4. Email\n";
+	std::cout << "5. Nazad\n";
+	std::cout << "Unos: ";
+
+	int opcija;
+	do {
+		std::cin >> opcija;
+	} while(opcija>5 || opcija<1);
+	std::cout << "Unesite parametar: ";
+	std::string informacija;
+	std::cin >> informacija;
+
+	if(opcija == 1) {
+		pronadjiRadnike("Korisnicko", informacija, "radnikR");
+	} else if(opcija == 2) {
+		pronadjiRadnike("Ime", informacija, "radnikR");
+	} else if(opcija == 3) {
+		pronadjiRadnike("Prezime", informacija, "radnikR");
+	} else if(opcija == 4) {
+		pronadjiRadnike("Email", informacija, "radnikR");
+	} else if(opcija == 5) {
+		return;
+	}
+}
 
 #endif
