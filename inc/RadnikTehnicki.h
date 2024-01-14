@@ -74,8 +74,8 @@ public:
 
 	void unesiPodatke(const string& korisnickoImeKlijenta);
 	void odaberiTermin();
-	int provjeriTermin(const string& datum, const string& vrijeme);
-	void upisiTerminUFajl(const string&, const string&, const string&);
+	int provjeriTermin(const string& datum, const string& vrijeme, const string&, const string&);
+	void upisiTerminUFajl(const string&, const string&, const string&, const string& );
 
 	int vrijemeUMinute(const string& vrijeme) {
 		int sati, minute;
@@ -204,5 +204,72 @@ public:
 		{
 			return false;
 		}
+	}
+	string izaberiVozilo(string korisnickoImeKlijnta)
+	{
+		ifstream file(putanja + "vozila.txt");
+		if (!file.is_open())
+		{
+			cout << "Ne moze se otvoriti datoteka." << endl;
+			return "";
+		}
+
+		vector<string> registarskiBrojevi;
+		string line;
+
+		while (getline(file, line))
+		{
+			if (line.find(korisnickoImeKlijnta + " ") == 0)
+			{
+				size_t lastSpace = line.find_last_of(" ");
+				string regBroj = line.substr(lastSpace + 1);
+				registarskiBrojevi.push_back(regBroj);
+			}
+		}
+
+		file.close();
+
+		if (registarskiBrojevi.empty())
+		{
+			cout << "Nemate registrovanih vozila." << endl;
+			return "";
+		}
+
+		cout << "Izaberite vozilo" << endl;
+		for (size_t i = 0; i < registarskiBrojevi.size(); i++)
+		{
+			cout << i + 1 << ". " << registarskiBrojevi[i] << endl;
+		}
+
+		int izbor;
+		do 
+		{
+			cout << "Unesite broj vozila: ";
+			cin >> izbor;
+		}while (isalpha(izbor));
+		if (izbor < 1 || izbor > registarskiBrojevi.size())
+		{
+			cout << "Neispravan izbor." << endl;
+			return "";
+		}
+
+		return registarskiBrojevi[izbor - 1];
+	}
+
+	bool daLiJeIzvjestajVecIzdat(const string& regBroj) {
+		ifstream fajl(putanja + "Izvjestaji.txt");
+		string linija;
+		while (getline(fajl, linija)) {
+			istringstream iss(linija);
+			vector<string> dijelovi;
+			string dio;
+			while (std::getline(iss, dio, ',')) {
+				dijelovi.push_back(dio);
+			}
+			if (dijelovi.size() > 6 && dijelovi[6] == regBroj) {
+				return true; 
+			}
+		}
+		return false;
 	}
 };

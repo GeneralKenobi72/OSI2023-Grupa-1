@@ -70,8 +70,59 @@ public:
 	string getGodinaProizvodnje() { return this->godinaProizvodnje; }
 	string getRegistarskiBroj() { return this->registarskiBroj; }
 
-	int provjeriTermin(const string& datum, const string& vrijeme);
-	void upisiTerminUFajl(const string&, const string&, const string&);
+	int provjeriTermin(const string& datum, const string& vrijeme, const string&);
+	void upisiTerminUFajl(const string&, const string&, const string&, const string& regBroj);
+
+	string izaberiVozilo()
+	{
+		ifstream file(putanja + "vozila.txt");
+		if (!file.is_open())
+		{
+			cout << "Ne moze se otvoriti datoteka." << endl;
+			return "";
+		}
+
+		vector<string> registarskiBrojevi;
+		string line;
+		string korisnickoIme = getKorisnickoIme();
+
+		while (getline(file, line))
+		{
+			if (line.find(korisnickoIme + " ") == 0) // Proverava da li linija poèinje sa korisnièkim imenom
+			{
+				// Ekstraktujte registarski broj iz linije
+				size_t lastSpace = line.find_last_of(" ");
+				string regBroj = line.substr(lastSpace + 1);
+				registarskiBrojevi.push_back(regBroj);
+			}
+		}
+
+		file.close();
+
+		if (registarskiBrojevi.empty())
+		{
+			cout << "Nemate registrovanih vozila." << endl;
+			return "";
+		}
+
+		cout << "Izaberite vozilo za tehnicki pregled" << endl;
+		for (size_t i = 0; i < registarskiBrojevi.size(); i++)
+		{
+			cout << i + 1 << ". " << registarskiBrojevi[i] << endl;
+		}
+
+		int izbor;
+		cout << "Unesite broj vozila: ";
+		cin >> izbor;
+
+		if (izbor < 1 || izbor > registarskiBrojevi.size())
+		{
+			cout << "Neispravan izbor." << endl;
+			return "";
+		}
+
+		return registarskiBrojevi[izbor - 1];
+	}
 
 	int vrijemeUMinute(const string& vrijeme) {
 		int sati, minute;

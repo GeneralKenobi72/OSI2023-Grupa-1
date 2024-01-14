@@ -5,13 +5,14 @@
 #include "Korisnik.h"
 #include <vector>
 #include <algorithm>
+#include <iomanip>
 #include <sstream>
 using namespace std;
 class Termin {
 public:
 	string datum;
 	string vrijeme;
-	string voziloID="";
+	string voziloID;
 	string status="";
 	string korisnickoIme;
 public:
@@ -39,7 +40,7 @@ public:
 		ifstream file(putanja+"Termini.txt");
 		Termin temp;
 
-		while (file >> temp.korisnickoIme >> temp.datum >> temp.vrijeme) {
+		while (file >> temp.korisnickoIme >> temp.datum >> temp.vrijeme >>temp.voziloID) {
 			termini.push_back(temp);
 		}
 
@@ -71,10 +72,30 @@ public:
 			return vrijeme < t.vrijeme;
 		}
 	}
-	Termin nadjiSlobodanTermin(const vector<Termin>& termini, const string& kIme) {
+	string formatirajDatum(const std::tm& tm) {
+		ostringstream oss;
+		oss << put_time(&tm, "%Y.%m.%d");
+		return oss.str();
+	}
+	string dodajDaneNaDatum(int brojDana) {
+		time_t trenutno = time(nullptr);
+
+#ifdef _WIN32
+		std::tm tm;
+		localtime_s(&tm, &trenutno);
+#else
+		std::tm tm = *std::localtime(&trenutno);
+#endif
+		tm.tm_mday += brojDana;
+		std::mktime(&tm);
+
+		return formatirajDatum(tm);
+	}
+	Termin nadjiSlobodanTermin(const vector<Termin>& termini, const string& kIme, const string& regBroj) {
+
 		if (termini.empty()) {
 			//neka ovo bude default termin
-			Termin slobodanTermin(kIme, "2024.01.22", "08:00", "");
+			Termin slobodanTermin(kIme, "2024.01.22", "08:00", regBroj);
 			return slobodanTermin;
 		}
 
@@ -84,7 +105,7 @@ public:
 		minute %= 60;
 
 		string novoVrijeme = to_string(sati) + ":" + (minute < 10 ? "0" : "") + to_string(minute);
-		Termin slobodanTermin(kIme, posljednjiTermin.datum, novoVrijeme, "");
+		Termin slobodanTermin(kIme, posljednjiTermin.datum, novoVrijeme, regBroj);
 		return slobodanTermin;
 	}
 };
@@ -100,7 +121,7 @@ public:
 	Vozilo() {}
 	Vozilo(string korisnickoIme, string marka, string model, string godProiz, string regBroj) : 
 		korisnickoIme(korisnickoIme) , marka(marka), model(model) , godinaProizvodnje(godProiz) {}
-	Vozilo ucitajPodatkeVozila(const string& korisnickoIme)
+	vector<Vozilo> ucitajPodatkeVozila(const string& korisnickoIme)
 	{
 #ifdef _WIN32
 		string putanja = "data\\";
@@ -108,36 +129,20 @@ public:
 		string putanja = "data/";
 #endif
 		Vozilo vozilo;
-		ifstream datoteka(putanja + korisnickoIme + ".txt");
+		vector<Vozilo> vozilaKorisnika;
+		ifstream datotekaKlijenta(putanja + korisnickoIme + ".txt");
 		try {
-			if (!datoteka.is_open())
+			if (!datotekaKlijenta.is_open())
 			{
 				throw FajlNijeOtvoren();
 			}
 			else {
 				string linija;
-				while (getline(datoteka, linija)) {
+				while (getline(datotekaKlijenta, linija)) {
 					istringstream iss(linija);
 					string kljuc;
 					getline(iss, kljuc, ':');
-
-					if (kljuc == "Marka vozila") {
-						getline(iss, vozilo.marka);
-					}
-					else if (kljuc == "Model vozila") {
-						getline(iss, vozilo.model);
-					}
-					else if (kljuc == "Godina proizvodnje") {
-						getline(iss, vozilo.godinaProizvodnje);
-					}
-					else if (kljuc == "Registarski broj vozila") {
-						getline(iss, vozilo.regBroj);
-					}
-					else if (kljuc == "Korisnicko Ime")
-					{
-						getline(iss, vozilo.korisnickoIme);
-					}
-					else if (kljuc == "Ime")
+					 if (kljuc == "Ime")
 					{
 						getline(iss, vozilo.imeKlijnta);
 					}
@@ -146,14 +151,24 @@ public:
 						getline(iss, vozilo.prezimeKlijnta);
 					}
 				}
-				datoteka.close();
+				datotekaKlijenta.close();
 			}
 		}
 		catch (FajlNijeOtvoren& e)
 		{
 			cout << e.what() << endl;
 		}
-		return vozilo;
+		ifstream fileVozila(putanja + "vozila.txt");
+		if (!fileVozila.is_open()) {
+			throw FajlNijeOtvoren();
+		}
+		while (fileVozila >> vozilo.korisnickoIme >> vozilo.marka >> vozilo.model >> vozilo.godinaProizvodnje >> vozilo.regBroj) {
+			if (vozilo.korisnickoIme == korisnickoIme) {
+				vozilaKorisnika.push_back(vozilo);
+			}
+		}
+
+		return vozilaKorisnika;
 	}
 };
 

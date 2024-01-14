@@ -94,12 +94,21 @@ public:
 	}
 	bool ValidanRegistracijskiBroj(const string& regBroj) {
 		if (regBroj.length() < 5 || regBroj.length() > 10) {
-			cout << "Nije validno." << endl;
+			cout << "Nije validno: duzina nije u validnom opsegu." << endl;
 			return false;
 		}
-		for (char c : regBroj) {
-			if (!isalnum(c)) {
-				cout << "Nije validno." << endl;
+
+		int brojCrtica = 0;
+		for (size_t i = 0; i < regBroj.length(); ++i) {
+			if (regBroj[i] == '-') {
+				if (i == 0 || i == regBroj.length() - 1 || brojCrtica > 0) {
+					cout << "Nije validno: neispravna pozicija crtice." << endl;
+					return false;
+				}
+				brojCrtica++;
+			}
+			else if (!isalnum(regBroj[i])) {
+				cout << "Nije validno: sadrzi neispravne karaktere." << endl;
 				return false;
 			}
 		}

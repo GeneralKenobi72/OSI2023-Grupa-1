@@ -71,7 +71,7 @@ std::vector<std::string> pretraziFajl(const std::string& putanja, const std::str
 	return poklapanja;
 }
 
-std::vector<std::string> pretraziDirektorijum(const std::string& direktorijum, const std::string& trazeniString, std::string tipRadnika) {
+/*std::vector<std::string> pretraziDirektorijum(const std::string& direktorijum, const std::string& trazeniString, std::string tipRadnika) {
 	std::vector<std::string> poklapanja;
 	for (const auto& entry : fs::directory_iterator(direktorijum)) {
 		if (fs::is_regular_file(entry.path())) {
@@ -82,6 +82,18 @@ std::vector<std::string> pretraziDirektorijum(const std::string& direktorijum, c
 		}
     }
     return poklapanja;
+}*/
+std::vector<std::string> pretraziDirektorijum(const std::string& direktorijum, const std::string& trazeniString, std::string tipRadnika) {
+	std::vector<std::string> poklapanja;
+	for (const auto& entry : fs::directory_iterator(direktorijum)) {
+		if (fs::is_regular_file(entry.path())) {
+			std::vector<std::string> rezultatiFajla = pretraziFajl(entry.path().string(), trazeniString, tipRadnika);
+			if (!rezultatiFajla.empty()) {
+				poklapanja.insert(poklapanja.end(), rezultatiFajla.begin(), rezultatiFajla.end());
+			}
+		}
+	}
+	return poklapanja;
 }
 
 void Admin::pronadjiRadnike(std::string parametar, std::string informacija, std::string tipRadnika) {
