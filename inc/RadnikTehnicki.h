@@ -39,7 +39,9 @@ public:
 	//Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled
 	RadnikT(bool ulogovan) noexcept : Radnik() { this->ulogovan = ulogovan; }
 	void postaviInfo(string korisnickoIme);
-
+	void promjenaSifre() override;
+	void posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra);
+	void kreirajZahtjev(string, string);
 	void ispisFajla(string korisnicko_ime);
 
 	//Ovjde je radnik vec registrovan na sistem te je samo potrebno ulogovanje 

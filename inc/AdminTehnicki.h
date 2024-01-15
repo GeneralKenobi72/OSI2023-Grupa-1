@@ -19,7 +19,6 @@ public:
 		: Admin(Ime, Prezime,korisnickoIme, sifra, email) {}
 	AdminTehnicki() noexcept : Admin() {}
 	AdminTehnicki(bool ulogovan) noexcept : Admin() { this->ulogovan = ulogovan; }
-
 	bool Ulogovanje() override;
 	//Ovdje treba jos doraditi kod dodajRadnikaTehnicki()
 	void dodajRadnikaTehnicki();

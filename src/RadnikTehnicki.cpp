@@ -10,6 +10,7 @@
 #include <functional>
 #include <vector>
 #include "Termin.h"
+#include <AdminTehnicki.h>
 
 using namespace std;
 
@@ -30,6 +31,60 @@ bool RadnikT::provjeriKorisnickoImeRadnikaT(const string korisnickoIme)
 {
 	ifstream file(putanja+korisnickoIme + ".txt");
 	return file.good();
+}
+
+
+void RadnikT::promjenaSifre()
+{
+	cout << "Unesite trenutnu sifru: " << endl;
+	string trenutnaSifra = this->UnesiSifru();
+	string korisnickoImeRezultat;
+	string sifraRezultat;
+	string rezultat;
+	ifstream file(putanja + this->getKorisnickoIme() + ".txt");
+	try {
+		if (!file.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+		else
+		{
+			getline(file, korisnickoImeRezultat);
+			getline(file, sifraRezultat);
+			rezultat = vrati_ignorisiDvotacku(sifraRezultat);
+		}
+	}
+	catch (const FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+	}
+	while (rezultat != trenutnaSifra) {
+		cout << "Neispravna sifra. Pokusajte ponovo. " << endl;
+		trenutnaSifra = this->UnesiSifru();
+	}
+	string novaSifraDrugiPut, novaSifra;
+	do {
+		cout << "Unesite novu sifru: " << endl;
+		novaSifra = this->UnesiSifru();
+		cout << "Potvrdite novu sifru ponovnim unosom: " << endl;
+		novaSifraDrugiPut = this->UnesiSifru();
+	} while (novaSifra != novaSifraDrugiPut);
+
+	posaljiZahtjevZaPromjenuSifre(korisnickoImeRezultat, novaSifra);
+	cout << "Zahtjev za promjenu sifre je poslan. Molimo sacekajte odobrenje. " << endl;
+
+}
+
+void RadnikT::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
+{
+	kreirajZahtjev(kIme, novaSifra);
+}
+
+void RadnikT::kreirajZahtjev(string kIme, string novaSifra) {
+	ofstream file(putanja + "zahtjevi\\" + kIme + +"Zahtjev" + ".txt");
+	file << kIme << endl;
+	file << novaSifra << endl;
+	file.close();
 }
 
 bool RadnikT::provjeriRadnikaTehnicki(string korisnickoIme_, string sifra_)
@@ -1011,6 +1066,7 @@ void RadnikT::prikaziMeni()
 		cout << "5. Pregled detaljnijih informacija klijenta sa zakazanim terminom" << endl;
 		cout << "6. Otkazivanje termina klijenta" << endl;
 		cout << "7. Popunjavanje izvjestaja" << endl;
+		cout << "8. Promjena sifre" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -1037,6 +1093,9 @@ void RadnikT::prikaziMeni()
 			break;
 		case 7:
 			popunjavanjeIzvjestaja();
+			break;
+		case 8:
+			promjenaSifre();
 			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;

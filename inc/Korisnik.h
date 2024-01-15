@@ -24,7 +24,6 @@ public:
 	// ali zbog preglednosti su definisane zasebno
 	bool ValidnoIme(string ime);
 	bool ValidnoPrezime(string prezime);
-
 	bool ValidanEmail(string email);
 	bool ValidnaSifra(string sifra);
 

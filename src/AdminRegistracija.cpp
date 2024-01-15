@@ -64,6 +64,8 @@ bool AdminRegistracija::Ulogovanje()
 	return true;
 }
 
+
+
 void AdminRegistracija::obrisiRadnikaRegistracija()
 {
 	if (provjeriUlogovanje() != true)
@@ -321,10 +323,11 @@ void AdminRegistracija::prikaziMeni()
 		cout << "3. Pregled radnika za Registraciju" << endl;
 		cout << "4. Pretrazivanje radnika za Registraciju" << endl;
 		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
-		cout << "6. Odjava" << endl;
+		cout << "6: Pregled zahtjeva za resetovanje lozinke" << endl;
+		cout << "7. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
-
+		bool flag = true;
 		switch (izbor) {
 		case 1:
 			dodajRadnikaRegistracija();
@@ -343,11 +346,32 @@ void AdminRegistracija::prikaziMeni()
 			cin >> ime;
 			ispisInfoRadnika(ime);
 			break;
-		case 6:
+		case 7:
 			Odjava();
 			this->ulogovan = false;
 			this->ulogovan = false;
 			kraj = true;
+			break;
+		case 6:
+			if (!ispisiZahtjeve()) {
+				cout << "Ne postoje aktivni zahtjevi. " << endl;
+				break;
+			}
+			cout << "Zelite li odobriti promjenu sifre nekom od korisnika <da/ne>: " << endl;
+			do {
+				string odgovor;
+				cin >> odgovor;
+				if (odgovor == "da" || odgovor == "Da") {
+					cout << "Kojem korisniku zelite omoguciti promjenu sifre:" << endl;
+					string korisnik;
+					cin >> korisnik;
+					odobriZahtjev(korisnik);
+					flag = true;
+				}
+				else if (odgovor == "ne" || odgovor == "Ne") flag = false;
+				else cout << "Nepostojeca komanda. Pokusajte ponovo." << endl;
+			} while (flag == true);
+			cout << "Izmjene uspjesno izvrsene." << endl;
 			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;

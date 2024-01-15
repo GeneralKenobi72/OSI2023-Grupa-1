@@ -8,6 +8,7 @@
 #include <fstream>
 #include "RadnikRegistracija.h"
 #include <functional>
+#include <AdminRegistracija.h>
 using namespace std;
 
 // Vraca podstring od pocetka do pozicije underscore-a
@@ -21,6 +22,59 @@ string RadnikR::fajlKorisnickoImeRadnikaT(const string fileIme) {
 	else {
 		return NULL;
 	}
+}
+
+void RadnikR::promjenaSifre()
+{
+	cout << "Unesite trenutnu sifru: " << endl;
+	string trenutnaSifra = this->UnesiSifru();
+	string korisnickoImeRezultat;
+	string sifraRezultat;
+	string rezultat;
+	ifstream file(putanja + this->getKorisnickoIme() + ".txt");
+	try {
+		if (!file.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+		else
+		{
+			getline(file, korisnickoImeRezultat);
+			getline(file, sifraRezultat);
+			rezultat = vrati_ignorisiDvotacku(sifraRezultat);
+		}
+	}
+	catch (const FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+	}
+	while (rezultat != trenutnaSifra) {
+		cout << "Neispravna sifra. Pokusajte ponovo. " << endl;
+		trenutnaSifra = this->UnesiSifru();
+	}
+	string novaSifraDrugiPut, novaSifra;
+	do {
+		cout << "Unesite novu sifru: " << endl;
+		novaSifra = this->UnesiSifru();
+		cout << "Potvrdite novu sifru ponovnim unosom: " << endl;
+		novaSifraDrugiPut = this->UnesiSifru();
+	} while (novaSifra != novaSifraDrugiPut);
+
+	posaljiZahtjevZaPromjenuSifre(korisnickoImeRezultat,novaSifra);
+	cout << "Zahtjev za promjenu sifre je poslan. Molimo sacekajte odobrenje. " << endl;
+
+}
+
+void RadnikR::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
+{
+	kreirajZahtjev(kIme,novaSifra);
+}
+
+void RadnikR::kreirajZahtjev(string kIme, string novaSifra) {
+	ofstream file(putanja + "zahtjevi\\" + kIme + +"Zahtjev" + ".txt");
+	file << kIme << endl;
+	file << novaSifra << endl;
+	file.close();
 }
 
 bool RadnikR::provjeriKorisnickoImeRadnikaR(const string korisnickoIme)
@@ -180,6 +234,7 @@ void RadnikR::prikaziMeni()
 		cout << endl;
 		cout << "Meni za Radnika R" << endl;
 		cout << "1. Odjava" << endl;
+		cout << "2. Promjena sifre" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -188,6 +243,9 @@ void RadnikR::prikaziMeni()
 			Odjava();
 			this->ulogovan = false;	
 			kraj = true;
+			break;
+		case 2:
+			promjenaSifre();
 			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;

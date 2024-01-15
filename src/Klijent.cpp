@@ -9,6 +9,8 @@
 #include <fstream>
 #include <filesystem>
 #include <vector>
+#include <AdminTehnicki.h>
+#include <AdminRegistracija.h>
 namespace fs = std::filesystem;
 using namespace std;
 
@@ -241,6 +243,7 @@ void Klijent::prikaziMeni()
 		cout << "2. Unos Termina" << endl;
 		cout << "3. Otkazivanje Termina" << endl;
 		cout << "4. Prikaz kazni i racuna" << endl;
+		cout << "5. Promjena sifre" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -259,6 +262,9 @@ void Klijent::prikaziMeni()
 		case 4:
 			prikaziKazneIRacune();
 			break;
+		case 5:
+			promjenaSifre();
+			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;
 			break;
@@ -266,6 +272,57 @@ void Klijent::prikaziMeni()
 	}
 }
 
+void Klijent::promjenaSifre()
+{
+	cout << "Unesite trenutnu sifru: " << endl;
+	string trenutnaSifra = this->UnesiSifru();
+	string korisnickoImeRezultat;
+	string sifraRezultat;
+	string rezultat;
+	ifstream file(putanja + this->getKorisnickoIme() + ".txt");
+	try {
+		if (!file.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+		else
+		{
+			getline(file, korisnickoImeRezultat);
+			getline(file, sifraRezultat);
+			rezultat = vrati_ignorisiDvotacku(sifraRezultat);
+		}
+	}
+	catch (const FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+	}
+	while (rezultat != trenutnaSifra) {
+		cout << "Neispravna sifra. Pokusajte ponovo. " << endl;
+		trenutnaSifra = this->UnesiSifru();
+	}
+	string novaSifraDrugiPut, novaSifra;
+	do {
+		cout << "Unesite novu sifru: " << endl;
+		novaSifra = this->UnesiSifru();
+		cout << "Potvrdite novu sifru ponovnim unosom: " << endl;
+		novaSifraDrugiPut = this->UnesiSifru();
+	} 
+	while ((novaSifra != novaSifraDrugiPut) || !this->ValidnaSifra(novaSifra));
+	string kIme = vrati_ignorisiDvotacku(korisnickoImeRezultat);
+	posaljiZahtjevZaPromjenuSifre(kIme,novaSifra);
+	cout << "Zahtjev za promjenu sifre je poslan. Molimo sacekajte odobrenje. " << endl;
+}
+void Klijent::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
+{
+	kreirajZahtjev(kIme,novaSifra);
+}
+
+void Klijent::kreirajZahtjev(string kIme,string novaSifra) {
+	ofstream file(putanja+ "zahtjevi\\" + kIme + +"Zahtjev" + ".txt");
+	file << kIme << endl;
+	file << novaSifra << endl;
+	file.close();
+}
 void Klijent::prikaziKazneIRacune() {
 	int kazneUkupno = 0;
 	int racuniUkupno = 0;

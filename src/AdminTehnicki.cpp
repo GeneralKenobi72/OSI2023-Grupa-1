@@ -208,6 +208,7 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 	}
 }
 
+
 //Funkcija za pregled svih radnika za tehnicki pregled gdje se ispisuju korisnicka imena
 // <filesystem> omogucava rad sa fajl sistemom, pruzajuci funkcionalnosti za manipulaciju fajlovima
 // prolazi kroz sve fajlove u trenutnom direktorijumu ("./"), entry.path().filename().string() uzima putanju trenutnog fajla u iteraciji,
@@ -316,10 +317,11 @@ void AdminTehnicki::prikaziMeni()
 		cout << "3. Pregled radnika za Tehnicki" << endl;
 		cout << "4. Pretrazivanje radnika za Tehnicki" << endl;
 		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
-		cout << "6. Odjava" << endl;
+		cout << "6: Pregled zahtjeva za resetovanje lozinke" << endl;
+		cout << "7. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
-
+		bool flag = true;
 		switch (izbor) {
 		case 1:
 			dodajRadnikaTehnicki();
@@ -339,6 +341,27 @@ void AdminTehnicki::prikaziMeni()
 			ispisInfoRadnika(ime);
 			break;
 		case 6:
+			if (!ispisiZahtjeve()) {
+				cout << "Ne postoje aktivni zahtjevi. " << endl;
+				break;
+			}
+			cout << "Zelite li odobriti promjenu sifre nekom od korisnika: " << endl;
+			do {
+				string odgovor;
+				cin >> odgovor;
+				if (odgovor == "da" || odgovor == "Da") {
+					cout << "Kojem Korisniku zelite omoguciti promjenu sifre:" << endl;
+					string korisnik;
+					cin >> korisnik;
+					odobriZahtjev(korisnik);
+					flag = true;
+				}
+				else if (odgovor == "ne" || odgovor == "Ne") flag = false;
+				else cout << "Nepostojeca komanda. Pokusajte ponovo." << endl;
+			} while (flag == true);
+			cout << "Izmjene uspjesno izvrsene." << endl;
+			break;
+		case 7:
 			Odjava();
 			kraj = true;
 			break;
