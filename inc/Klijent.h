@@ -36,6 +36,7 @@ public:
 	bool Ulogovanje() override;
 	void prikaziMeni() override;
 	bool provjeriKlijenta(string korisnickoIme, string sifra);
+	void prikaziKazneIRacune();
 	Korisnik* provjeri(string korisnickoIme, string sifra) override
 	{
 		if (this->provjeriKlijenta(korisnickoIme, sifra)) {

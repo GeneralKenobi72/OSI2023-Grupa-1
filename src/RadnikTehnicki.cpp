@@ -131,8 +131,9 @@ void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
 		cout << e.what() << endl;
 	}
 
-
+	Vozilo vozilo(markaVozila, modelVozila, godinaProizvodnje, " ",  registarskiBroj);
 	string podaciVozila = markaVozila + " " + modelVozila + " " + godinaProizvodnje + " " + registarskiBroj;
+	string KazneIRacuni = korisnickoImeKlijenta + " " + registarskiBroj + " " + to_string(vozilo.vrijednostKazne) + " 0";
 
 	ifstream fajlVozila(putanja + "vozila.txt");
 	string tempLine;
@@ -147,12 +148,19 @@ void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
 
 	if (!postoji) {
 		ofstream file(putanja + "vozila.txt", ios::app);
+		ofstream fajlKazneIRacuni(putanja + "KazneIRacuni.txt", ios::app);
 		try {
 			if (!file.is_open()) {
 				throw FajlNijeOtvoren();
 			}
 			else {
 				file << korisnickoImeKlijenta << " " << podaciVozila << "\n";
+			}
+			if (!fajlKazneIRacuni.is_open()) {
+				throw FajlNijeOtvoren();
+			}
+			else {
+				fajlKazneIRacuni << KazneIRacuni << "\n";
 			}
 		}
 		catch (const FajlNijeOtvoren& e) {
@@ -163,8 +171,6 @@ void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
 	else {
 		cout << "Podaci o vozilu su vec upisani." << endl;
 	}
-
-
 }
 
 void RadnikT::odaberiTermin()
@@ -884,6 +890,45 @@ void RadnikT::popunjavanjeIzvjestaja()
 		this->potvrdaIzvjestaja = true;
 		izvjestaj.dodatniProblemi.push_back("Nema");
 	}
+	std::cout << "Unesite cijenu tehnickog pregleda: ";
+	int cijenaTehnickog;
+	do {
+		cin >> cijenaTehnickog;
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Neispravan unos. Molimo unesite cijenu." << endl;
+		}
+	} while (cin.fail());
+	izvjestaj.cijenaTehnickogPregleda = cijenaTehnickog;
+	// Dodavanje cijene tehnickog u fajl KazneIracuni na kraj linija vozila pored kazni
+	ifstream kazneIracuni(putanja + "KazneIRacuni.txt");
+	std::vector<std::string> linije;
+
+	if(!kazneIracuni.is_open()) {
+		cerr << "Nije moguce otvoriti fajl KazneIracuni." << endl;
+		return;
+	}
+
+	std::string linija;
+	while(std::getline(kazneIracuni, linija)) {
+		linije.push_back(linija);
+	}
+
+	for (auto& linija : linije) {
+		if (linija.find(odabranoVozilo.regBroj) != std::string::npos) {
+			// mijenjanje zadnje 0 za cijenu tehnickog
+			linija.replace(linija.find_last_of("0"), 1, std::to_string(cijenaTehnickog));
+		}
+	}
+
+	kazneIracuni.close();
+	std::ofstream outFile(putanja + "KazneIRacuni.txt");
+	for (const auto& linija : linije) {
+		outFile << linija << std::endl;
+	}
+	outFile.close();
+
 	cuvanjeIzvjestaja(izvjestaj);
 }
 
@@ -899,10 +944,11 @@ void RadnikT::cuvanjeIzvjestaja(const Izvjestaj& izvjestaj)
 			<< izvjestaj.vozilo.model << ","
 			<< izvjestaj.vozilo.godinaProizvodnje << ","
 			<< izvjestaj.vozilo.regBroj << ","
-			<< izvjestaj.izvrseniRad << ";";
+			<< izvjestaj.izvrseniRad << ",";
 		for (auto it = izvjestaj.dodatniProblemi.begin(); it != izvjestaj.dodatniProblemi.end(); ++it) {
 			fajl << (it != izvjestaj.dodatniProblemi.begin() ? ";" : "") << *it;
 		}
+		fajl << izvjestaj.cijenaTehnickogPregleda << endl;
 		fajl <<"\n";
 		cout << "Izvjestaj upsjesno sacuvan." << endl;
 	}
@@ -945,6 +991,7 @@ void RadnikT::izdajPotvrdu(const Izvjestaj& izvjestaj)
 	potvrda << "\n";
 
 	potvrda << "Izdao/la: " << this->Ime << " " << this->Prezime << "\n";
+	potvrda << "Cijena tehnickog pregleda: " << izvjestaj.cijenaTehnickogPregleda << " KM" << "\n";
 	potvrda << string(153, '-') << "\n";
 	cout << "Potvrda je uspjesno izdata." << "\n";
 	potvrda.close();

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <sstream>
+#include <random>
 using namespace std;
 class Termin {
 public:
@@ -118,9 +119,27 @@ public:
 	string regBroj;
 	string korisnickoIme;
 	string imeKlijnta, prezimeKlijnta;
+
+	int vrijednostKazne;
+	int cijenaTehnickog;
+	int cijenaRegistracije;
+
 	Vozilo() {}
 	Vozilo(string korisnickoIme, string marka, string model, string godProiz, string regBroj) : 
-		korisnickoIme(korisnickoIme) , marka(marka), model(model) , godinaProizvodnje(godProiz) {}
+		korisnickoIme(korisnickoIme) , marka(marka), model(model) , godinaProizvodnje(godProiz) {
+		std::random_device dev;
+		std::mt19937 rng(dev());
+		std::uniform_int_distribution<std::mt19937::result_type> dist6(1, 100);
+
+		cout << dist6(rng) << endl;
+		if(dist6(rng) < 60) {
+			vrijednostKazne = 0;
+		} else {
+			std::uniform_int_distribution<std::mt19937::result_type> dist6(50, 1000);
+			vrijednostKazne = dist6(rng);
+		}
+	}
+
 	vector<Vozilo> ucitajPodatkeVozila(const string& korisnickoIme)
 	{
 #ifdef _WIN32
