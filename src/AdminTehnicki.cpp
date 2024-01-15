@@ -11,6 +11,11 @@
 #include "Izuzeci.h"
 #include "RadnikTehnicki.h"
 #include "AdminTehnicki.h"
+#include "Termin.h"
+#include <map>
+#include <cctype>
+#include <sstream>
+#include <vector>
 namespace fs = std::filesystem;
 using namespace std;
 
@@ -315,7 +320,7 @@ void AdminTehnicki::prikaziMeni()
 		cout << "2. Obrisi radika za Tehnicki" << endl;
 		cout << "3. Pregled radnika za Tehnicki" << endl;
 		cout << "4. Pretrazivanje radnika za Tehnicki" << endl;
-		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
+		cout << "5. Pracenje statistike" << endl;
 		cout << "6. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
@@ -334,9 +339,6 @@ void AdminTehnicki::prikaziMeni()
 			pretrazivanjeNalogaRadnika();
 			break;
 		case 5:
-			cout << "Unesite korisnicko ime radnika." << endl;
-			cin >> ime;
-			ispisInfoRadnika(ime);
 			break;
 		case 6:
 			Odjava();

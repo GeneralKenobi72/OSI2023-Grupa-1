@@ -3,7 +3,9 @@
 #include "Korisnik.h"
 #include "Radnik.h"
 #include <string>
+#include "Termin.h"
 #include <fstream>
+#include <vector>
 #include <functional>
 using namespace std;
 
@@ -62,4 +64,5 @@ public:
 			}
 		}
 	}
+	Vozilo unosPodatakaVozila();
 };
