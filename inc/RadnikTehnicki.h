@@ -159,6 +159,7 @@ public:
 		Vozilo vozilo;
 		string izvrseniRad;
 		vector<string> dodatniProblemi;
+		int cijenaTehnickogPregleda;
 	};
 	void popunjavanjeIzvjestaja();
 	void cuvanjeIzvjestaja(const Izvjestaj& izvjestaj);
