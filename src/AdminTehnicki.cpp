@@ -216,11 +216,22 @@ void AdminTehnicki::obrisiRadnikaTehnicki()
 //kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 void AdminTehnicki::PregledNalogaRadnika()
 {
-	for (const auto& entry : fs::directory_iterator(putanja)) { //Ovo je trenutni direktorijum 
-		string imeFajla = entry.path().filename().string();
-
-		if (imeFajla.find(".txt") != string::npos) {
-			cout << "Radnik: " << imeFajla.substr(0, imeFajla.find(".txt")) << endl;
+	if (provjeriUlogovanje() != true)
+	{
+		cout << "Potrebno je da se ulogujete!" << endl;
+		return;
+	}
+	cout << "Pregled svih radnika za registraciju: " << endl;
+	for (const auto& entry : std::filesystem::directory_iterator(putanja))
+	{
+		ifstream file(entry.path());
+		string linija;
+		while (getline(file, linija))
+		{
+			if (linija == "funkcija:radnikT")
+			{
+				cout << endl << entry.path().filename().string().substr(0, entry.path().filename().string().length() - 4) << endl;
+			}
 		}
 	}
 }

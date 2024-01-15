@@ -240,6 +240,7 @@ void Klijent::prikaziMeni()
 		cout << "1. Odjava" << endl;
 		cout << "2. Unos Termina" << endl;
 		cout << "3. Otkazivanje Termina" << endl;
+		cout << "4. Prikaz kazni i racuna" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -255,10 +256,95 @@ void Klijent::prikaziMeni()
 		case 3:
 			otkaziTermin();
 			break;
+		case 4:
+			prikaziKazneIRacune();
+			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;
 			break;
 		}
+	}
+}
+
+void Klijent::prikaziKazneIRacune() {
+	int kazneUkupno = 0;
+	int racuniUkupno = 0;
+	if (!provjeriUlogovanje())
+	{
+		return;
+	}
+	ifstream file(putanja + "KazneIRacuni.txt");
+	string line;
+	bool found = false;
+	while (getline(file, line)) {
+		if (line.find(this->korisnickoIme) != string::npos) {
+			found = true;
+			std::istringstream iss(line);
+			std::string token;
+			std::vector<std::string> stringovi;
+			while (std::getline(iss, token, ' ')) {
+				stringovi.push_back(token);
+			}
+			kazneUkupno += stoi(stringovi[2]);
+			racuniUkupno += stoi(stringovi[3]);
+		}
+	}
+	cout << endl << "=====================================" << endl;
+	cout << "Iznos Kazni: " << kazneUkupno << "KM" << endl;
+	cout << "Iznos Racuna: " << racuniUkupno << "KM" << endl;
+	cout << "=====================================" << endl << endl;
+	cout << "1. Online plcanje" << endl;
+	cout << "2. Nazad" << endl;
+	cout << "Unos: ";
+	std::string unos;
+	do {
+		cin >> unos;
+		if (unos == "1") {
+			std::ifstream file(putanja + "KazneIRacuni.txt");
+			std::vector<std::string> lines;
+			std::string line;
+			while (std::getline(file, line)) {
+				if (line.find(this->korisnickoIme) != std::string::npos) {
+					std::istringstream iss(line);
+					std::string token;
+					std::vector<std::string> stringovi;
+					while (std::getline(iss, token, ' ')) {
+						stringovi.push_back(token);
+					}
+					stringovi[2] = "0";
+					stringovi[3] = "0";
+					std::string noviLine = "";
+					for (size_t i = 0; i < stringovi.size() - 1; ++i) {
+						noviLine += stringovi[i] + " ";
+					}
+					noviLine += stringovi.back();
+					lines.push_back(noviLine);
+				}
+				else {
+					lines.push_back(line);
+				}
+			}
+			file.close();
+			std::ofstream outFile(putanja + "KazneIRacuni.txt");
+			for (const auto& line : lines) {
+				outFile << line << std::endl;
+			}
+			outFile.close();
+			cout << "Placanje uspjesno." << endl;
+			break;
+		}
+		else if (unos == "2") {
+			break;
+		}
+		else {
+			cout << "Nepostojeca opcija." << endl;
+			cout << "Unos: ";
+		}
+	} while (true);
+	file.close();
+
+	if (!found) {
+		cout << "Nemate kazni i racuna" << endl;
 	}
 }
 
@@ -345,6 +431,7 @@ void Klijent::unesiPodatke()
 	} while (!ValidanRegistracijskiBroj(registarskiBroj));
 	setRegistarskiBroj(registarskiBroj);
 	string korisnicko_ime = getKorisnickoIme();
+	Vozilo vozilo(korisnicko_ime, markaVozila, modelVozila, godinaProizvodnje, registarskiBroj);
 	string podaciVozila = markaVozila + " " + modelVozila + " " + godinaProizvodnje + " " + registarskiBroj;
 
 	ifstream fajlVozila(putanja+"vozila.txt");
@@ -360,12 +447,20 @@ void Klijent::unesiPodatke()
 
 	if (!postoji) {
 		ofstream file(putanja+"vozila.txt", ios::app);
+		string kazneIRacuni = korisnicko_ime + " " + registarskiBroj + " " + to_string(vozilo.vrijednostKazne) + " 0";
+		ofstream fajlKazneIRacuni(putanja+"KazneIRacuni.txt", ios::app);
 		try {
 			if (!file.is_open()) {
 				throw FajlNijeOtvoren();
 			}
 			else {
 				file <<"\n" << korisnicko_ime << " " << podaciVozila << "\n";
+			}
+			if(!fajlKazneIRacuni.is_open()) {
+				throw FajlNijeOtvoren();
+			}
+			else {
+				fajlKazneIRacuni << kazneIRacuni << "\n";
 			}
 		}
 		catch (const FajlNijeOtvoren& e) {
