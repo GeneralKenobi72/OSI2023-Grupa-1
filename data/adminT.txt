@@ -1,0 +1,6 @@
+KorisnickoIme:adminT
+Sifra:adminT
+Ime:Admin
+Prezime:Tehnickog
+Email:admint@mail.com
+funkcija:adminT

@@ -1,0 +1,6 @@
+KorisnickoIme:adminR
+Sifra:adminR
+Ime:Admin
+Prezime:Registracija
+Email:adminR@mail.com
+funkcija:adminR
