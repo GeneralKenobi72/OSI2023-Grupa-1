@@ -97,46 +97,25 @@ void AdminRegistracija::obrisiRadnikaRegistracija()
 	}
 }
 
-//Funkcija za pregled svih radnika za registraciju gdje se ispisuju korisnicka imena
-//dodatno mozemo imati funckiju gdje na osnovu tih imena pristupamo datoteci za jos detaljnije informacija 
-//kao sto su email, ime, prezime itd. sto se radi u f-ji isipiInfoRadnika
 void AdminRegistracija::PregledNalogaRadnika()
 {
-	for (const auto& entry : fs::directory_iterator("data")) {
-		if(fs::is_regular_file(entry.path())) {
-			std::ifstream fajl(entry.path());
-			if(!fajl.is_open()) {
-				std::cerr << "Nemoguce otvoriti fajl: " << putanja << std::endl;
-				continue;
-			}
-			std::string linija;
-			int brojLinije = 0;
-			bool pronadjen = false;
-			while(std::getline(fajl, linija)) {
-				brojLinije++;
-				if(linija == ("funkcija:radnikR")) {
-					pronadjen = true;
-					break;
-				}
-			}
-			fajl.close();
-			if(pronadjen) {
-				std::ifstream fajl(putanja);
-				if(!fajl.is_open()) {
-					std::cerr << "Nemoguce otvoriti fajl: " << putanja << std::endl;
-					continue;
-				}
-				int i=0;
-				while(std::getline(fajl, linija)) {
-					if(i != 1) {
-						std::cout << linija << endl;
-					}
-					i++;
-				}
-				std::cout << std::endl;
+	if (provjeriUlogovanje() != true)
+	{
+		cout << "Potrebno je da se ulogujete!" << endl;
+		return;
+	}
+	cout << "Pregled svih radnika za registraciju: " << endl;
+	for (const auto& entry : std::filesystem::directory_iterator(putanja))
+	{
+		ifstream file(entry.path());
+		string linija;
+		while (getline(file, linija))
+		{
+			if (linija == "funkcija:radnikR")
+			{
+				cout << endl << entry.path().filename().string().substr(0, entry.path().filename().string().length() - 4) << endl;
 			}
 		}
-
 	}
 }
 
