@@ -357,8 +357,8 @@ void AdminRegistracija::prikaziMeni()
 				cout << "Ne postoje aktivni zahtjevi. " << endl;
 				break;
 			}
-			cout << "Zelite li odobriti promjenu sifre nekom od korisnika <da/ne>: " << endl;
 			do {
+				cout << "Zelite li odobriti promjenu sifre nekom od korisnika <da/ne>: " << endl;
 				string odgovor;
 				cin >> odgovor;
 				if (odgovor == "da" || odgovor == "Da") {
@@ -366,7 +366,7 @@ void AdminRegistracija::prikaziMeni()
 					string korisnik;
 					cin >> korisnik;
 					odobriZahtjev(korisnik);
-					flag = true;
+					string odgovor2;
 				}
 				else if (odgovor == "ne" || odgovor == "Ne") flag = false;
 				else cout << "Nepostojeca komanda. Pokusajte ponovo." << endl;

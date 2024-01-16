@@ -13,7 +13,7 @@ using namespace std;
 
 bool Admin::ispisiZahtjeve() {
 	vector<string> listOfUsers;
-	for (const auto& file : std::filesystem::directory_iterator("data\\zahtjevi")) {
+	for (const auto& file : std::filesystem::directory_iterator(putanja + putanja2)) {
 		ifstream inputFile(file.path());
 		string sample;
 		getline(inputFile, sample);
@@ -29,7 +29,7 @@ bool Admin::ispisiZahtjeve() {
 
 void Admin::odobriZahtjev(string kIme)
 {
-	ifstream file(putanja + "zahtjevi\\"+ kIme + "Zahtjev.txt");
+	ifstream file(putanja + putanja2 + kIme + "Zahtjev.txt");
 	if (!file.is_open()) {
 		cout << "Neispravno korisnicko ime. Pokusajte ponovo. " << endl;
 		return;
@@ -38,7 +38,7 @@ void Admin::odobriZahtjev(string kIme)
 	getline(file, ime);
 	getline(file, novaSifra);
 	file.close();
-	std::filesystem::remove("data\\zahtjevi\\" + kIme + "Zahtjev.txt");
+	std::filesystem::remove(putanja + putanja2 + kIme + "Zahtjev.txt");
 	ifstream file1(putanja + kIme + ".txt");
 	string kime,staraSifra, prezime, email, fja;
 	getline(file1, kime);

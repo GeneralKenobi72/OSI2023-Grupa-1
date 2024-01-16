@@ -56,8 +56,12 @@ void RadnikR::promjenaSifre()
 	}
 	string novaSifraDrugiPut, novaSifra;
 	do {
-		cout << "Unesite novu sifru: " << endl;
-		novaSifra = this->UnesiSifru();
+		int i = 0;
+		do {
+			if(!i) cout << "Unesite novu sifru: " << endl;
+			novaSifra = this->UnesiSifru();
+			i++;
+		} while (!ValidnaSifra(novaSifra));
 		cout << "Potvrdite novu sifru ponovnim unosom: " << endl;
 		novaSifraDrugiPut = this->UnesiSifru();
 	} while (novaSifra != novaSifraDrugiPut);
@@ -73,7 +77,7 @@ void RadnikR::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
 }
 
 void RadnikR::kreirajZahtjev(string kIme, string novaSifra) {
-	ofstream file(putanja + "zahtjevi\\" + kIme + +"Zahtjev" + ".txt");
+	ofstream file(putanja + putanja2 + kIme + +"Zahtjev" + ".txt");
 	file << kIme << endl;
 	file << novaSifra << endl;
 	file.close();
