@@ -241,6 +241,7 @@ void Klijent::prikaziMeni()
 		cout << "2. Unos Termina" << endl;
 		cout << "3. Otkazivanje Termina" << endl;
 		cout << "4. Prikaz kazni i racuna" << endl;
+		cout << "5. Prikaz izdate potvrde o tehnickom pregledu" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -258,6 +259,9 @@ void Klijent::prikaziMeni()
 			break;
 		case 4:
 			prikaziKazneIRacune();
+			break;
+		case 5:
+			pregeldPotvrde();
 			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;
@@ -752,5 +756,29 @@ void Klijent::otkaziTermin()
 		outFileKlijenta << linija << endl;
 	}
 	outFileKlijenta.close();*/
+}
+void Klijent::pregeldPotvrde()
+{
+	string file_putanja = putanja + "Potvrda_" + this->getKorisnickoIme() + ".txt";
+	ifstream filePotvda(file_putanja);
+	try {
+		if (!filePotvda.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+	}
+	catch (FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+		return;
+	}
+	cout << "Potvrda za korisnika " << korisnickoIme << endl;
+
+	string linija;
+	while (getline(filePotvda, linija)) {
+		cout << linija << endl;
+	}
+
+	filePotvda.close();
 }
 #endif
