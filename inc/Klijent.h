@@ -170,6 +170,14 @@ public:
 
 		return sati >= 8 && sati <= 20 && minute >= 0 && minute < 60;
 	}
+	bool jePrestupnaGodina(int godina) {
+		if ((godina % 4 == 0 && godina % 100 != 0) || godina % 400 == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	bool jeValidanDatum(const string& datum) {
 		int godina, mjesec, dan;
         #ifdef _WIN32
@@ -181,6 +189,27 @@ public:
 			return false;
 		}
         #endif
+
+		if (godina < 1900 || godina > 2024) return false;
+		if (mjesec < 1 || mjesec > 12) return false;
+		if (dan < 1 || dan > 31) return false;
+
+		if (mjesec == 2) {
+			int maxDaniUFeb;
+			if (jePrestupnaGodina(godina)) {
+				maxDaniUFeb = 29;
+			}
+			else {
+				maxDaniUFeb = 28;
+			}
+			if (dan > maxDaniUFeb) {
+				return false;
+			}
+		}
+		else if (mjesec == 4 || mjesec == 6 || mjesec == 9 || mjesec == 11) {
+			if (dan > 30) 
+				return false;
+		}
 
 		struct tm unetiDatum = { 0 };
 		unetiDatum.tm_year = godina - 1900;
