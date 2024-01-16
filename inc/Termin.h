@@ -132,7 +132,6 @@ public:
 		std::mt19937 rng(dev());
 		std::uniform_int_distribution<std::mt19937::result_type> dist6(1, 100);
 
-		cout << dist6(rng) << endl;
 		if(dist6(rng) < 60) {
 			vrijednostKazne = 0;
 		} else {
