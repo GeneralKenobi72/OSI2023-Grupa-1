@@ -322,9 +322,8 @@ void AdminRegistracija::prikaziMeni()
 		cout << "2. Obrisi radika za Registraciju" << endl;
 		cout << "3. Pregled radnika za Registraciju" << endl;
 		cout << "4. Pretrazivanje radnika za Registraciju" << endl;
-		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
-		cout << "6: Pregled zahtjeva za resetovanje lozinke" << endl;
-		cout << "7. Odjava" << endl;
+		cout << "5: Pregled zahtjeva za resetovanje lozinke" << endl;
+		cout << "6. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 		bool flag = true;
@@ -341,18 +340,13 @@ void AdminRegistracija::prikaziMeni()
 		case 4:
 			pretrazivanjeNalogaRadnika();
 			break;
-		case 5:
-			cout << "Unesite korisnicko ime radnika." << endl;
-			cin >> ime;
-			ispisInfoRadnika(ime);
-			break;
-		case 7:
+		case 6:
 			Odjava();
 			this->ulogovan = false;
 			this->ulogovan = false;
 			kraj = true;
 			break;
-		case 6:
+		case 5:
 			if (!ispisiZahtjeve()) {
 				cout << "Ne postoje aktivni zahtjevi. " << endl;
 				break;

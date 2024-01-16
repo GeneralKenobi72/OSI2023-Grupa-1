@@ -513,10 +513,9 @@ void AdminTehnicki::prikaziMeni()
 		cout << "2. Obrisi radika za Tehnicki" << endl;
 		cout << "3. Pregled radnika za Tehnicki" << endl;
 		cout << "4. Pretrazivanje radnika za Tehnicki" << endl;
-		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
-		cout << "6: Pregled zahtjeva za resetovanje lozinke" << endl;
-		cout << "7. Pracenje statistike" << endl;
-		cout << "8. Odjava" << endl;
+		cout << "5: Pregled zahtjeva za resetovanje lozinke" << endl;
+		cout << "6. Pracenje statistike" << endl;
+		cout << "7. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 		bool flag = true;
@@ -533,10 +532,10 @@ void AdminTehnicki::prikaziMeni()
 		case 4:
 			pretrazivanjeNalogaRadnika();
 			break;
-		case 7:
+		case 6:
 			pracenjeStatistike();
 			break;
-		case 6:
+		case 5:
 			if (!ispisiZahtjeve()) {
 				cout << "Ne postoje aktivni zahtjevi. " << endl;
 				break;
@@ -556,7 +555,7 @@ void AdminTehnicki::prikaziMeni()
 			} while (flag == true);
 			cout << "Izmjene uspjesno izvrsene." << endl;
 			break;
-		case 8:
+		case 7:
 			Odjava();
 			kraj = true;
 			break;
