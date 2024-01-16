@@ -50,9 +50,8 @@ public:
 				return nullptr;
 		}
 	}
-	// TODO: treba implementirati
-	//bool provjeriSpremnostZaRegistraciju(const string& problemi);
-	//void pracenjeStatistike();
+	bool provjeriSpremnostZaRegistraciju(const string& problemi);
+	void pracenjeStatistike();
 private:
 	bool provjeriUlogovanje() override {
 		if (ulogovan == false)
