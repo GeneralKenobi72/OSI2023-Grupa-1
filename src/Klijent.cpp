@@ -416,7 +416,7 @@ void Klijent::unesiPodatke()
 	} while (!ValidnoVozilo(markaVozila));
 	setMarkaVozila(markaVozila);
 	do {
-		cout << "Unesite model vozila(npr. mk6): ";
+		cout << "Unesite model vozila(bez '-' npr. mk6): ";
 		getline(cin, modelVozila);
 	} while (!ValidnoVozilo(modelVozila));
 	setModelVozila(modelVozila);
@@ -454,7 +454,7 @@ void Klijent::unesiPodatke()
 				throw FajlNijeOtvoren();
 			}
 			else {
-				file << korisnicko_ime << " " << podaciVozila << "\n";
+				file <<"\n" << korisnicko_ime << " " << podaciVozila << "\n";
 			}
 			if(!fajlKazneIRacuni.is_open()) {
 				throw FajlNijeOtvoren();

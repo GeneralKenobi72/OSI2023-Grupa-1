@@ -3,8 +3,12 @@
 #include "Korisnik.h"
 #include "Radnik.h"
 #include <string>
+#include "Termin.h"
 #include <fstream>
+#include <vector>
 #include <functional>
+#include <ctime>
+#include <random>
 using namespace std;
 
 class RadnikR : public Radnik {
@@ -61,5 +65,27 @@ public:
 				return nullptr;
 			}
 		}
+	}
+	Vozilo unosPodatakaVozila();
+	string generisiRegistracioneTablice() {
+		// dakle tablice su oblika ABC-TD012, dakle samo ta jedna '-'
+		string tablice;
+		random_device rd; // ovdje cemo generisati neki nasumican broj
+		mt19937 gen(rd());
+		uniform_int_distribution<> distribucijaSlova(65, 90);
+		uniform_int_distribution<> distribucijaBrojeva(0, 9);
+		// ovdje cemo dodati neka 3 nasumicna slova
+		for (int i = 0; i < 3; ++i) {
+			char slovo = distribucijaSlova(gen);
+			tablice.push_back(slovo);
+		}
+		tablice.push_back('-');
+
+		for (int i = 0; i < 3; ++i) {
+			char broj = '0' + distribucijaBrojeva(gen); //pretvara u char
+			tablice.push_back(broj);
+		}
+
+		return tablice;
 	}
 };

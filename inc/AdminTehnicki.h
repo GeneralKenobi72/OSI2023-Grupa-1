@@ -6,7 +6,12 @@
 #include <string>
 #include "Izuzeci.h"
 #include <filesystem>
+#include "Termin.h"
 #include "RadnikTehnicki.h"
+#include <cctype>
+#include <sstream>
+#include <map>
+#include <vector>
 namespace fs = std::filesystem;
 using namespace std;
 
@@ -45,6 +50,9 @@ public:
 				return nullptr;
 		}
 	}
+	// TODO: treba implementirati
+	//bool provjeriSpremnostZaRegistraciju(const string& problemi);
+	//void pracenjeStatistike();
 private:
 	bool provjeriUlogovanje() override {
 		if (ulogovan == false)

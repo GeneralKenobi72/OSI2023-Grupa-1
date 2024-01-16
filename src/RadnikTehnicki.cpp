@@ -105,22 +105,22 @@ void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
 		{
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			do {
-				cout << "Unesite marku vozila klijenta " << korisnickoImeKlijenta << ": ";
+				cout << "Unesite marku vozila klijenta(npr. ImeVozila)" << korisnickoImeKlijenta << ": ";
 				getline(cin, markaVozila);
 			} while (!ValidnoVozilo(markaVozila));
 			
 			do {
-				cout << "Unesite model vozila klijenta " << korisnickoImeKlijenta << ": ";
+				cout << "Unesite model vozila klijenta (bez '-' npr. mk6) " << korisnickoImeKlijenta << ": ";
 				getline(cin, modelVozila);
 			} while (!ValidnoVozilo(modelVozila));
 			
 			do {
-				cout << "Unesite godinu proizvodnje vozila klijenta " << korisnickoImeKlijenta << ": ";
+				cout << "Unesite godinu proizvodnje vozila klijenta(npr. 2000) " << korisnickoImeKlijenta << ": ";
 				getline(cin, godinaProizvodnje);
 			} while (!ValidnaGodina(godinaProizvodnje));
 
 			do {
-				cout << "Unesite registarski broj vozila klijenta " << korisnickoImeKlijenta << ": ";
+				cout << "Unesite registarski broj vozila klijenta(npr. ABC-123) " << korisnickoImeKlijenta << ": ";
 				getline(cin, registarskiBroj);
 			} while (!ValidanRegistracijskiBroj(registarskiBroj));
 			string korisnicko_ime = getKorisnickoIme();
@@ -154,7 +154,7 @@ void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
 				throw FajlNijeOtvoren();
 			}
 			else {
-				file << korisnickoImeKlijenta << " " << podaciVozila << "\n";
+				file << "\n" << korisnickoImeKlijenta << " " << podaciVozila << "\n";
 			}
 			if (!fajlKazneIRacuni.is_open()) {
 				throw FajlNijeOtvoren();
@@ -203,7 +203,7 @@ void RadnikT::odaberiTermin()
 	{
 		regBroj = izaberiVozilo(korisnickoImeKlijenta);
 		if (regBroj.empty()) {
-			cout << "Nema registrovanih vozila." << endl;
+			//cout << "Nema registrovanih vozila." << endl;
 			return;
 		}
 	}
@@ -211,7 +211,7 @@ void RadnikT::odaberiTermin()
 		unesiPodatke(korisnickoImeKlijenta);
 		regBroj = izaberiVozilo(korisnickoImeKlijenta);
 		if (regBroj.empty()) {
-			cout << "Nema registrovanih vozila." << endl;
+			//cout << "Nema registrovanih vozila." << endl;
 			return;
 		}
 	}

@@ -7,6 +7,8 @@
 #include <string>
 #include <fstream>
 #include "RadnikRegistracija.h"
+#include "Termin.h"
+#include <vector>
 #include <functional>
 using namespace std;
 
@@ -175,11 +177,13 @@ bool RadnikR::Ulogovanje()
 void RadnikR::prikaziMeni()
 {
 	bool kraj = false;
+	Vozilo vozilo;
 	while (!kraj) {
 		int izbor;
 		cout << endl;
 		cout << "Meni za Radnika R" << endl;
 		cout << "1. Odjava" << endl;
+		cout << "2. Unos vozila" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -188,6 +192,9 @@ void RadnikR::prikaziMeni()
 			Odjava();
 			this->ulogovan = false;	
 			kraj = true;
+			break;
+		case 2:
+			vozilo = unosPodatakaVozila();
 			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;
@@ -246,6 +253,81 @@ bool RadnikR::provjeriRadnikaRegistracija(string korisnickoIme_, string sifra_)
 		return false;
 	}
 	return true;
+}
+
+Vozilo RadnikR::unosPodatakaVozila()
+{
+	string marka, model, registarskiBroj,kIme, godinaProizvodnje;
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
+	Vozilo vozilo;
+	cout << "Unesite korisnicko ime ciji se podaci vozila unose." << endl;
+	getline(cin, kIme);
+
+	string putanjaDatoteke =putanja+ kIme + ".txt";
+	if (filesystem::exists(putanjaDatoteke))
+	{
+		vozilo.korisnickoIme = kIme;
+		do {
+			cout << "Unesite marku vozila klijenta(npr. ImeVozila)" << kIme << ": ";
+			getline(cin, marka);
+		} while (!ValidnoVozilo(marka));
+		vozilo.marka = marka;
+		do {
+			cout << "Unesite model vozila klijenta (bez '-' npr. mk6) " << kIme << ": ";
+			getline(cin, model);
+		} while (!ValidnoVozilo(model));
+		vozilo.model = model;
+		do {
+			cout << "Unesite godinu proizvodnje vozila klijenta(npr. 2000) " << kIme << ": ";
+			getline(cin, godinaProizvodnje);
+		} while (!ValidnaGodina(godinaProizvodnje));
+		vozilo.godinaProizvodnje = godinaProizvodnje;
+		do {
+			cout << "Unesite registarski broj vozila klijenta(npr. ABC-123) " << kIme << ": ";
+			getline(cin, registarskiBroj);
+		} while (!ValidanRegistracijskiBroj(registarskiBroj));
+		vozilo.regBroj = registarskiBroj;
+		
+		string podaciVozila = marka + " " + model + " " + godinaProizvodnje + " " + registarskiBroj;
+		
+		ifstream fajlVozila(putanja + "vozila.txt");
+		string tempLine;
+		bool postoji = false;
+		while (getline(fajlVozila, tempLine)) {
+			if (tempLine.find(kIme + " " + podaciVozila) != string::npos) {
+				postoji = true;
+				break;
+			}
+		}
+		fajlVozila.close();
+
+		if (!postoji) {
+			ofstream file(putanja + "vozila.txt", ios::app);
+			ofstream fajlKazneIRacuni(putanja + "KazneIRacuni.txt", ios::app);
+			try {
+				if (!file.is_open()) {
+					throw FajlNijeOtvoren();
+				}
+				else {
+					file << "\n" << kIme << " " << podaciVozila << "\n";
+				}
+			}
+			catch (const FajlNijeOtvoren& e) {
+				cout << e.what() << endl;
+			}
+			file.close();
+		}
+		else {
+			cout << "Podaci o vozilu su vec upisani." << endl;
+		}
+
+		return vozilo;
+	}
+	else
+	{
+		cout << "Korisnik sa korisnickim imenom: " << kIme << " nije pronadjen." << endl;
+		return Vozilo();
+	}
 }
 
 
