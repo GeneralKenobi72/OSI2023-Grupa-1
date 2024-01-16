@@ -244,6 +244,7 @@ void Klijent::prikaziMeni()
 		cout << "3. Otkazivanje Termina" << endl;
 		cout << "4. Prikaz kazni i racuna" << endl;
 		cout << "5. Promjena sifre" << endl;
+		cout << "6. Prikaz izdate potvrde o tehnickom pregledu" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -264,6 +265,9 @@ void Klijent::prikaziMeni()
 			break;
 		case 5:
 			promjenaSifre();
+			break;
+		case 6:
+			pregeldPotvrde();
 			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;
@@ -473,7 +477,7 @@ void Klijent::unesiPodatke()
 	} while (!ValidnoVozilo(markaVozila));
 	setMarkaVozila(markaVozila);
 	do {
-		cout << "Unesite model vozila(npr. mk6): ";
+		cout << "Unesite model vozila(bez '-' npr. mk6): ";
 		getline(cin, modelVozila);
 	} while (!ValidnoVozilo(modelVozila));
 	setModelVozila(modelVozila);
@@ -511,7 +515,7 @@ void Klijent::unesiPodatke()
 				throw FajlNijeOtvoren();
 			}
 			else {
-				file << korisnicko_ime << " " << podaciVozila << "\n";
+				file <<"\n" << korisnicko_ime << " " << podaciVozila << "\n";
 			}
 			if(!fajlKazneIRacuni.is_open()) {
 				throw FajlNijeOtvoren();
@@ -625,7 +629,7 @@ void Klijent::odaberiTermin()
 			} while (!jeValidnoVrijeme(vrijeme));
 
 				if (!jeVrijemeURadnomVremenu(vrijeme)) {
-					cout << "Uneseno vrijeme nije unutar radnog vremena. Molimo unesite vrijeme izmeðu 08:00 i 20:00." << endl;
+					cout << "Uneseno vrijeme nije unutar radnog vremena. Molimo unesite vrijeme izmeï¿½u 08:00 i 20:00." << endl;
 					continue;
 				}
 
@@ -809,5 +813,29 @@ void Klijent::otkaziTermin()
 		outFileKlijenta << linija << endl;
 	}
 	outFileKlijenta.close();*/
+}
+void Klijent::pregeldPotvrde()
+{
+	string file_putanja = putanja + "Potvrda_" + this->getKorisnickoIme() + ".txt";
+	ifstream filePotvda(file_putanja);
+	try {
+		if (!filePotvda.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+	}
+	catch (FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+		return;
+	}
+	cout << "Potvrda za korisnika " << korisnickoIme << endl;
+
+	string linija;
+	while (getline(filePotvda, linija)) {
+		cout << linija << endl;
+	}
+
+	filePotvda.close();
 }
 #endif

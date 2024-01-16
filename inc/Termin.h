@@ -118,6 +118,7 @@ public:
 	string godinaProizvodnje;
 	string regBroj;
 	string korisnickoIme;
+	string problem = "";
 	string imeKlijnta, prezimeKlijnta;
 
 	int vrijednostKazne;

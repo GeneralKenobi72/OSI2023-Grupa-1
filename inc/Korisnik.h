@@ -70,12 +70,11 @@ public:
 			return false;
 		}
 		for (char znak : vozilo) {
-			if (!isalnum(znak) && !isspace(znak)) {
+			if (!isalnum(znak)) {
 				cout << "Nije validno." << endl;
 				return false;
 			}
 		}
-
 		return true;
 	}
 	bool ValidnaGodina(const string& godinaStr) {

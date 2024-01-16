@@ -9,6 +9,7 @@
 #include <fstream>
 #include <functional>
 #include "Termin.h"
+#include <limits>
 namespace fs = std::filesystem;
 using namespace std;
 #include <string>
@@ -133,8 +134,21 @@ int pocetniMeni() {
 	std::cout << "2: Ulogovanje\n";
 	std::cout << "3: Kraj rada\n";
 	std::cout << "Unos: ";
+	string unos;
 	int opcija;
-	cin >> opcija;
+	while (true) {
+		cout << "Unesite broj: ";
+		cin >> opcija;
+
+		if (std::cin.fail()) {
+			cin.clear(); 
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+			cout << "Molimo unesite ispravan broj.\n";
+		}
+		else {
+			break; 
+		}
+	}
 	return opcija;
 }
 

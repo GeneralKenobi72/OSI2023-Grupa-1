@@ -11,6 +11,11 @@
 #include "Izuzeci.h"
 #include "RadnikTehnicki.h"
 #include "AdminTehnicki.h"
+#include "Termin.h"
+#include <map>
+#include <cctype>
+#include <sstream>
+#include <vector>
 namespace fs = std::filesystem;
 using namespace std;
 
@@ -304,6 +309,198 @@ bool AdminTehnicki::provjeriKorisnickoImeAdminT(const string username)
 	ifstream file(putanja+username + ".txt");
 	return file.good();
 }
+bool AdminTehnicki::provjeriSpremnostZaRegistraciju(const string& problemi)
+{
+	vector<string> kriticniProblemi = { "kocnice", "upravljac", "motor", "osovina", "neispravan brisac", "mlaz vode" };
+	if (problemi == "Nema")
+	{
+		return true;
+	}
+	else {
+		/*for (const auto& kriticniProblem : kriticniProblemi) {
+			if (problemi.find(kriticniProblem) != string::npos) {
+				return false;
+			}
+		}*/
+		return false;
+	}
+}
+
+void AdminTehnicki::pracenjeStatistike()
+{
+	if (provjeriUlogovanje() != true)
+	{
+		cout << "Potrebno je da se ulogujete!" << endl;
+		return;
+	}
+	int brojacRadnika = 0;
+	ofstream fileStatistika(putanja + "Statistika.txt", ios::trunc);
+	for (const auto& entry : std::filesystem::directory_iterator(putanja))
+	{
+		ifstream file(entry.path());
+		string linija;
+		while (getline(file, linija))
+		{
+			if (linija == "funkcija:radnikT")
+			{
+				//cout << endl << entry.path().filename().string().substr(0, entry.path().filename().string().length() - 4) << endl;
+				brojacRadnika++;
+			}
+		}
+	}
+	fileStatistika << "Broj zaposlenih radnika za tehnicki: " << brojacRadnika << endl;
+
+	ifstream fileTermini(putanja + "Termini.txt");
+	string linija;
+	int brojPregleda = 0;
+
+	fileStatistika << "---------------------Pregledi-----------------------" << endl;
+
+	while (getline(fileTermini, linija)) {
+		stringstream ss(linija);
+		string korisnickoIme, datum, vrijeme, regBroj;
+
+		ss >> korisnickoIme >> datum >> vrijeme >> regBroj;
+		fileStatistika << datum << " " << vrijeme << endl;
+
+		brojPregleda++;
+	}
+
+	fileStatistika << "Broj tehnickih pregleda: " << brojPregleda << endl;
+
+	int brojPotvrda = 0;
+
+	for (const auto& entry : std::filesystem::directory_iterator(putanja)) {
+		string filename = entry.path().filename().string();
+		if (filename.find("Potvrda_") == 0) {
+			ifstream file(entry.path());
+			bool novoVozilo = false;
+			string linija;
+			while (getline(file, linija))
+			{
+				if (linija.find("Servis vozila - Potvrda") != string::npos) {
+					if (novoVozilo)
+					{
+						brojPotvrda++;
+					}
+					novoVozilo = true;
+				}
+			}
+			if (novoVozilo)
+			{
+				brojPotvrda++;
+			}
+		}
+	}
+	fileStatistika << "Broj izdatih potvrda: " << brojPotvrda << endl;
+
+
+	map<string, vector<Vozilo>> radnikPotvrde;
+
+	map<string, int> brojPotvrdaPoZaposlenom;
+	for (const auto& entry : std::filesystem::directory_iterator(putanja)) {
+		string filename = entry.path().filename().string();
+		if (filename.find("Potvrda_") == 0) {
+			ifstream file(entry.path());
+			string linija;
+			Vozilo trenutnoVozilo;
+			string izdavaoc;
+			bool novoVozilo = false;
+			while (getline(file, linija)) {
+				if (linija.find("Servis vozila - Potvrda") != string::npos) {
+					if (novoVozilo) {
+						radnikPotvrde[izdavaoc].push_back(trenutnoVozilo);
+						trenutnoVozilo = Vozilo{}; // Resetuj trenutno vozilo
+						brojPotvrdaPoZaposlenom[izdavaoc]++;
+					}
+					novoVozilo = true;
+				}
+				else if (linija.find("Izdao/la:") != string::npos) {
+					trenutnoVozilo.imeKlijnta = linija.substr(linija.find(":") + 2);
+					izdavaoc = linija.substr(linija.find(":") + 2);
+				}
+				else if (linija.find("Model vozila:") != string::npos) {
+					trenutnoVozilo.model = linija.substr(linija.find(":") + 2);
+				}
+				else if (linija.find("Registarski broj:") != string::npos)
+				{
+					trenutnoVozilo.regBroj = linija.substr(linija.find(":") + 1);
+				}
+				else if (linija.find("Problemi:") != string::npos) {
+					trenutnoVozilo.problem = linija.substr(linija.find(":") + 2);
+				}
+				else if (linija.find("Cijena tehnickog pregleda:") != string::npos)
+				{
+					string izvuceniTekst = linija.substr(linija.find(":") + 2);
+					string brojevniDio;
+					for (char c : izvuceniTekst) {
+						if (isdigit(c)) {
+							brojevniDio.push_back(c);
+						}
+					}
+					//cout << "Cijena: " << brojevniDio << endl;
+					if (!brojevniDio.empty()) {
+						try {
+							trenutnoVozilo.cijenaTehnickog = stoi(brojevniDio);
+						}
+						catch (const std::exception& e) {
+							//cerr << "Greska pri konverziji: " << e.what() << '\n';
+							trenutnoVozilo.cijenaTehnickog = 0;
+						}
+					}
+				}
+			}
+			if (novoVozilo) {
+				radnikPotvrde[izdavaoc].push_back(trenutnoVozilo);
+				brojPotvrdaPoZaposlenom[izdavaoc]++;
+			}
+		}
+	}
+	fileStatistika << "-------Broj izdatih potvrda po zaposlenom--------" << endl;
+	for (const auto& izdavac : brojPotvrdaPoZaposlenom) {
+		fileStatistika << izdavac.first << ": " << izdavac.second << " potvrda(e)" << endl;
+	}
+
+	fileStatistika << "---Pracenje potvrda o tehnickom pregledu vozila---" << endl;
+	for (const auto& radnik : radnikPotvrde) {
+		fileStatistika << "Radnik: " << radnik.first << endl;
+		for (const auto& vozilo : radnik.second) {
+			bool spremnoZaRegistraciju = provjeriSpremnostZaRegistraciju(vozilo.problem);
+			string spremno = "Da";
+			if (!spremnoZaRegistraciju)
+			{
+				spremno = "Ne";
+			}
+			fileStatistika << "Model vozila: " << vozilo.model
+				<< ", Registarski broj: " << vozilo.regBroj
+				<< ", Problemi: " << vozilo.problem
+				<< ", Cijena tehnickog pregleda: " << vozilo.cijenaTehnickog << " KM"
+				<< ", Spremno za registraciju: " << spremno << endl;
+		}
+	}
+
+	fileTermini.close();
+	fileStatistika.close();
+
+
+	cout << "Da li zelite da vidite statistiku? (da/ne)" << endl;
+	string da;
+	cin >> da;
+	if (da == "da" || da == "Da")
+	{
+		ifstream out(putanja + "Statistika.txt");
+		string linija;
+		while (getline(out, linija))
+		{
+			cout << linija << endl;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
 void AdminTehnicki::prikaziMeni()
 {
 	bool kraj = false;
@@ -318,7 +515,8 @@ void AdminTehnicki::prikaziMeni()
 		cout << "4. Pretrazivanje radnika za Tehnicki" << endl;
 		cout << "5. Ispis detaljnijih informacija o radniku" << endl;
 		cout << "6: Pregled zahtjeva za resetovanje lozinke" << endl;
-		cout << "7. Odjava" << endl;
+		cout << "7. Pracenje statistike" << endl;
+		cout << "8. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 		bool flag = true;
@@ -335,10 +533,8 @@ void AdminTehnicki::prikaziMeni()
 		case 4:
 			pretrazivanjeNalogaRadnika();
 			break;
-		case 5:
-			cout << "Unesite korisnicko ime radnika." << endl;
-			cin >> ime;
-			ispisInfoRadnika(ime);
+		case 7:
+			pracenjeStatistike();
 			break;
 		case 6:
 			if (!ispisiZahtjeve()) {
@@ -361,7 +557,7 @@ void AdminTehnicki::prikaziMeni()
 			} while (flag == true);
 			cout << "Izmjene uspjesno izvrsene." << endl;
 			break;
-		case 7:
+		case 8:
 			Odjava();
 			kraj = true;
 			break;
