@@ -13,6 +13,7 @@ using namespace std;
 
 bool Admin::ispisiZahtjeve() {
 	vector<string> listOfUsers;
+	if (!std::filesystem::exists(putanja + putanja2)) return false;
 	for (const auto& file : std::filesystem::directory_iterator(putanja + putanja2)) {
 		ifstream inputFile(file.path());
 		string sample;

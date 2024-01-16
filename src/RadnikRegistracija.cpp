@@ -77,6 +77,7 @@ void RadnikR::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
 }
 
 void RadnikR::kreirajZahtjev(string kIme, string novaSifra) {
+	if (!std::filesystem::exists(putanja + putanja2)) std::filesystem::create_directory(putanja + putanja2);
 	ofstream file(putanja + putanja2 + kIme + +"Zahtjev" + ".txt");
 	file << kIme << endl;
 	file << novaSifra << endl;
