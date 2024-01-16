@@ -74,6 +74,7 @@ public:
 	int provjeriTermin(const string& datum, const string& vrijeme, const string&);
 	void upisiTerminUFajl(const string&, const string&, const string&, const string& regBroj);
 
+
 	string izaberiVozilo()
 	{
 		ifstream file(putanja + "vozila.txt");
@@ -235,5 +236,7 @@ public:
 			return false;
 		}
 	}
+
+	void pregeldPotvrde();
 
 };
