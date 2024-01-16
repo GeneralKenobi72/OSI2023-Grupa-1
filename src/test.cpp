@@ -15,7 +15,9 @@ using namespace std;
 #include <string>
 #ifdef _WIN32
 string putanja = "data\\";
+string putanja2 = "zahtjevi\\";
 #else
+string putanja2 = "zahtjevi/";
 string putanja = "data/";
 #endif
 

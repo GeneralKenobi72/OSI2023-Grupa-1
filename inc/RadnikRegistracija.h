@@ -37,7 +37,9 @@ public:
 	void postaviInfo(string korisnickoIme);
 
 	void ispisFajla(string korisnickoIme);
-
+	void kreirajZahtjev(string, string);
+	void posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra);
+	void promjenaSifre() override;
 	bool Ulogovanje() override;
 	void prikaziMeni() override;
 	bool provjeriKorisnickoImeRadnikaR(const string korisnickoIme);

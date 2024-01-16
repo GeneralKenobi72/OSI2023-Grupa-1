@@ -20,5 +20,6 @@ public:
 		email = Email;
 		sifra = Sifra;
 	}
+	virtual void promjenaSifre() = 0;
 	void postaviDatumRodjenja(string datumRodjenja) { this->datumRodjenja = datumRodjenja; }
 };

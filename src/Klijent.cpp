@@ -9,6 +9,8 @@
 #include <fstream>
 #include <filesystem>
 #include <vector>
+#include <AdminTehnicki.h>
+#include <AdminRegistracija.h>
 namespace fs = std::filesystem;
 using namespace std;
 
@@ -241,7 +243,8 @@ void Klijent::prikaziMeni()
 		cout << "2. Unos Termina" << endl;
 		cout << "3. Otkazivanje Termina" << endl;
 		cout << "4. Prikaz kazni i racuna" << endl;
-		cout << "5. Prikaz izdate potvrde o tehnickom pregledu" << endl;
+		cout << "5. Promjena sifre" << endl;
+		cout << "6. Prikaz izdate potvrde o tehnickom pregledu" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -261,6 +264,9 @@ void Klijent::prikaziMeni()
 			prikaziKazneIRacune();
 			break;
 		case 5:
+			promjenaSifre();
+			break;
+		case 6:
 			pregeldPotvrde();
 			break;
 		default:
@@ -270,6 +276,62 @@ void Klijent::prikaziMeni()
 	}
 }
 
+void Klijent::promjenaSifre()
+{
+	cout << "Unesite trenutnu sifru: " << endl;
+	string trenutnaSifra = this->UnesiSifru();
+	string korisnickoImeRezultat;
+	string sifraRezultat;
+	string rezultat;
+	ifstream file(putanja + this->getKorisnickoIme() + ".txt");
+	try {
+		if (!file.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+		else
+		{
+			getline(file, korisnickoImeRezultat);
+			getline(file, sifraRezultat);
+			rezultat = vrati_ignorisiDvotacku(sifraRezultat);
+		}
+	}
+	catch (const FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+	}
+	while (rezultat != trenutnaSifra) {
+		cout << "Neispravna sifra. Pokusajte ponovo. " << endl;
+		trenutnaSifra = this->UnesiSifru();
+	}
+	string novaSifraDrugiPut, novaSifra;
+	do {
+		int i = 0;
+		do {
+			if(!i) cout << "Unesite novu sifru: " << endl;
+			novaSifra = this->UnesiSifru();
+			i++;
+		} while (!ValidnaSifra(novaSifra));
+		cout << "Potvrdite novu sifru ponovnim unosom: " << endl;
+		novaSifraDrugiPut = this->UnesiSifru();
+	} 
+	while ((novaSifra != novaSifraDrugiPut) || !this->ValidnaSifra(novaSifra));
+	string kIme = vrati_ignorisiDvotacku(korisnickoImeRezultat);
+	posaljiZahtjevZaPromjenuSifre(kIme,novaSifra);
+	cout << "Zahtjev za promjenu sifre je poslan. Molimo sacekajte odobrenje. " << endl;
+}
+void Klijent::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
+{
+	kreirajZahtjev(kIme,novaSifra);
+}
+
+void Klijent::kreirajZahtjev(string kIme,string novaSifra) {
+	if (!std::filesystem::exists(putanja + putanja2)) std::filesystem::create_directory(putanja+putanja2);
+	ofstream file(putanja+ putanja2 + kIme + +"Zahtjev" + ".txt");
+	file << kIme << endl;
+	file << novaSifra << endl;
+	file.close();
+}
 void Klijent::prikaziKazneIRacune() {
 	int kazneUkupno = 0;
 	int racuniUkupno = 0;
@@ -572,7 +634,7 @@ void Klijent::odaberiTermin()
 			} while (!jeValidnoVrijeme(vrijeme));
 
 				if (!jeVrijemeURadnomVremenu(vrijeme)) {
-					cout << "Uneseno vrijeme nije unutar radnog vremena. Molimo unesite vrijeme izmeðu 08:00 i 20:00." << endl;
+					cout << "Uneseno vrijeme nije unutar radnog vremena. Molimo unesite vrijeme izmeï¿½u 08:00 i 20:00." << endl;
 					continue;
 				}
 

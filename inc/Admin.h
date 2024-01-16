@@ -12,7 +12,9 @@ protected:
 	//bool provjeriUlogovanje() override { return false; }
 public:
 	Admin(const string, const string, const string, const string, const string);
-	Admin() : Korisnik() {}
+	Admin() : Korisnik() { }
+	void odobriZahtjev(string);
+	bool ispisiZahtjeve();
 	string getIme();
 	string getPrezime();
 	string getSifra();

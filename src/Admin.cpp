@@ -11,6 +11,55 @@
 namespace fs = std::filesystem;
 using namespace std;
 
+bool Admin::ispisiZahtjeve() {
+	vector<string> listOfUsers;
+	if (!std::filesystem::exists(putanja + putanja2)) return false;
+	for (const auto& file : std::filesystem::directory_iterator(putanja + putanja2)) {
+		ifstream inputFile(file.path());
+		string sample;
+		getline(inputFile, sample);
+		listOfUsers.push_back(sample);
+	}
+	bool flag = false;
+	for (string sample : listOfUsers) {
+		cout << sample << endl;
+		flag = true;
+	}
+	return flag;
+}
+
+void Admin::odobriZahtjev(string kIme)
+{
+	ifstream file(putanja + putanja2 + kIme + "Zahtjev.txt");
+	if (!file.is_open()) {
+		cout << "Neispravno korisnicko ime. Pokusajte ponovo. " << endl;
+		return;
+	}
+	string ime, novaSifra;
+	getline(file, ime);
+	getline(file, novaSifra);
+	file.close();
+	std::filesystem::remove(putanja + putanja2 + kIme + "Zahtjev.txt");
+	ifstream file1(putanja + kIme + ".txt");
+	string kime,staraSifra, prezime, email, fja;
+	getline(file1, kime);
+	getline(file1, staraSifra);
+	getline(file1, ime);
+	getline(file1, prezime);
+	getline(file1, email);
+	getline(file1, fja);
+	file1.close();
+	ofstream file2(putanja + kIme + ".txt");
+	file2 << kime << "\n";
+	file2 <<"Sifra:" << novaSifra << "\n";
+	file2 << ime << "\n";
+	file2 << prezime << "\n";
+	file2 << email << "\n";
+	file2 << fja << "\n";
+	file2.close();
+}
+
+
 Admin::Admin(const string A_Ime, const string A_Prezime, const string KorisnickoIme, const string A_sifra, const string A_email)
 	: Korisnik()
 {
@@ -20,6 +69,7 @@ Admin::Admin(const string A_Ime, const string A_Prezime, const string Korisnicko
 	email = A_email;
 	sifra = A_sifra;
 }
+
 
 inline string Admin::getIme() { return Ime; }
 
@@ -95,6 +145,7 @@ std::vector<std::string> pretraziDirektorijum(const std::string& direktorijum, c
 	}
 	return poklapanja;
 }
+
 
 void Admin::pronadjiRadnike(std::string parametar, std::string informacija, std::string tipRadnika) {
 	if(parametar == "Korisnicko") {

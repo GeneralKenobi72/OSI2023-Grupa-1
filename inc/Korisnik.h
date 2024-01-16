@@ -24,7 +24,6 @@ public:
 	// ali zbog preglednosti su definisane zasebno
 	bool ValidnoIme(string ime);
 	bool ValidnoPrezime(string prezime);
-
 	bool ValidanEmail(string email);
 	bool ValidnaSifra(string sifra);
 
@@ -60,7 +59,9 @@ public:
 	static string vrati_ignorisiDvotacku(string imeDatoteke);
 	#ifdef _WIN32
 	string putanja = "data\\";
+	string putanja2 = "zahtjevi\\";
 	#else
+	string putanja2 = "zahtjevi/";
 	string putanja = "data/";
 	#endif
 	bool ulogovan= false;

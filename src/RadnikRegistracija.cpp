@@ -10,6 +10,7 @@
 #include "Termin.h"
 #include <vector>
 #include <functional>
+#include <AdminRegistracija.h>
 using namespace std;
 
 // Vraca podstring od pocetka do pozicije underscore-a
@@ -23,6 +24,64 @@ string RadnikR::fajlKorisnickoImeRadnikaT(const string fileIme) {
 	else {
 		return NULL;
 	}
+}
+
+void RadnikR::promjenaSifre()
+{
+	cout << "Unesite trenutnu sifru: " << endl;
+	string trenutnaSifra = this->UnesiSifru();
+	string korisnickoImeRezultat;
+	string sifraRezultat;
+	string rezultat;
+	ifstream file(putanja + this->getKorisnickoIme() + ".txt");
+	try {
+		if (!file.is_open())
+		{
+			throw FajlNijeOtvoren();
+		}
+		else
+		{
+			getline(file, korisnickoImeRezultat);
+			getline(file, sifraRezultat);
+			rezultat = vrati_ignorisiDvotacku(sifraRezultat);
+		}
+	}
+	catch (const FajlNijeOtvoren& e)
+	{
+		cout << e.what() << endl;
+	}
+	while (rezultat != trenutnaSifra) {
+		cout << "Neispravna sifra. Pokusajte ponovo. " << endl;
+		trenutnaSifra = this->UnesiSifru();
+	}
+	string novaSifraDrugiPut, novaSifra;
+	do {
+		int i = 0;
+		do {
+			if(!i) cout << "Unesite novu sifru: " << endl;
+			novaSifra = this->UnesiSifru();
+			i++;
+		} while (!ValidnaSifra(novaSifra));
+		cout << "Potvrdite novu sifru ponovnim unosom: " << endl;
+		novaSifraDrugiPut = this->UnesiSifru();
+	} while (novaSifra != novaSifraDrugiPut);
+
+	posaljiZahtjevZaPromjenuSifre(korisnickoImeRezultat,novaSifra);
+	cout << "Zahtjev za promjenu sifre je poslan. Molimo sacekajte odobrenje. " << endl;
+
+}
+
+void RadnikR::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
+{
+	kreirajZahtjev(kIme,novaSifra);
+}
+
+void RadnikR::kreirajZahtjev(string kIme, string novaSifra) {
+	if (!std::filesystem::exists(putanja + putanja2)) std::filesystem::create_directory(putanja + putanja2);
+	ofstream file(putanja + putanja2 + kIme + +"Zahtjev" + ".txt");
+	file << kIme << endl;
+	file << novaSifra << endl;
+	file.close();
 }
 
 bool RadnikR::provjeriKorisnickoImeRadnikaR(const string korisnickoIme)
@@ -183,7 +242,8 @@ void RadnikR::prikaziMeni()
 		cout << endl;
 		cout << "Meni za Radnika R" << endl;
 		cout << "1. Odjava" << endl;
-		cout << "2. Unos vozila" << endl;
+		cout << "2. Promjena sifre" << endl;
+		cout << "3. Unos vozila" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -194,6 +254,9 @@ void RadnikR::prikaziMeni()
 			kraj = true;
 			break;
 		case 2:
+			promjenaSifre();
+			break;
+		case 3:
 			vozilo = unosPodatakaVozila();
 			break;
 		default:

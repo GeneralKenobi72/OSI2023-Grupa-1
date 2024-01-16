@@ -33,7 +33,10 @@ public:
 	void upisFajla(string korisnicko_ime);
 	void ispisFajla(string korisnicko_ime);
 	void novaRegistracija();
+	void promjenaSifre();
+	void kreirajZahtjev(string kIme, string novaSifra);
 	bool Ulogovanje() override;
+	void posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra);
 	void prikaziMeni() override;
 	bool provjeriKlijenta(string korisnickoIme, string sifra);
 	void prikaziKazneIRacune();
