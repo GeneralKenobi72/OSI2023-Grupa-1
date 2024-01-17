@@ -23,6 +23,16 @@ Klijent::Klijent(const string C_Ime, const string C_Prezime,
 	sifra = C_sifra;
 	email = c_email;
 	korisnickoIme = C_korisnickoIme;
+	//this->osiguranjePostoji = osiguranjePostoji;
+	//if (osiguranjePostoji) {
+		//for (int i = 0; i < 10; i++) {
+			//std::default_random_engine generator;
+			//std::uniform_int_distribution<int> distribution(0, 10);
+			//int randInt = distribution(generator);
+			//this->brojOsiguranja.push_back(randInt);
+		//}
+	//}
+	//else this->brojOsiguranja = "N/A";
 }
 
 void Klijent::upisFajla(string korisnicko_ime)
@@ -245,6 +255,7 @@ void Klijent::prikaziMeni()
 		cout << "4. Prikaz kazni i racuna" << endl;
 		cout << "5. Promjena sifre" << endl;
 		cout << "6. Prikaz izdate potvrde o tehnickom pregledu" << endl;
+		cout << "7. Predaja zahtjeva za registraciju vozila" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -268,6 +279,9 @@ void Klijent::prikaziMeni()
 			break;
 		case 6:
 			pregeldPotvrde();
+			break;
+		case 7:
+			predajZahtjevZaRegistraciju();
 			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;
@@ -323,6 +337,12 @@ void Klijent::promjenaSifre()
 void Klijent::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
 {
 	kreirajZahtjev(kIme,novaSifra);
+}
+
+void Klijent::predajZahtjevZaRegistraciju()
+{
+	unesiPodatke();
+	cout << "Vasa registracija je zavedena te ce biti obradjena u najskorijem vremenskom periodu. Hvala." << endl;
 }
 
 void Klijent::kreirajZahtjev(string kIme,string novaSifra) {
@@ -498,13 +518,15 @@ void Klijent::unesiPodatke()
 	setRegistarskiBroj(registarskiBroj);
 	string korisnicko_ime = getKorisnickoIme();
 	Vozilo vozilo(korisnicko_ime, markaVozila, modelVozila, godinaProizvodnje, registarskiBroj);
-	string podaciVozila = markaVozila + " " + modelVozila + " " + godinaProizvodnje + " " + registarskiBroj;
+	string podaciVozila = markaVozila + " " + modelVozila + " " + godinaProizvodnje + " " + registarskiBroj + " " + vozilo.brojOsiguranja;
 
-	ifstream fajlVozila(putanja+"vozila.txt");
+	if (!std::filesystem::exists(putanja + putanjaDoNeregVozila)) std::filesystem::create_directory(putanja + putanjaDoNeregVozila);
+	ifstream fajlVozila(putanja+putanjaDoNeregVozila + registarskiBroj + ".txt");
 	string tempLine;
 	bool postoji = false;
 	while (getline(fajlVozila, tempLine)) {
 		if (tempLine.find(korisnicko_ime + " " + podaciVozila) != string::npos) {
+			getline(fajlVozila, tempLine);
 			postoji = true;
 			break;
 		}
@@ -512,7 +534,7 @@ void Klijent::unesiPodatke()
 	fajlVozila.close();
 
 	if (!postoji) {
-		ofstream file(putanja+"vozila.txt", ios::app);
+		ofstream file(putanja+putanjaDoNeregVozila + registarskiBroj + ".txt", ios::app);
 		string kazneIRacuni = korisnicko_ime + " " + registarskiBroj + " " + to_string(vozilo.vrijednostKazne) + " 0";
 		ofstream fajlKazneIRacuni(putanja+"KazneIRacuni.txt", ios::app);
 		try {
@@ -520,7 +542,7 @@ void Klijent::unesiPodatke()
 				throw FajlNijeOtvoren();
 			}
 			else {
-				file <<"\n" << korisnicko_ime << " " << podaciVozila << "\n";
+				file << '\n' << korisnicko_ime << " " << podaciVozila << endl;
 			}
 			if(!fajlKazneIRacuni.is_open()) {
 				throw FajlNijeOtvoren();

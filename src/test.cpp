@@ -15,15 +15,20 @@ using namespace std;
 #include <string>
 #ifdef _WIN32
 string putanja = "data\\";
-string putanja2 = "zahtjevi\\";
+string putanja2 = "zahtjeviZaResetovanjeLozinke\\";
+string putanjaDoRegistracija = "zahtjeviZaRegistracije\\";
+string putanjaDoNeregVozila = "NeregistrovanaVozila\\";
 #else
-string putanja2 = "zahtjevi/";
+string putanjaDoNeregVozila = "NeregistrovanaVozila/";
+string putanjaDoRegistracija = "zahtjeviZaRegistracije/";
+string putanja2 = "zahtjeviZaResetovanjeLozinke/";
 string putanja = "data/";
 #endif
 
 Korisnik* koSeLoguje(string korisnickoIme) {
 	string Ime, Prezime, Sifra, Email, s;
 	ifstream file(putanja+korisnickoIme+".txt");
+	string uloga;
 	try {
 		if (!file.is_open())
 		{
@@ -32,6 +37,7 @@ Korisnik* koSeLoguje(string korisnickoIme) {
 		else
 		{
 			getline(file, s);
+			s = Korisnik::vrati_ignorisiDvotacku(s);
 			getline(file, Sifra);
 			Sifra = Korisnik::vrati_ignorisiDvotacku(Sifra);
 			getline(file, Ime);
@@ -40,8 +46,8 @@ Korisnik* koSeLoguje(string korisnickoIme) {
 			Prezime = Korisnik::vrati_ignorisiDvotacku(Prezime);
 			getline(file, Email);
 			Email = Korisnik::vrati_ignorisiDvotacku(Email);
-			getline(file, s);
-			s = Korisnik::vrati_ignorisiDvotacku(s);
+			getline(file, uloga);
+			uloga = Korisnik::vrati_ignorisiDvotacku(uloga);
 		}
 	}
 	catch (const FajlNijeOtvoren& e)
@@ -49,23 +55,23 @@ Korisnik* koSeLoguje(string korisnickoIme) {
 		cout << e.what() << endl;
 		return nullptr;
 	}
-	if(s == "klijent"){
+	if(uloga == "klijent"){
 		Klijent* k = new Klijent(Ime, Prezime, korisnickoIme, Sifra, Email);
 		k->ulogovan = true;
 		return k;
-	} else if(s == "adminT") {
+	} else if(uloga == "adminT") {
 		AdminTehnicki* a = new AdminTehnicki(Ime,Prezime,korisnickoIme,Sifra,Email);
 		a->ulogovan = true;
 		return a;
-	} else if(s == "adminR") {
+	} else if(uloga == "adminR") {
 		AdminRegistracija* a = new AdminRegistracija(Ime,Prezime,korisnickoIme,Sifra,Email);
 		a->ulogovan = true;
 		return a;
-	} else if(s == "radnikT") {
+	} else if(uloga == "radnikT") {
 		RadnikT* r = new RadnikT(Ime,Prezime,korisnickoIme,Sifra,Email);
 		r->ulogovan = true;
 		return r;
-	} else if(s == "radnikR") {
+	} else if(uloga == "radnikR") {
 		RadnikR* r = new RadnikR(Ime,Prezime,korisnickoIme,Sifra,Email);
 		r->ulogovan = true;
 		return r;

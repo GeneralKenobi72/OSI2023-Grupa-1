@@ -34,8 +34,10 @@ public:
 	vector<Termin> ucitajTermine() {
 		vector<Termin> termini;
 #ifdef _WIN32
+		string putanjaDoNeregVozila = "NeregistrovanaVozila\\";
 		string putanja = "data\\";
 #else
+		string putanjaDoNeregVozila = "NeregistrovanaVozila/";
 		string putanja = "data/";
 #endif
 		ifstream file(putanja+"Termini.txt");
@@ -120,23 +122,30 @@ public:
 	string korisnickoIme;
 	string problem = "";
 	string imeKlijnta, prezimeKlijnta;
+	string brojOsiguranja;
 
 	int vrijednostKazne;
 	int cijenaTehnickog;
 	int cijenaRegistracije;
 
 	Vozilo() {}
-	Vozilo(string korisnickoIme, string marka, string model, string godProiz, string regBroj) : 
-		korisnickoIme(korisnickoIme) , marka(marka), model(model) , godinaProizvodnje(godProiz) {
+	Vozilo(string korisnickoIme, string marka, string model, string godProiz, string regBroj) :
+		korisnickoIme(korisnickoIme), marka(marka), model(model), godinaProizvodnje(godProiz) {
 		std::random_device dev;
 		std::mt19937 rng(dev());
 		std::uniform_int_distribution<std::mt19937::result_type> dist6(1, 100);
 
-		if(dist6(rng) < 60) {
+		if (dist6(rng) < 60) {
 			vrijednostKazne = 0;
-		} else {
+		}
+		else {
 			std::uniform_int_distribution<std::mt19937::result_type> dist6(50, 1000);
 			vrijednostKazne = dist6(rng);
+		}
+		for (int i = 0; i < 10; i++) {
+			std::uniform_int_distribution<std::mt19937::result_type> broj(0, 10);
+			char sample = '0' + broj(rng);
+			brojOsiguranja.push_back(sample);
 		}
 	}
 
@@ -144,8 +153,10 @@ public:
 	{
 #ifdef _WIN32
 		string putanja = "data\\";
+		string putanjaDoNeregVozila = "NeregistrovanaVozila\\";
 #else
 		string putanja = "data/";
+		string putanjaDoNeregVozila = "NeregistrovanaVozila/";
 #endif
 		Vozilo vozilo;
 		vector<Vozilo> vozilaKorisnika;
@@ -181,7 +192,7 @@ public:
 		if (!fileVozila.is_open()) {
 			throw FajlNijeOtvoren();
 		}
-		while (fileVozila >> vozilo.korisnickoIme >> vozilo.marka >> vozilo.model >> vozilo.godinaProizvodnje >> vozilo.regBroj) {
+		while (fileVozila >> vozilo.korisnickoIme >> vozilo.marka >> vozilo.model >> vozilo.godinaProizvodnje >> vozilo.regBroj >> brojOsiguranja) {
 			if (vozilo.korisnickoIme == korisnickoIme) {
 				vozilaKorisnika.push_back(vozilo);
 			}
