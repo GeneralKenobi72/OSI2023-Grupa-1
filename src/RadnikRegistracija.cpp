@@ -312,7 +312,6 @@ void RadnikR::odobriRegistraciju(string kIme) {
 		string kkIme;
 		char c;
 		getline(file, kkIme);
-		cout << kIme << kkIme<< endl;
 		if (kIme == kkIme) {
 			getline(file, s);
 			file.close();
