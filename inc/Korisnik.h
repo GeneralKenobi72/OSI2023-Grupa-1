@@ -59,9 +59,15 @@ public:
 	static string vrati_ignorisiDvotacku(string imeDatoteke);
 	#ifdef _WIN32
 	string putanja = "data\\";
-	string putanja2 = "zahtjevi\\";
+	string putanja2 = "zahtjeviZaResetovanjeLozinke\\";
+	string putanjaDoRegistracija = "zahtjeviZaRegistracije\\";
+	string putanjaDoNeregVozila = "NeregistrovanaVozila\\";
+	string putanjaDoRegVozila = "RegistrovanaVozila\\";
 	#else
-	string putanja2 = "zahtjevi/";
+	string putanjaDoRegVozila = "RegistrovanaVozila/";
+	string putanjaDoNeregVozila = "NeregistrovanaNeregistrovanaVozila\\";
+	string putanjaDoRegistracija = "zahtjeviZaRegistracije/";
+	string putanja2 = "zahtjeviZaResetovanjeLozinke/";
 	string putanja = "data/";
 	#endif
 	bool ulogovan= false;

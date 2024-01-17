@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Korisnik.h"
+#include <random>
 #include <string>
 #include <fstream>
 #include <filesystem>
@@ -69,6 +70,7 @@ public:
 	void setGodinaProizvodnje(string godina) { this->godinaProizvodnje = godina; }
 	void setRegistarskiBroj(string broj) { this->registarskiBroj = broj; }
 
+	void predajZahtjevZaRegistraciju();
 	string getMarkaVozila() { return this->markaVozila; }
 	string getModelVozila() { return this->modelVozila; }
 	string getGodinaProizvodnje() { return this->godinaProizvodnje; }

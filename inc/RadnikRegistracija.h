@@ -35,9 +35,10 @@ public:
 			std::string sifra, std::string email) : Radnik(ime,prezime,korisnicko,sifra,email) {};
 	//Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled iz postojece datoteke
 	void postaviInfo(string korisnickoIme);
-
+	void odobriRegistraciju(string kIme);
 	void ispisFajla(string korisnickoIme);
 	void kreirajZahtjev(string, string);
+	void provjeriZahtjeveZaRegistracije();
 	void posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra);
 	void promjenaSifre() override;
 	bool Ulogovanje() override;

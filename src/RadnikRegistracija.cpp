@@ -244,6 +244,7 @@ void RadnikR::prikaziMeni()
 		cout << "1. Odjava" << endl;
 		cout << "2. Promjena sifre" << endl;
 		cout << "3. Unos vozila" << endl;
+		cout << "4. Pregled zahtjeva za registraciju vozila" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -259,12 +260,81 @@ void RadnikR::prikaziMeni()
 		case 3:
 			vozilo = unosPodatakaVozila();
 			break;
+		case 4:
+			provjeriZahtjeveZaRegistracije();
+			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;
 			break;
 		}
 	}
 }
+void RadnikR::provjeriZahtjeveZaRegistracije() {
+	if (std::filesystem::is_empty(putanja + putanjaDoNeregVozila)) {
+		cout << "Ne postoje zahtjevi na cekanju" << endl << endl;
+		return;
+	}
+	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoNeregVozila)) {
+		ifstream file(entry.path());
+		string kIme;
+		char c;
+		string info;
+		getline(file, kIme);
+		getline(file, info);
+		//while (cin.get(c) && c != ' ') kIme.push_back(c);
+		cout << kIme << endl;
+		file.close();
+	}
+	
+	bool flag = false;
+	do {
+		cout << "Zelite li odobriti neku od registracija: <da/ne> " << endl;
+		string odgovor;
+		cin >> odgovor;
+		if (odgovor == "ne" || odgovor == "Ne") flag = false;
+		else if (odgovor == "da" || odgovor == "Da") {
+			cout << "Registraciju kojeg korisnika zelite odobriti " << endl;
+			string kname;
+			cin >> kname;
+			odobriRegistraciju(kname);
+			flag = true;
+		}
+		else {
+			cout << "Nepostojeca komanda. Pokusajte ponovo. " << endl;
+		}
+	} while (flag == true);
+}
+
+void RadnikR::odobriRegistraciju(string kIme) {
+	string s;
+	bool flag = false;
+	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoNeregVozila)) {
+		ifstream file(entry.path());
+		string kkIme;
+		char c;
+		getline(file, kkIme);
+		cout << kIme << kkIme<< endl;
+		if (kIme == kkIme) {
+			getline(file, s);
+			file.close();
+			flag = true;
+			std::filesystem::remove(entry.path());
+			break;
+		}
+		file.close();
+	}
+	if (!flag) {
+		cout << "Nepostojeci korisnik. " << endl;
+		return;
+	}
+	if (!std::filesystem::exists(putanja + putanjaDoRegVozila)) std::filesystem::create_directory(putanja + putanjaDoRegVozila);
+
+	ofstream file1(putanja + putanjaDoRegVozila + kIme + ".txt");
+	file1 << kIme << endl;
+	file1 << s << endl;
+	file1.close();
+}
+
 
 bool RadnikR::provjeriRadnikaRegistracija(string korisnickoIme_, string sifra_)
 {
@@ -359,6 +429,7 @@ Vozilo RadnikR::unosPodatakaVozila()
 		while (getline(fajlVozila, tempLine)) {
 			if (tempLine.find(kIme + " " + podaciVozila) != string::npos) {
 				postoji = true;
+
 				break;
 			}
 		}
@@ -372,7 +443,7 @@ Vozilo RadnikR::unosPodatakaVozila()
 					throw FajlNijeOtvoren();
 				}
 				else {
-					file << "\n" << kIme << " " << podaciVozila << "\n";
+					file << kIme << " " << podaciVozila << "\n";
 				}
 			}
 			catch (const FajlNijeOtvoren& e) {
