@@ -172,7 +172,7 @@ public:
 		}
         #endif
 
-		return sati >= 8 && sati <= 20 && minute >= 0 && minute < 60;
+		return sati >= 8 && sati < 20 && minute >= 0 && minute < 60;
 	}
 	bool jePrestupnaGodina(int godina) {
 		if ((godina % 4 == 0 && godina % 100 != 0) || godina % 400 == 0) {
