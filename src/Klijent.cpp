@@ -379,7 +379,7 @@ void Klijent::prikaziKazneIRacune() {
 	cout << "Iznos Kazni: " << kazneUkupno << "KM" << endl;
 	cout << "Iznos Racuna: " << racuniUkupno << "KM" << endl;
 	cout << "=====================================" << endl << endl;
-	cout << "1. Online plcanje" << endl;
+	cout << "1. Online placanje" << endl;
 	cout << "2. Nazad" << endl;
 	cout << "Unos: ";
 	std::string unos;

@@ -106,7 +106,7 @@ void AdminRegistracija::PregledNalogaRadnika()
 		cout << "Potrebno je da se ulogujete!" << endl;
 		return;
 	}
-	cout << "Pregled svih radnika za registraciju: " << endl;
+	cout << endl << "Pregled svih radnika za registraciju: " << endl;
 	for (const auto& entry : std::filesystem::directory_iterator(putanja))
 	{
 		ifstream file(entry.path());
@@ -115,7 +115,7 @@ void AdminRegistracija::PregledNalogaRadnika()
 		{
 			if (linija == "funkcija:radnikR")
 			{
-				cout << endl << entry.path().filename().string().substr(0, entry.path().filename().string().length() - 4) << endl;
+				cout <<  entry.path().filename().string().substr(0, entry.path().filename().string().length() - 4) << endl;
 			}
 		}
 	}
@@ -282,7 +282,7 @@ void AdminRegistracija::dodajRadnikaRegistracija()
 			}
 			else
 			{
-				file << "Korisnicko ime:" << KorisnickoImeRadnikaR << "\n";
+				file << "KorisnickoIme:" << KorisnickoImeRadnikaR << "\n";
 				file << "Sifra:" << LozinkaRadnikaR << "\n";
 				file << "Ime:" << ImeRadnikaR << "\n";
 				file << "Prezime:" << PrezimeRadnikR << "\n";
@@ -322,8 +322,9 @@ void AdminRegistracija::prikaziMeni()
 		cout << "2. Obrisi radika za Registraciju" << endl;
 		cout << "3. Pregled radnika za Registraciju" << endl;
 		cout << "4. Pretrazivanje radnika za Registraciju" << endl;
-		cout << "5: Pregled zahtjeva za resetovanje lozinke" << endl;
-		cout << "6. Odjava" << endl;
+		cout << "5. Izmjena podataka radnika za Registraciju" << endl;
+		cout << "6: Pregled zahtjeva za resetovanje lozinke" << endl;
+		cout << "7. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 		bool flag = true;
@@ -340,13 +341,16 @@ void AdminRegistracija::prikaziMeni()
 		case 4:
 			pretrazivanjeNalogaRadnika();
 			break;
-		case 6:
+		case 5:
+			izmjenaPodatakaRadnika("radnikR");
+			break;
+		case 7:
 			Odjava();
 			this->ulogovan = false;
 			this->ulogovan = false;
 			kraj = true;
 			break;
-		case 5:
+		case 6:
 			if (!ispisiZahtjeve()) {
 				cout << "Ne postoje aktivni zahtjevi. " << endl;
 				break;
