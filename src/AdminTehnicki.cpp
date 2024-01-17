@@ -159,7 +159,7 @@ void AdminTehnicki::dodajRadnikaTehnicki()
 			}
 			else
 			{
-				file << "Korisnicko ime:" << KorisnickoImeRadnikaT << "\n";
+				file << "KorisnickoIme:" << KorisnickoImeRadnikaT << "\n";
 				file << "Sifra:" << LozinkaRadnikaT << "\n";
 				file << "Ime:" << ImeRadnikaT << "\n";
 				file << "Prezime:" << PrezimeRadnikT << "\n";
@@ -227,7 +227,7 @@ void AdminTehnicki::PregledNalogaRadnika()
 		cout << "Potrebno je da se ulogujete!" << endl;
 		return;
 	}
-	cout << "Pregled svih radnika za registraciju: " << endl;
+	cout << endl << "Pregled svih radnika za tehnicki: " << endl;
 	for (const auto& entry : std::filesystem::directory_iterator(putanja))
 	{
 		ifstream file(entry.path());
@@ -513,9 +513,10 @@ void AdminTehnicki::prikaziMeni()
 		cout << "2. Obrisi radika za Tehnicki" << endl;
 		cout << "3. Pregled radnika za Tehnicki" << endl;
 		cout << "4. Pretrazivanje radnika za Tehnicki" << endl;
-		cout << "5: Pregled zahtjeva za resetovanje lozinke" << endl;
-		cout << "6. Pracenje statistike" << endl;
-		cout << "7. Odjava" << endl;
+		cout << "5. Izmjena podataka o radniku za Tehnicki" << endl;
+		cout << "6: Pregled zahtjeva za resetovanje lozinke" << endl;
+		cout << "7. Pracenje statistike" << endl;
+		cout << "8. Odjava" << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 		bool flag = true;
@@ -532,10 +533,13 @@ void AdminTehnicki::prikaziMeni()
 		case 4:
 			pretrazivanjeNalogaRadnika();
 			break;
-		case 6:
+		case 5:
+			izmjenaPodatakaRadnika("radnikT");
+			break;
+		case 7:
 			pracenjeStatistike();
 			break;
-		case 5:
+		case 6:
 			if (!ispisiZahtjeve()) {
 				cout << "Ne postoje aktivni zahtjevi. " << endl;
 				break;
@@ -555,7 +559,7 @@ void AdminTehnicki::prikaziMeni()
 			} while (flag == true);
 			cout << "Izmjene uspjesno izvrsene." << endl;
 			break;
-		case 7:
+		case 8:
 			Odjava();
 			kraj = true;
 			break;

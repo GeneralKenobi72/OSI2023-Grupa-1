@@ -20,6 +20,7 @@ public:
 	string getSifra();
 	string getKorisnickoIme();
 	string getEmail();
+	void izmjenaPodatakaRadnika(std::string tipRadnika);
 	void pretrazivanjeNalogaRadnika();
 	void pronadjiRadnike(std::string parametar, std::string informacija, std::string tipRadnika);
 	bool Ulogovanje() override { return false; }
