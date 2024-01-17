@@ -81,7 +81,7 @@ inline string Admin::getKorisnickoIme() { return korisnickoIme; }
 
 inline string Admin::getEmail() { return email; }
 
-std::vector<std::string> pretraziFajl(const std::string& putanja, const std::string& trazeniString, std::string tipRadnika) {
+std::vector<std::string> pretraziFajl(const std::string& putanja, const std::string& trazeniString, std::string tipRadnika, bool& pronadjen) {
 	std::vector<std::string> poklapanja;
 
 	std::ifstream fajl(putanja);
@@ -104,6 +104,7 @@ std::vector<std::string> pretraziFajl(const std::string& putanja, const std::str
     }
 	fajl.close();
 	if(brojPoklapanja == 2) {
+		pronadjen = true;
 		std::ifstream fajl(putanja);
     	if (!fajl.is_open()) {
 	    	std::cerr << "Nemoguce otvoriti fajl: " << putanja << std::endl;
@@ -133,11 +134,11 @@ std::vector<std::string> pretraziFajl(const std::string& putanja, const std::str
     }
     return poklapanja;
 }*/
-std::vector<std::string> pretraziDirektorijum(const std::string& direktorijum, const std::string& trazeniString, std::string tipRadnika) {
+std::vector<std::string> pretraziDirektorijum(const std::string& direktorijum, const std::string& trazeniString, std::string tipRadnika, bool& pronadjen) {
 	std::vector<std::string> poklapanja;
 	for (const auto& entry : fs::directory_iterator(direktorijum)) {
 		if (fs::is_regular_file(entry.path())) {
-			std::vector<std::string> rezultatiFajla = pretraziFajl(entry.path().string(), trazeniString, tipRadnika);
+			std::vector<std::string> rezultatiFajla = pretraziFajl(entry.path().string(), trazeniString, tipRadnika, pronadjen);
 			if (!rezultatiFajla.empty()) {
 				poklapanja.insert(poklapanja.end(), rezultatiFajla.begin(), rezultatiFajla.end());
 			}
@@ -148,14 +149,27 @@ std::vector<std::string> pretraziDirektorijum(const std::string& direktorijum, c
 
 
 void Admin::pronadjiRadnike(std::string parametar, std::string informacija, std::string tipRadnika) {
+	bool pronadjen = false;
 	if(parametar == "Korisnicko") {
-		pretraziDirektorijum("data", "KorisnickoIme:" + informacija, tipRadnika);
+		pretraziDirektorijum("data", "KorisnickoIme:" + informacija, tipRadnika, pronadjen);
+		if(!pronadjen) {
+			std::cout << "Nije pronadjen radnik sa korisnickim imenom: " << informacija << std::endl;
+		}
 	} else if(parametar == "Ime") {
-		pretraziDirektorijum("data", "Ime:" + informacija, tipRadnika);
+		pretraziDirektorijum("data", "Ime:" + informacija, tipRadnika, pronadjen);
+		if(!pronadjen) {
+			std::cout << "Nije pronadjen radnik sa imenom: " << informacija << std::endl;
+		}
 	} else if(parametar == "Prezime") {
-		pretraziDirektorijum("data", "Prezime:" + informacija, tipRadnika);
+		pretraziDirektorijum("data", "Prezime:" + informacija, tipRadnika, pronadjen);
+		if(!pronadjen) {
+			std::cout << "Nije pronadjen radnik sa prezimenom: " << informacija << std::endl;
+		}
 	} else if(parametar == "Email") {
-		pretraziDirektorijum("data", "Email:" + informacija, tipRadnika);
+		pretraziDirektorijum("data", "Email:" + informacija, tipRadnika, pronadjen);
+		if(!pronadjen) {
+			std::cout << "Nije pronadjen radnik sa emailom: " << informacija << std::endl;
+		}
 	}
 }
 
