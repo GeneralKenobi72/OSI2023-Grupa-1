@@ -275,12 +275,17 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 	}
 	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoNeregVozila)) {
 		ifstream file(entry.path());
-		string kIme;
+		string podaci;
 		char c;
-		string info;
-		getline(file, kIme);
-		getline(file, info);
-		//while (cin.get(c) && c != ' ') kIme.push_back(c);
+		string kIme;
+		string emptyString;
+		getline(file, emptyString);
+		getline(file, podaci);
+		for (char c : podaci) {
+			if (c == ' ')  break;
+			else kIme.push_back(c);
+		}
+
 		cout << kIme << endl;
 		file.close();
 	}
@@ -305,16 +310,21 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 }
 
 void RadnikR::odobriRegistraciju(string kIme) {
-	string s;
+	string s, podaci;
 	bool flag = false;
 	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoNeregVozila)) {
 		ifstream file(entry.path());
-		string kkIme;
+		getline(file, s);
+		string kIme2;
 		char c;
-		getline(file, kkIme);
-		if (kIme == kkIme) {
-			getline(file, s);
-			file.close();
+		getline(file, podaci);
+		for (char c : podaci) {
+			if (c == ' ')  break;
+			else kIme2.push_back(c);
+		}
+		cout << kIme.size() << kIme2.size() << endl;
+		if (kIme == kIme2) {
+			file.close();	
 			flag = true;
 			std::filesystem::remove(entry.path());
 			break;
@@ -328,8 +338,7 @@ void RadnikR::odobriRegistraciju(string kIme) {
 	if (!std::filesystem::exists(putanja + putanjaDoRegVozila)) std::filesystem::create_directory(putanja + putanjaDoRegVozila);
 
 	ofstream file1(putanja + putanjaDoRegVozila + kIme + ".txt");
-	file1 << kIme << endl;
-	file1 << s << endl;
+	file1 << podaci << endl;
 	file1.close();
 }
 

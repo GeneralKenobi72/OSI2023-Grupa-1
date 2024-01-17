@@ -526,6 +526,7 @@ void Klijent::unesiPodatke()
 	bool postoji = false;
 	while (getline(fajlVozila, tempLine)) {
 		if (tempLine.find(korisnicko_ime + " " + podaciVozila) != string::npos) {
+			getline(fajlVozila, tempLine);
 			postoji = true;
 			break;
 		}
@@ -541,7 +542,7 @@ void Klijent::unesiPodatke()
 				throw FajlNijeOtvoren();
 			}
 			else {
-				file << korisnicko_ime << endl << podaciVozila << endl;
+				file << '\n' << korisnicko_ime << " " << podaciVozila << endl;
 			}
 			if(!fajlKazneIRacuni.is_open()) {
 				throw FajlNijeOtvoren();
