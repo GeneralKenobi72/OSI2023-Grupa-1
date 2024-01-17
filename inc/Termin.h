@@ -144,9 +144,8 @@ public:
 		}
 		for (int i = 0; i < 10; i++) {
 			std::uniform_int_distribution<std::mt19937::result_type> broj(0, 10);
-			char buffer[5];
-			itoa(broj(rng), buffer, 10);
-			brojOsiguranja.push_back(buffer[0]);
+			char sample = '0' + broj(rng);
+			brojOsiguranja.push_back(sample);
 		}
 	}
 

@@ -322,7 +322,6 @@ void RadnikR::odobriRegistraciju(string kIme) {
 			if (c == ' ')  break;
 			else kIme2.push_back(c);
 		}
-		cout << kIme.size() << kIme2.size() << endl;
 		if (kIme == kIme2) {
 			file.close();	
 			flag = true;
