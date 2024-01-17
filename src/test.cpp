@@ -46,6 +46,8 @@ Korisnik* koSeLoguje(string korisnickoIme) {
 			Prezime = Korisnik::vrati_ignorisiDvotacku(Prezime);
 			getline(file, Email);
 			Email = Korisnik::vrati_ignorisiDvotacku(Email);
+			string datum;
+			//getline(file, datum);
 			getline(file, uloga);
 			uloga = Korisnik::vrati_ignorisiDvotacku(uloga);
 		}
@@ -59,19 +61,19 @@ Korisnik* koSeLoguje(string korisnickoIme) {
 		Klijent* k = new Klijent(Ime, Prezime, korisnickoIme, Sifra, Email);
 		k->ulogovan = true;
 		return k;
-	} else if(s == "adminT") {
+	} else if(uloga == "adminT") {
 		AdminTehnicki* a = new AdminTehnicki(Ime,Prezime,korisnickoIme,Sifra,Email);
 		a->ulogovan = true;
 		return a;
-	} else if(s == "adminR") {
+	} else if(uloga == "adminR") {
 		AdminRegistracija* a = new AdminRegistracija(Ime,Prezime,korisnickoIme,Sifra,Email);
 		a->ulogovan = true;
 		return a;
-	} else if(s == "radnikT") {
+	} else if(uloga == "radnik za tehnicki") {
 		RadnikT* r = new RadnikT(Ime,Prezime,korisnickoIme,Sifra,Email);
 		r->ulogovan = true;
 		return r;
-	} else if(s == "radnikR") {
+	} else if(uloga == "radnik za registraciju") {
 		RadnikR* r = new RadnikR(Ime,Prezime,korisnickoIme,Sifra,Email);
 		r->ulogovan = true;
 		return r;

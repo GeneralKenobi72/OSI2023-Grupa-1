@@ -58,17 +58,16 @@ void RadnikR::promjenaSifre()
 	do {
 		int i = 0;
 		do {
-			if(!i) cout << "Unesite novu sifru: " << endl;
+			if (!i) cout << "Unesite novu sifru: " << endl;
 			novaSifra = this->UnesiSifru();
 			i++;
 		} while (!ValidnaSifra(novaSifra));
 		cout << "Potvrdite novu sifru ponovnim unosom: " << endl;
 		novaSifraDrugiPut = this->UnesiSifru();
-	} while (novaSifra != novaSifraDrugiPut);
-
-	posaljiZahtjevZaPromjenuSifre(korisnickoImeRezultat,novaSifra);
+	} while ((novaSifra != novaSifraDrugiPut) || !this->ValidnaSifra(novaSifra));
+	string kIme = vrati_ignorisiDvotacku(korisnickoImeRezultat);
+	posaljiZahtjevZaPromjenuSifre(kIme, novaSifra);
 	cout << "Zahtjev za promjenu sifre je poslan. Molimo sacekajte odobrenje. " << endl;
-
 }
 
 void RadnikR::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
