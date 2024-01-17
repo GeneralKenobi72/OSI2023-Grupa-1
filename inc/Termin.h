@@ -143,7 +143,7 @@ public:
 			vrijednostKazne = dist6(rng);
 		}
 		for (int i = 0; i < 10; i++) {
-			std::uniform_int_distribution<std::mt19937::result_type> broj(0, 10);
+			std::uniform_int_distribution<std::mt19937::result_type> broj(0, 9);
 			char sample = '0' + broj(rng);
 			brojOsiguranja.push_back(sample);
 		}
@@ -192,7 +192,7 @@ public:
 		if (!fileVozila.is_open()) {
 			throw FajlNijeOtvoren();
 		}
-		while (fileVozila >> vozilo.korisnickoIme >> vozilo.marka >> vozilo.model >> vozilo.godinaProizvodnje >> vozilo.regBroj >> brojOsiguranja) {
+		while (fileVozila >> vozilo.korisnickoIme >> vozilo.marka >> vozilo.model >> vozilo.godinaProizvodnje >> vozilo.regBroj >> vozilo.brojOsiguranja) {
 			if (vozilo.korisnickoIme == korisnickoIme) {
 				vozilaKorisnika.push_back(vozilo);
 			}

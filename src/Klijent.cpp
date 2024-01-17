@@ -521,7 +521,7 @@ void Klijent::unesiPodatke()
 	string podaciVozila = markaVozila + " " + modelVozila + " " + godinaProizvodnje + " " + registarskiBroj + " " + vozilo.brojOsiguranja;
 
 	if (!std::filesystem::exists(putanja + putanjaDoNeregVozila)) std::filesystem::create_directory(putanja + putanjaDoNeregVozila);
-	ifstream fajlVozila(putanja+putanjaDoNeregVozila + registarskiBroj + ".txt");
+	ifstream fajlVozila(putanja + "vozila.txt");
 	string tempLine;
 	bool postoji = false;
 	while (getline(fajlVozila, tempLine)) {
@@ -534,7 +534,8 @@ void Klijent::unesiPodatke()
 	fajlVozila.close();
 
 	if (!postoji) {
-		ofstream file(putanja+putanjaDoNeregVozila + registarskiBroj + ".txt", ios::app);
+		ofstream file(putanja  + "vozila.txt", ios::app);
+		ofstream fileZaNeRegVozila(putanja + putanjaDoNeregVozila + registarskiBroj + ".txt");
 		string kazneIRacuni = korisnicko_ime + " " + registarskiBroj + " " + to_string(vozilo.vrijednostKazne) + " 0";
 		ofstream fajlKazneIRacuni(putanja+"KazneIRacuni.txt", ios::app);
 		try {
@@ -542,6 +543,7 @@ void Klijent::unesiPodatke()
 				throw FajlNijeOtvoren();
 			}
 			else {
+				fileZaNeRegVozila << korisnickoIme << " " << podaciVozila << endl;
 				file << '\n' << korisnicko_ime << " " << podaciVozila << endl;
 			}
 			if(!fajlKazneIRacuni.is_open()) {
@@ -554,6 +556,7 @@ void Klijent::unesiPodatke()
 		catch (const FajlNijeOtvoren& e) {
 			cout << e.what() << endl;
 		}
+		fileZaNeRegVozila.close();
 		file.close();
 	}
 	else {

@@ -279,7 +279,6 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 		char c;
 		string kIme;
 		string emptyString;
-		getline(file, emptyString);
 		getline(file, podaci);
 		for (char c : podaci) {
 			if (c == ' ')  break;
@@ -310,11 +309,10 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 }
 
 void RadnikR::odobriRegistraciju(string kIme) {
-	string s, podaci;
+	string podaci;
 	bool flag = false;
 	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoNeregVozila)) {
 		ifstream file(entry.path());
-		getline(file, s);
 		string kIme2;
 		char c;
 		getline(file, podaci);

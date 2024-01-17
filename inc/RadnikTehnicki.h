@@ -253,8 +253,15 @@ public:
 		{
 			if (line.find(korisnickoImeKlijnta + " ") == 0)
 			{
-				size_t lastSpace = line.find_last_of(" ");
-				string regBroj = line.substr(lastSpace + 1);
+				std::istringstream iss(line);
+				std::string word, regBroj, lastWord;
+
+				// Read words from the line
+				while (iss >> word) {
+					regBroj = lastWord;
+					lastWord = word;
+				}
+				
 				registarskiBrojevi.push_back(regBroj);
 			}
 		}
