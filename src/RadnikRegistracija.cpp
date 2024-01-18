@@ -349,7 +349,6 @@ void RadnikR::odobriRegistraciju(string kIme) {
 	ifstream filePotvrda(putanja + "Potvrda_" + kIme + "_" + regBroj + ".txt");
 	for (int i = 0; i < 8; i++) getline(filePotvrda, podaci);
 	string problem = vrati_ignorisiDvotacku(podaci);
-	cout << problem << endl;
 	string putanjaFajlaZaBrisanje;
 	if (!(problem == " Nema")) {
 		putanjaFajlaZaBrisanje = putanja + "Potvrda_" + kIme + "_" + regBroj + ".txt";

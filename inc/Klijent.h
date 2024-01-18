@@ -35,6 +35,7 @@ public:
 	void ispisFajla(string korisnicko_ime);
 	void novaRegistracija();
 	void promjenaSifre();
+	void prikaziMojeRegistracije();
 	void kreirajZahtjev(string kIme, string novaSifra);
 	bool Ulogovanje() override;
 	void posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra);

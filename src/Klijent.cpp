@@ -260,6 +260,7 @@ void Klijent::prikaziMeni()
 		cout << "5. Promjena sifre" << endl;
 		cout << "6. Prikaz izdate potvrde o tehnickom pregledu" << endl;
 		cout << "7. Predaja zahtjeva za registraciju vozila" << endl;
+		cout << "8. Prikaz svih mojih registracija " << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -287,10 +288,35 @@ void Klijent::prikaziMeni()
 		case 7:
 			predajZahtjevZaRegistraciju();
 			break;
+		case 8:
+			prikaziMojeRegistracije();
+			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;
 			break;
 		}
+	}
+}
+
+void Klijent::prikaziMojeRegistracije() {
+	if (!std::filesystem::exists(putanja + putanjaDoRegVozila)) {
+		cout << "Nemate registrovanih vozila u nasem sistemu." << endl;
+		return;
+	}
+	int i = 0;
+	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoRegVozila)) {
+		ifstream fajlRegistracije(entry.path());
+		string kIme, regBroj, cijena;
+		getline(fajlRegistracije, kIme);
+		if (this->korisnickoIme == kIme) {
+			i++;
+			getline(fajlRegistracije, regBroj);
+			getline(fajlRegistracije, cijena);
+			cout << "Registrovali ste vozilo registarskog broja " + regBroj + " i za istu ste platili " + cijena + "evra." << endl;
+		}
+	}
+	if (i == 0) {
+		cout << "Nemate registrovanih vozila u nasem sistemu." << endl;
 	}
 }
 
