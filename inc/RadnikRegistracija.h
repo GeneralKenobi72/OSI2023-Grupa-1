@@ -39,6 +39,7 @@ public:
 	void prikaziSveRegistracije();
 	void ispisFajla(string korisnickoIme);
 	void kreirajZahtjev(string, string);
+	bool postojiKorisnikUZahtjevimaZaRegistraciju(string);//dodano
 	void provjeriZahtjeveZaRegistracije();
 	void posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra);
 	void promjenaSifre() override;
