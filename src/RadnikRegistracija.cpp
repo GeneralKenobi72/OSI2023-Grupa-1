@@ -359,8 +359,13 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 }
 
 bool RadnikR::postojiKorisnikUZahtjevimaZaRegistraciju(string korisnickoIme) {
-	if (!std::filesystem::exists(putanja + putanjaDoRegVozila)) return false;
-	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoRegVozila)) {
+#ifdef WIN32
+	string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju\\";
+#else
+	string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju/";
+#endif
+	if (!std::filesystem::exists(putanja + putanjaDoZahtjevaZaRegistraciju)) return false;
+	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoZahtjevaZaRegistraciju)) {
 		ifstream fajl(entry.path());
 		string kIme;
 		getline(fajl, kIme);
@@ -377,11 +382,12 @@ void RadnikR::prikaziSveRegistracije() {
 	}
 	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoRegVozila)) {
 		ifstream fajlRegistrovanogVozila(entry.path());
-		string kIme, regBroj, cijena;
+		string kIme, regBroj, cijena,regTablice;
 		getline(fajlRegistrovanogVozila, kIme);
 		getline(fajlRegistrovanogVozila, regBroj);
 		getline(fajlRegistrovanogVozila, cijena);
-		cout << "Registracija vozila " + regBroj << " korisnika " << kIme << " koji je platio cijenu od " << cijena << "e" <<endl;
+		getline(fajlRegistrovanogVozila, regTablice);
+		cout << "Registracija vozila " + regBroj << " korisnika " << kIme << " koji je platio cijenu od " << cijena << "e. Broj registracionih tablica je "<< regTablice <<endl;
 	}
 }
 
@@ -421,7 +427,8 @@ void RadnikR::odobriRegistraciju(string kIme) {
 	cout << "Unesi cijenu registracije: ";
 	string cijena;
 	cin >> cijena;
-	fileRegVozila << kIme << endl << regBroj << endl << cijena << endl;
+	string registracioneTablice = generisiRegistracioneTablice();
+	fileRegVozila << kIme << endl << regBroj << endl << cijena << endl << registracioneTablice << endl;
 	fileRegVozila.close();
 
 	// Iz fajla KazneIRacuni na osnovu regBroja i kImena dodajemo cijenu registracije u fajl
