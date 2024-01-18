@@ -191,7 +191,7 @@ void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
 	}
 
 	Vozilo vozilo(markaVozila, modelVozila, godinaProizvodnje, " ",  registarskiBroj);
-	string podaciVozila = markaVozila + " " + modelVozila + " " + godinaProizvodnje + " " + registarskiBroj;
+	string podaciVozila = markaVozila + " " + modelVozila + " " + godinaProizvodnje + " " + registarskiBroj +" " + vozilo.brojOsiguranja;
 	string KazneIRacuni = korisnickoImeKlijenta + " " + registarskiBroj + " " + to_string(vozilo.vrijednostKazne) + " 0";
 
 	ifstream fajlVozila(putanja + "vozila.txt");
@@ -207,12 +207,14 @@ void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
 
 	if (!postoji) {
 		ofstream file(putanja + "vozila.txt", ios::app);
+		ofstream fileZaNeRegVozila(putanja + putanjaDoNeregVozila + registarskiBroj + ".txt");
 		ofstream fajlKazneIRacuni(putanja + "KazneIRacuni.txt", ios::app);
 		try {
 			if (!file.is_open()) {
 				throw FajlNijeOtvoren();
 			}
 			else {
+				fileZaNeRegVozila << korisnickoIme << " " << podaciVozila << endl;
 				file << "\n" << korisnickoImeKlijenta << " " << podaciVozila << "\n";
 			}
 			if (!fajlKazneIRacuni.is_open()) {
@@ -226,6 +228,7 @@ void RadnikT::unesiPodatke(const string& korisnickoImeKlijenta)
 			cout << e.what() << endl;
 		}
 		file.close();
+		fileZaNeRegVozila.close();
 	}
 	else {
 		cout << "Podaci o vozilu su vec upisani." << endl;
@@ -1027,7 +1030,7 @@ void RadnikT::izdajPotvrdu(const Izvjestaj& izvjestaj)
 		return;
 	}
 
-	ofstream potvrda(putanja+"Potvrda_" + izvjestaj.vozilo.korisnickoIme + ".txt", ios::app);
+	ofstream potvrda(putanja+"Potvrda_" + izvjestaj.vozilo.korisnickoIme +"_" + izvjestaj.vozilo.regBroj + ".txt", ios::app);
 	centrirajTekst("Servis vozila - Potvrda", potvrda);
 	potvrda <<string(153,'-')<<"\n";
 	string datumIzdavanja=dodajDaneNaDatum(0);

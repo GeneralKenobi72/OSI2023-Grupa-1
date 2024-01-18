@@ -35,6 +35,7 @@ public:
 	void ispisFajla(string korisnicko_ime);
 	void novaRegistracija();
 	void promjenaSifre();
+	void prikaziMojeRegistracije();
 	void kreirajZahtjev(string kIme, string novaSifra);
 	bool Ulogovanje() override;
 	void posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra);
@@ -97,9 +98,15 @@ public:
 		{
 			if (line.find(korisnickoIme + " ") == 0) // Proverava da li linija poèinje sa korisnièkim imenom
 			{
+				std::istringstream iss(line);
+				std::string word, regBroj, lastWord;
+
+				// Read words from the line
+				while (iss >> word) {
+					regBroj = lastWord;
+					lastWord = word;
+				}
 				// Ekstraktujte registarski broj iz linije
-				size_t lastSpace = line.find_last_of(" ");
-				string regBroj = line.substr(lastSpace + 1);
 				registarskiBrojevi.push_back(regBroj);
 			}
 		}
