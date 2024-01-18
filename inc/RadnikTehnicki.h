@@ -254,13 +254,13 @@ public:
 			if (line.find(korisnickoImeKlijnta + " ") == 0)
 			{
 				std::istringstream iss(line);
-				std::string word, regBroj, lastWord;
-
-				// Read words from the line
-				while (iss >> word) {
-					regBroj = lastWord;
-					lastWord = word;
+				std::vector<std::string> tokens;
+				std::string token;
+				while (std::getline(iss, token, ' '))
+				{
+					tokens.push_back(token);
 				}
+				string regBroj = tokens[4];
 				
 				registarskiBrojevi.push_back(regBroj);
 			}
