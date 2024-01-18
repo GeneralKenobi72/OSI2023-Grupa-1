@@ -186,6 +186,8 @@ string unesi_sifru(){
 
 int main()
 {
+	ofstream file(putanja + "Termini.txt", ios::app);
+	file.close();
 	while(true) {
 		int opcija = pocetniMeni();
 		if(opcija == 1) {
