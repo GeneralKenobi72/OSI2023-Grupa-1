@@ -1030,7 +1030,7 @@ void RadnikT::izdajPotvrdu(const Izvjestaj& izvjestaj)
 		return;
 	}
 
-	ofstream potvrda(putanja+"Potvrda_" + izvjestaj.vozilo.korisnickoIme + ".txt", ios::app);
+	ofstream potvrda(putanja+"Potvrda_" + izvjestaj.vozilo.korisnickoIme +"_" + izvjestaj.vozilo.regBroj + ".txt", ios::app);
 	centrirajTekst("Servis vozila - Potvrda", potvrda);
 	potvrda <<string(153,'-')<<"\n";
 	string datumIzdavanja=dodajDaneNaDatum(0);

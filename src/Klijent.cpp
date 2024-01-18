@@ -846,7 +846,14 @@ void Klijent::otkaziTermin()
 }
 void Klijent::pregeldPotvrde()
 {
-	string file_putanja = putanja + "Potvrda_" + this->getKorisnickoIme() + ".txt";
+	string regBroj;
+	cout << "Unesite registarski broj vozila ciju potvrdu zelite vidjeti: " << endl;
+	cin >> regBroj;
+	string file_putanja = putanja + "Potvrda_" + this->getKorisnickoIme() + "_" + regBroj + ".txt";
+	if (!std::filesystem::exists(file_putanja)) {
+		cout << "Ne postoji potvrda za uneseni registarski broj. "<< endl << endl;
+		return;
+	}
 	ifstream filePotvda(file_putanja);
 	try {
 		if (!filePotvda.is_open())

@@ -65,7 +65,7 @@ public:
 	string putanjaDoRegVozila = "RegistrovanaVozila\\";
 	#else
 	string putanjaDoRegVozila = "RegistrovanaVozila/";
-	string putanjaDoNeregVozila = "NeregistrovanaVozila\\";
+	string putanjaDoNeregVozila = "NeregistrovanaVozila/";
 	string putanjaDoRegistracija = "zahtjeviZaRegistracije/";
 	string putanja2 = "zahtjeviZaResetovanjeLozinke/";
 	string putanja = "data/";
