@@ -13,7 +13,11 @@
 #include <AdminRegistracija.h>
 namespace fs = std::filesystem;
 using namespace std;
-
+#ifdef WIN32
+string putanjaDoZahtjevaZaRegistraciju = "putanjaDoZahtjevaZaRegistraciju\\";
+#else
+string putanjaDoZahtjevaZaRegistraciju = "putanjaDoZahtjevaZaRegistraciju/";
+#endif
 Klijent::Klijent(const string C_Ime, const string C_Prezime,
 	const string C_korisnickoIme, const string C_sifra, const string c_email)
 	: Korisnik()
@@ -341,8 +345,18 @@ void Klijent::posaljiZahtjevZaPromjenuSifre(string kIme, string novaSifra)
 
 void Klijent::predajZahtjevZaRegistraciju()
 {
-	unesiPodatke();
-	cout << "Vasa registracija je zavedena te ce biti obradjena u najskorijem vremenskom periodu. Hvala." << endl;
+	cout << "Unesite registarski broj vozila: " << endl;
+	string regBroj;
+	cin >> regBroj;
+	if (!std::filesystem::exists(putanja + putanjaDoZahtjevaZaRegistraciju)) std::filesystem::create_directory(putanja + putanjaDoZahtjevaZaRegistraciju);
+	if (!std::filesystem::exists(putanja + "Potvrda_" + korisnickoIme + "_" + regBroj + ".txt")) {
+		cout << "Nemoguce predati zahtjev. Potrebno je prvo obaviti tehnicki pregled." << endl;
+		return;
+	}
+	ofstream zahtjev(putanja + putanjaDoZahtjevaZaRegistraciju + regBroj + ".txt");
+	zahtjev << korisnickoIme << endl;
+	zahtjev << regBroj << endl;
+	cout << "Vas zahtjev je zaveden te ce biti obradjen u najskorijem vremenskom periodu. Hvala." << endl;
 }
 
 void Klijent::kreirajZahtjev(string kIme,string novaSifra) {

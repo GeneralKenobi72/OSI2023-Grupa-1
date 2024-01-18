@@ -269,23 +269,25 @@ void RadnikR::prikaziMeni()
 	}
 }
 void RadnikR::provjeriZahtjeveZaRegistracije() {
-	if (std::filesystem::is_empty(putanja + putanjaDoNeregVozila)) {
-		cout << "Ne postoje zahtjevi na cekanju" << endl << endl;
+#ifdef WIN32
+	string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju\\";
+#else
+	string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju/";
+#endif
+	if (!std::filesystem::exists(putanja + putanjaDoZahtjevaZaRegistraciju)) {
+		cout << "Ne postoje aktivni zahtjevi." << endl << endl;
 		return;
 	}
-	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoNeregVozila)) {
+	if (std::filesystem::is_empty(putanja + putanjaDoZahtjevaZaRegistraciju)) {
+		cout << "Ne postoje aktivni zahtjevi." << endl << endl;
+		return;
+	}
+	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoZahtjevaZaRegistraciju)) {
 		ifstream file(entry.path());
-		string podaci;
-		char c;
-		string kIme;
-		string emptyString;
-		getline(file, podaci);
-		for (char c : podaci) {
-			if (c == ' ')  break;
-			else kIme.push_back(c);
-		}
-
-		cout << kIme << endl;
+		string korisnickoIme, regBroj;
+		getline(file, korisnickoIme);
+		getline(file, regBroj);
+		cout << korisnickoIme << ", vozilo registarskog broja:" << regBroj << endl;
 		file.close();
 	}
 	
@@ -296,7 +298,7 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 		cin >> odgovor;
 		if (odgovor == "ne" || odgovor == "Ne") flag = false;
 		else if (odgovor == "da" || odgovor == "Da") {
-			cout << "Registraciju kojeg korisnika zelite odobriti " << endl;
+			cout << "Registraciju vozila kojeg korisnika zelite odobriti? " << endl;
 			string kname;
 			cin >> kname;
 			odobriRegistraciju(kname);
@@ -309,52 +311,51 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 }
 
 void RadnikR::odobriRegistraciju(string kIme) {
+#ifdef WIN32
+	string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju\\";
+#else
+	string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju/";
+#endif
 	string regBroj;
-	cout << "Unesite registarski broj." << endl;
+	cout << "Unesite registarski broj:" << endl;
 	cin >> regBroj;
-	if (!std::filesystem::exists(putanja + "Potvrda_" + kIme + ".txt")) {
-		cout << "Potvrda za ovo vozilo jos nije izdata." << endl;
+	if (!std::filesystem::exists(putanja + putanjaDoZahtjevaZaRegistraciju + regBroj + ".txt")) {
+		cout << "Klijent nije predao zahtjev za registraciju ovog vozila." << endl;
 		return;
 	}
+	std::filesystem::remove(putanja + putanjaDoZahtjevaZaRegistraciju + regBroj + ".txt");
 	string podaci;
-	ifstream filePotvrda(putanja + "Potvrda_" + kIme + ".txt");
+	ifstream filePotvrda(putanja + "Potvrda_" + kIme + "_" + regBroj + ".txt");
 	for (int i = 0; i < 8; i++) getline(filePotvrda, podaci);
 	string problem = vrati_ignorisiDvotacku(podaci);
+	cout << problem << endl;
+	string putanjaFajlaZaBrisanje;
 	if (!(problem == " Nema")) {
-		cout << "Vozilo nije proslo tehnicki pregled." << endl;
+		putanjaFajlaZaBrisanje = putanja + "Potvrda_" + kIme + "_" + regBroj + ".txt";
+		cout << "Vozilo nije proslo tehnicki pregled te ga je nemoguce registrovati." << endl;
+		filePotvrda.close();
+	}
+	if (!putanjaFajlaZaBrisanje.empty()) {
+		std::filesystem::remove(putanjaFajlaZaBrisanje);
 		return;
 	}
-	bool flag = false;
-	for (const auto& entry : std::filesystem::directory_iterator(putanja + "Potvrda_" +kIme + ".txt")) {
-		ifstream file(entry.path());
-		string kIme2;
-		char c;
-		getline(file, podaci);
-		for (char c : podaci) {
-			if (c == ' ')  break;
-			else kIme2.push_back(c);
-		}
-		if (kIme == kIme2) {
-			if (!std::filesystem::exists(putanja + "Potvrda_" + korisnickoIme)) {
-				cout << "Potvrda za ovo vozilo jos nije izdata." << endl;
-				break;
-			}
-			file.close();	
-			flag = true;
-			std::filesystem::remove(entry.path());
-			break;
-		}
-		file.close();
-	}
-	if (!flag) {
-		cout << "Nepostojeci korisnik. " << endl;
-		return;
-	}
+	filePotvrda.close();
 	if (!std::filesystem::exists(putanja + putanjaDoRegVozila)) std::filesystem::create_directory(putanja + putanjaDoRegVozila);
-
-	ofstream file1(putanja + putanjaDoRegVozila + kIme + ".txt");
-	file1 << podaci << endl;
-	file1.close();
+	ofstream fileRegVozila(putanja + putanjaDoRegVozila + regBroj + ".txt");
+	fileRegVozila << kIme << endl << regBroj << endl;
+	fileRegVozila.close();
+	//generisanje stikera
+#ifdef WIN32
+	string putanjaDoSvihStikera = "Stikeri\\";
+#else 
+	string putanjaDoSvihStikera = "Stikeri/";
+#endif
+	if (!std::filesystem::exists(putanja + putanjaDoSvihStikera)) std::filesystem::create_directory(putanja + putanjaDoSvihStikera);
+	ofstream stiker(putanja + putanjaDoSvihStikera+ "stiker_" + regBroj + ".txt");
+	stiker << kIme << endl;
+	stiker << "imitacija stikera za vozilo " + regBroj << endl;
+	stiker.close();
+	cout << "Registracija vozila uspesno izvrsena." << endl << endl;
 }
 
 
@@ -442,8 +443,7 @@ Vozilo RadnikR::unosPodatakaVozila()
 			getline(cin, registarskiBroj);
 		} while (!ValidanRegistracijskiBroj(registarskiBroj));
 		vozilo.regBroj = registarskiBroj;
-		
-		string podaciVozila = marka + " " + model + " " + godinaProizvodnje + " " + registarskiBroj;
+		string podaciVozila = marka + " " + model + " " + godinaProizvodnje + " " + registarskiBroj + " " + vozilo.brojOsiguranja;
 		
 		ifstream fajlVozila(putanja + "vozila.txt");
 		string tempLine;
@@ -465,7 +465,7 @@ Vozilo RadnikR::unosPodatakaVozila()
 					throw FajlNijeOtvoren();
 				}
 				else {
-					file << kIme << " " << podaciVozila << "\n";
+					file <<'\n' << kIme << " " << podaciVozila << "\n";
 				}
 			}
 			catch (const FajlNijeOtvoren& e) {
