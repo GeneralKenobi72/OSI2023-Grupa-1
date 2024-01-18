@@ -346,13 +346,28 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 			cout << "Registraciju vozila kojeg korisnika zelite odobriti? " << endl;
 			string kname;
 			cin >> kname;
-			odobriRegistraciju(kname);
+			if (!postojiKorisnikUZahtjevimaZaRegistraciju(kname)) {
+				cout << "Neispravno korisnicko ime. Pokusajte ponovo." << endl;
+			}
+			else odobriRegistraciju(kname);
 			flag = true;
 		}
 		else {
 			cout << "Nepostojeca komanda. Pokusajte ponovo. " << endl;
 		}
 	} while (flag == true);
+}
+
+bool RadnikR::postojiKorisnikUZahtjevimaZaRegistraciju(string korisnickoIme) {
+	if (!std::filesystem::exists(putanja + putanjaDoRegVozila)) return false;
+	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoRegVozila)) {
+		ifstream fajl(entry.path());
+		string kIme;
+		getline(fajl, kIme);
+		fajl.close();
+		if (kIme == korisnickoIme) return true;
+	}
+	return false;
 }
 
 void RadnikR::prikaziSveRegistracije() {
@@ -376,9 +391,11 @@ void RadnikR::odobriRegistraciju(string kIme) {
 #else
 	string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju/";
 #endif
+	
 	string regBroj;
 	cout << "Unesite registarski broj:" << endl;
 	cin >> regBroj;
+	
 	if (!std::filesystem::exists(putanja + putanjaDoZahtjevaZaRegistraciju + regBroj + ".txt")) {
 		cout << "Klijent nije predao zahtjev za registraciju ovog vozila." << endl;
 		return;
