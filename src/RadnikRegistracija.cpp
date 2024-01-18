@@ -309,9 +309,23 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 }
 
 void RadnikR::odobriRegistraciju(string kIme) {
+	string regBroj;
+	cout << "Unesite registarski broj." << endl;
+	cin >> regBroj;
+	if (!std::filesystem::exists(putanja + "Potvrda_" + kIme + ".txt")) {
+		cout << "Potvrda za ovo vozilo jos nije izdata." << endl;
+		return;
+	}
 	string podaci;
+	ifstream filePotvrda(putanja + "Potvrda_" + kIme + ".txt");
+	for (int i = 0; i < 8; i++) getline(filePotvrda, podaci);
+	string problem = vrati_ignorisiDvotacku(podaci);
+	if (!(problem == " Nema")) {
+		cout << "Vozilo nije proslo tehnicki pregled." << endl;
+		return;
+	}
 	bool flag = false;
-	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoNeregVozila)) {
+	for (const auto& entry : std::filesystem::directory_iterator(putanja + "Potvrda_" +kIme + ".txt")) {
 		ifstream file(entry.path());
 		string kIme2;
 		char c;
@@ -321,6 +335,10 @@ void RadnikR::odobriRegistraciju(string kIme) {
 			else kIme2.push_back(c);
 		}
 		if (kIme == kIme2) {
+			if (!std::filesystem::exists(putanja + "Potvrda_" + korisnickoIme)) {
+				cout << "Potvrda za ovo vozilo jos nije izdata." << endl;
+				break;
+			}
 			file.close();	
 			flag = true;
 			std::filesystem::remove(entry.path());
