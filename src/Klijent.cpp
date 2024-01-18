@@ -379,6 +379,24 @@ void Klijent::predajZahtjevZaRegistraciju()
 		cout << "Nemoguce predati zahtjev. Potrebno je prvo obaviti tehnicki pregled." << endl;
 		return;
 	}
+	ifstream fileKazneIRacuni(putanja + "KazneIRacuni.txt");
+	string line;
+	bool found = false;
+	while (getline(fileKazneIRacuni, line)) {
+		if (line.find(korisnickoIme) != string::npos && line.find(regBroj) != string::npos) {
+			found = true;
+			std::istringstream iss(line);
+			std::string token;
+			std::vector<std::string> stringovi;
+			while (std::getline(iss, token, ' ')) {
+				stringovi.push_back(token);
+			}
+			if (stoi(stringovi[2]) > 0) {
+				cout << "Nemoguce predati zahtjev. Potrebno je prvo platiti kazne." << endl;
+				return;
+			}
+		}
+	}
 	ofstream zahtjev(putanja + putanjaDoZahtjevaZaRegistraciju + regBroj + ".txt");
 	zahtjev << korisnickoIme << endl;
 	zahtjev << regBroj << endl;

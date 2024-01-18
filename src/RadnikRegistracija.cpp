@@ -232,6 +232,42 @@ bool RadnikR::Ulogovanje()
 	return true;
 }
 
+void RadnikR::pregledKazniIRacuna() {
+	string korisnickoIme;
+	cout << "Unesite korisnicko ime klijenta cije kazne i racune zelite pregledati: " << endl;
+	cin >> korisnickoIme;
+	ifstream file(putanja + "KazneIRacuni.txt");
+	string tempLine;
+	bool postoji = false;
+	int ukupnoKazne = 0;
+	int ukupnoRacuni = 0;
+	while (getline(file, tempLine)) {
+		if (tempLine.find(korisnickoIme) != string::npos) {
+			postoji = true;
+			std::string string;
+			std::vector<std::string> tokens;
+			std::istringstream iss(tempLine);
+			while (std::getline(iss, string, ' ')) {
+				tokens.push_back(string);
+			}
+			ukupnoKazne += stoi(tokens[2]);
+			ukupnoRacuni += stoi(tokens[3]);
+		}
+	}
+	file.close();
+	if (postoji) {
+		cout << "=====================================" << endl;
+		cout << "Ukupno kazni: " << ukupnoKazne << endl;
+		cout << "Ukupno racuna: " << ukupnoRacuni << endl;
+		cout << "=====================================" << endl;
+	}
+	else {
+		cout << "Korisnik " << korisnickoIme << " nema kazni ni racuna." << endl;
+	}
+}
+
+
+
 void RadnikR::prikaziMeni()
 {
 	bool kraj = false;
@@ -243,8 +279,9 @@ void RadnikR::prikaziMeni()
 		cout << "1. Odjava" << endl;
 		cout << "2. Promjena sifre" << endl;
 		cout << "3. Unos vozila" << endl;
-		cout << "4. Pregled zahtjeva za registraciju vozila" << endl;
-		cout << "5. Prikaz svih registrovanih vozila " << endl;
+		cout << "4. Pregled kazni i racuna klijenta" << endl;
+		cout << "5. Pregled zahtjeva za registraciju vozila" << endl;
+		cout << "6. Prikaz svih registrovanih vozila " << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -261,9 +298,12 @@ void RadnikR::prikaziMeni()
 			vozilo = unosPodatakaVozila();
 			break;
 		case 4:
-			provjeriZahtjeveZaRegistracije();
+			pregledKazniIRacuna();
 			break;
 		case 5:
+			provjeriZahtjeveZaRegistracije();
+			break;
+		case 6:
 			prikaziSveRegistracije();
 			break;
 		default:
@@ -272,7 +312,6 @@ void RadnikR::prikaziMeni()
 		}
 	}
 }
-
 
 void RadnikR::provjeriZahtjeveZaRegistracije() {
 #ifdef WIN32
@@ -362,11 +401,37 @@ void RadnikR::odobriRegistraciju(string kIme) {
 	filePotvrda.close();
 	if (!std::filesystem::exists(putanja + putanjaDoRegVozila)) std::filesystem::create_directory(putanja + putanjaDoRegVozila);
 	ofstream fileRegVozila(putanja + putanjaDoRegVozila + regBroj + ".txt");
-	cout << "Unesi cijenu registracije(u evrima): ";
+	cout << "Unesi cijenu registracije: ";
 	string cijena;
 	cin >> cijena;
 	fileRegVozila << kIme << endl << regBroj << endl << cijena << endl;
 	fileRegVozila.close();
+
+	// Iz fajla KazneIRacuni na osnovu regBroja i kImena dodajemo cijenu registracije u fajl
+	ifstream fileKazneIRacuni(putanja + "KazneIRacuni.txt");
+	string tempLine;
+	vector<string> lines;
+	while (getline(fileKazneIRacuni, tempLine)) {
+		lines.push_back(tempLine);
+	}
+	fileKazneIRacuni.close();
+	ofstream fileKazneIRacuni2(putanja + "KazneIRacuni.txt");
+	for (int i = 0; i < lines.size(); i++) {
+		if (lines[i].find(kIme + " " + regBroj) != string::npos) {
+			std::istringstream iss(lines[i]);
+			std::string string;
+			std::vector<std::string> tokens;
+			while (std::getline(iss, string, ' ')) {
+				tokens.push_back(string);
+			}
+			int cijenaUkupna = stoi(tokens[3]) + stoi(cijena);
+			fileKazneIRacuni2 << kIme << " " << regBroj << " " << tokens[2] << " " << cijenaUkupna << endl;
+		}
+		else {
+			fileKazneIRacuni2 << lines[i] << endl;
+		}
+	}
+
 	//generisanje stikera
 #ifdef WIN32
 	string putanjaDoSvihStikera = "Stikeri\\";
