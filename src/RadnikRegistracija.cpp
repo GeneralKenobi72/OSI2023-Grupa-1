@@ -244,6 +244,7 @@ void RadnikR::prikaziMeni()
 		cout << "2. Promjena sifre" << endl;
 		cout << "3. Unos vozila" << endl;
 		cout << "4. Pregled zahtjeva za registraciju vozila" << endl;
+		cout << "5. Prikaz svih registrovanih vozila " << endl;
 		cout << "Unesite izbor: ";
 		cin >> izbor;
 
@@ -262,12 +263,17 @@ void RadnikR::prikaziMeni()
 		case 4:
 			provjeriZahtjeveZaRegistracije();
 			break;
+		case 5:
+			prikaziSveRegistracije();
+			break;
 		default:
 			cout << "Nepostojeca opcija!" << endl;
 			break;
 		}
 	}
 }
+
+
 void RadnikR::provjeriZahtjeveZaRegistracije() {
 #ifdef WIN32
 	string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju\\";
@@ -310,6 +316,21 @@ void RadnikR::provjeriZahtjeveZaRegistracije() {
 	} while (flag == true);
 }
 
+void RadnikR::prikaziSveRegistracije() {
+	if ((!std::filesystem::exists(putanja + putanjaDoRegVozila)) || (std::filesystem::is_empty(putanja + putanjaDoRegVozila))) {
+		cout << "Ne postoje registrovana vozila." << endl;
+		return;
+	}
+	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoRegVozila)) {
+		ifstream fajlRegistrovanogVozila(entry.path());
+		string kIme, regBroj, cijena;
+		getline(fajlRegistrovanogVozila, kIme);
+		getline(fajlRegistrovanogVozila, regBroj);
+		getline(fajlRegistrovanogVozila, cijena);
+		cout << "Registracija vozila " + regBroj << " korisnika " << kIme << " koji je platio cijenu od " << cijena << "e" <<endl;
+	}
+}
+
 void RadnikR::odobriRegistraciju(string kIme) {
 #ifdef WIN32
 	string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju\\";
@@ -342,7 +363,10 @@ void RadnikR::odobriRegistraciju(string kIme) {
 	filePotvrda.close();
 	if (!std::filesystem::exists(putanja + putanjaDoRegVozila)) std::filesystem::create_directory(putanja + putanjaDoRegVozila);
 	ofstream fileRegVozila(putanja + putanjaDoRegVozila + regBroj + ".txt");
-	fileRegVozila << kIme << endl << regBroj << endl;
+	cout << "Unesi cijenu registracije(u evrima): ";
+	string cijena;
+	cin >> cijena;
+	fileRegVozila << kIme << endl << regBroj << endl << cijena << endl;
 	fileRegVozila.close();
 	//generisanje stikera
 #ifdef WIN32

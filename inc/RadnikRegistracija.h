@@ -36,6 +36,7 @@ public:
 	//Ovjde se pohranjuju info. o nekom radniku za tehnicki pregled iz postojece datoteke
 	void postaviInfo(string korisnickoIme);
 	void odobriRegistraciju(string kIme);
+	void prikaziSveRegistracije();
 	void ispisFajla(string korisnickoIme);
 	void kreirajZahtjev(string, string);
 	void provjeriZahtjeveZaRegistracije();

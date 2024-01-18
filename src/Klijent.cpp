@@ -14,9 +14,9 @@
 namespace fs = std::filesystem;
 using namespace std;
 #ifdef WIN32
-string putanjaDoZahtjevaZaRegistraciju = "putanjaDoZahtjevaZaRegistraciju\\";
+string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju\\";
 #else
-string putanjaDoZahtjevaZaRegistraciju = "putanjaDoZahtjevaZaRegistraciju/";
+string putanjaDoZahtjevaZaRegistraciju = "ZahtjeviZaRegistraciju/";
 #endif
 Klijent::Klijent(const string C_Ime, const string C_Prezime,
 	const string C_korisnickoIme, const string C_sifra, const string c_email)
