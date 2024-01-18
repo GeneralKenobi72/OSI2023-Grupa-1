@@ -306,13 +306,14 @@ void Klijent::prikaziMojeRegistracije() {
 	int i = 0;
 	for (const auto& entry : std::filesystem::directory_iterator(putanja + putanjaDoRegVozila)) {
 		ifstream fajlRegistracije(entry.path());
-		string kIme, regBroj, cijena;
+		string kIme, regBroj, cijena,regTablice;
 		getline(fajlRegistracije, kIme);
 		if (this->korisnickoIme == kIme) {
 			i++;
 			getline(fajlRegistracije, regBroj);
 			getline(fajlRegistracije, cijena);
-			cout << "Registrovali ste vozilo registarskog broja " + regBroj + " i za istu ste platili " + cijena + "evra." << endl;
+			getline(fajlRegistracije, regTablice);
+			cout << "Registrovali ste vozilo registarskog broja " + regBroj + " i za istu ste platili " + cijena + "evra. Broj registracionih tablica je "<< regTablice << endl;
 		}
 	}
 	if (i == 0) {
