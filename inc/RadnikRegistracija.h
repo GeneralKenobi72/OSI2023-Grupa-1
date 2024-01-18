@@ -44,6 +44,7 @@ public:
 	void promjenaSifre() override;
 	bool Ulogovanje() override;
 	void prikaziMeni() override;
+	void pregledKazniIRacuna();
 	bool provjeriKorisnickoImeRadnikaR(const string korisnickoIme);
 	bool provjeriRadnikaRegistracija(string korisnickoIme_, string sifra_);
 	void postaviPozicija() { pozicija = "Radnik za Registraciju";  }
